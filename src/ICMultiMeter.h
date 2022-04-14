@@ -39,9 +39,9 @@
 #include "SPIFFS.h"
 #include <M5StackUpdater.h>
 
-#define VERSION "0.0.7"
+#define VERSION "0.0.1"
 #define AUTHOR "F4HWN"
-#define NAME "IC705MultiMeter"
+#define NAME "ICMultiMeter"
 
 #define FASTLED_INTERNAL // To disable pragma messages on compile
 #define STEP 2
