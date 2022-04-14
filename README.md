@@ -249,7 +249,7 @@ Step 1, click on the Platformio icon (the icon with an ant's head...). Step 2, u
 
 Finally, step 3, go to the `Platform` sub-section. And click on `Upload Filesystem Image`.
 
-Wait ! It's coffee time (or beer) :) The contents of the `data` directory will be written to the SPI Flash File Storage of your M5Stack. Are you done? You're there !!!!
+Wait ! It's coffee time (or beer) :) The contents of the `data` directory will be written to the SPI Flash File Storage of your M5Stack. Are you done? You're there !!!
 
 ## Usage
 
