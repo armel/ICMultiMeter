@@ -127,7 +127,13 @@ In complement, you can view your ICMultiMeter from a simple browser. It is even 
 
 #### Proxy Configuration
 
-If you're a using an IC7300 or IC9700, __it's necessary__ !
+If you're a using an IC7300 or IC9700, __it's necessary__ ! 
+
+You will need to take a look at my other project, [ICUSBProxy](https://github.com/armel/ICUSBProxy). This project allows to set up an HTTP _proxy_ allowing to talk wirelessly, from an M5Stack (or other equipment), with an Icom transceiver like IC7300 or IC9700 and sending CI-V commands.
+
+Please, take the time to read the [README.md](https://github.com/armel/ICUSBProxy/blob/main/README.md) and install [ICUSBProxy](https://github.com/armel/ICUSBProxy).
+
+It's done ? Nice, so we can move forward.
 
 Line 21 and 22, the constants `SERIAL_DEVICE` and `BAUDE_RATE` set the CI-V COM port settings. So COM port number (COM1, /dev/ttyUSB0, etc.) and Baude rate (115900, 19200, 9600, etc.).
 Line 23 and 24, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port of the Proxy.
