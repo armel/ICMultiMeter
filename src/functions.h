@@ -23,7 +23,7 @@ void callbackBT(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 // Wifi callback Off
 void callbackWifiOff(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-  M5.Lcd.sleep();
+  //M5.Lcd.sleep();
   Serial.println("Wifi Client disconnected");
   wifiConnected = false;
 
@@ -34,7 +34,7 @@ void callbackWifiOff(WiFiEvent_t event, WiFiEventInfo_t info)
 void callbackWifiOn(WiFiEvent_t event, WiFiEventInfo_t info)
 {
   screensaver = millis();
-  M5.Lcd.wakeup();
+  //M5.Lcd.wakeup();
   Serial.println("Wifi Client Connected");
   frequencyOld = "";
   wifiConnected = true;
