@@ -115,6 +115,8 @@ Choose between : BT or USB
 
 Line 14, the constant `CI_V_ADDRESS` set the CI-V Address of your Transceiver. I have indicated the default value. Refer to the documentation, if needed.
 
+> Note that, if you read 94h as `CI_V_ADDRESS` on your Transceiver, you must indicate 0x94. If it's A4h, you must indicate 0xA4. And so on. 
+
 #### Wifi Configuration 
 
 If you're a using an IC7300 or IC9700, __it's necessary__ !
