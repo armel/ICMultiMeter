@@ -328,7 +328,7 @@ Many thanks to...
 
 # Donations
 
-Special thanks to Matt B-Wilkinson, Rolf Schroeder, Brian Garber and Robert Agnew for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Matt B-Wilkinson, Rolf Schroeder, Brian Garber, Robert Agnew and Meinhard Frank Günther for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 
