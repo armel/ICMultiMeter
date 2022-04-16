@@ -319,11 +319,11 @@ I think it is possible to have 3 or 4 applications cohabit in SPI Flash File Sto
  
 Many thanks to...
 
-| Project             | Author           |  Link                                        |
-|:------------------- | :--------------- | :------------------------------------------- |
-| M5Stack             | M5Stack          | https://github.com/m5stack/M5Stack           |
-| M5Stack-SD-Updater  | Tobozo           | https://github.com/tobozo/M5Stack-SD-Updater |
-| FastLED             | FastLED          | https://github.com/FastLED/FastLED           |
+| Project             | Author                                                |  Link                                        |
+|:------------------- | :---------------------------------------------------- | :------------------------------------------- |
+| M5Stack             | [M5Stack](https://twitter.com/M5Stack)                | https://github.com/m5stack/M5Stack           |
+| M5Stack-SD-Updater  | [Tobozo](https://twitter.com/TobozoTagada)            | https://github.com/tobozo/M5Stack-SD-Updater |
+| FastLED             | FastLED                                               | https://github.com/FastLED/FastLED           |
 
 
 # Donations
