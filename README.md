@@ -316,8 +316,9 @@ The left and right buttons allow you to switch from one binary to another. And t
 I think it is possible to have 3 or 4 applications cohabit in SPI Flash File Storage. If need more, use SD Card Storage.
 
 # Credits
+
+Many thanks to...
  
-|                     |                  |                                              |
 |:------------------- | :--------------- | :------------------------------------------- |
 | M5Stack             | M5Stack          | https://github.com/m5stack/M5Stack           |
 | M5Stack-SD-Updater  | Tobozo           | https://github.com/tobozo/M5Stack-SD-Updater |
@@ -326,7 +327,7 @@ I think it is possible to have 3 or 4 applications cohabit in SPI Flash File Sto
 
 # Donations
 
-Special Thanks to Matt B-Wilkinson, Rolf Schroeder, Brian Garber and Robert Agnew for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Matt B-Wilkinson, Rolf Schroeder, Brian Garber and Robert Agnew for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 
