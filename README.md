@@ -13,7 +13,7 @@
 
 **An excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_channel=HAMRADIODUDE) was released by @HamRadioDude about the installation of the IC705SMeter project. It can help you ! This is the same approach here.** 
 
-The ICMultiMeter project allows you to display the equivalent of the Meter screen of the IC705, IC7300 and IC9700, directly on the M5Stack screen. This allows you to dedicate the IC screen to the Waterfall while having all the measurements on the M5Stack screen.
+The ICMultiMeter project allows you to display the equivalent of the Meter screen of the IC-705, IC-7300 and IC-9700, directly on the M5Stack screen. This allows you to dedicate the IC screen to the Waterfall while having all the measurements on the M5Stack screen.
 
 ![ICMultiMeter FM](https://github.com/armel/ICMultiMeter/blob/main/img/FM.png)
 ![ICMultiMeter SSB](https://github.com/armel/ICMultiMeter/blob/main/img/SSB.png)
@@ -100,16 +100,16 @@ Line 5, check that the constant `BOARD` corresponds to your M5Stack model (by de
 Line 8, the constant `IC_MODEL` set your Transceiver model.
 Choose between : 705, 7300 or 9700.
 
-> I don't own the 9700, so I haven't tested it.
+> I don't own the IC-9700, so I haven't tested it.
 
 #### IC Connect method
 
-If you're a using an IC7300 or IC9700, choose __USB__ !
+If you're a using an IC-7300 or IC-9700, choose __USB__ !
 
 Line 11, the constant `IC_CONNECT` set your connect method.
 Choose between : BT or USB
 
-> Note that BT only works with IC705.
+> Note that BT only works with IC-705.
 
 #### CI-V Address of your Transceiver
 
@@ -119,19 +119,19 @@ Line 14, the constant `CI_V_ADDRESS` set the CI-V Address of your Transceiver. I
 
 #### Wifi Configuration 
 
-If you're a using an IC7300 or IC9700, __it's necessary__ !
+If you're a using an IC-7300 or IC-9700, __it's necessary__ !
 
 Line 17 and 18, the constants `WIFI_SSID` and `WIFI_PASSWORD` set your Wifi configuration.
 
-In complement, you can view your ICMultiMeter from a simple browser. It is even possible to control it by this way, as the buttons are clickable. In order to display your ICMultiMeter in your browser, just go to `http://ip_address_of_your_ICMultiMeter/`. As a reminder, the IP address that your ICMultiMeter retrieves is displayed on the screen.
+In complement, you can view your ICMultiMeter from a simple browser. It is even possible to control it by this way, as the buttons are clickable. In order to display your ICMultiMeter in your browser, just go to `http://ip_address_of_your_ICMultiMeter/`. As a reminder, the IP address that your ICMultiMeter retrieves is sometimes displayed on the screen.
 
 > Beware: it's slow! And there is no automatic refresh. You have to click on the background of the screen image to make a new capture. And otherwise, as said, the buttons are functional.
 
 #### Proxy Configuration
 
-If you're a using an IC7300 or IC9700, __it's necessary__ ! 
+If you're a using an IC-7300 or IC-9700, __it's necessary__ ! 
 
-You will need to take a look at my other project, [ICUSBProxy](https://github.com/armel/ICUSBProxy). This project allows to set up an HTTP _proxy_ allowing to talk wirelessly, from an M5Stack (or other equipment), with an Icom transceiver like IC7300 or IC9700 and sending CI-V commands.
+You will need to take a look at my other project, [ICUSBProxy](https://github.com/armel/ICUSBProxy). This project allows to set up an HTTP _proxy_ allowing to talk wirelessly, from an M5Stack (or other equipment), with an Icom transceiver like IC-7300 or IC-9700 and sending CI-V commands.
 
 Please, take the time to read the [README.md](https://github.com/armel/ICUSBProxy/blob/main/README.md) and install [ICUSBProxy](https://github.com/armel/ICUSBProxy).
 
@@ -140,7 +140,7 @@ It's done ? Nice, so we can move forward.
 Line 21 and 22, the constants `SERIAL_DEVICE` and `BAUDE_RATE` set the CI-V COM port settings. So COM port number (COM1, /dev/ttyUSB0, etc.) and Baude rate (115900, 19200, 9600, etc.).
 Line 23 and 24, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port of the Proxy.
 
-> About Proxy, the idea is to use a PC or a nano computer (like a Raspberry Pi) to connect the IC7300 or IC9700 transceiver via the USB cable (USB type A to USB type B). The M5Stack will talk to this PC by Wifi and the PC will talk to the transceiver by the USB cable. By this way, the M5Stack keeps the big advantage of being wireless.
+> About Proxy, the idea is to use a PC or a nano computer (like a Raspberry Pi) to connect the IC-7300 or IC-9700 transceiver via the USB cable (USB type A to USB type B). The M5Stack will talk to this PC by Wifi and the PC will talk to the transceiver by the USB cable. By this way, the M5Stack keeps the big advantage of being wireless.
 
 #### TFT image retention
 
@@ -150,7 +150,46 @@ You can change the constant `TIMEOUT_SCREENSAVER` to set the delay, line 27.
 
 If the screen saver is active and you press a button or the PTT to transmit, the ICMultiMeter screen will come back.
 
-Note that if the connection between your M5Stack and the IC705 has been established and you turn off your IC705 or disconnect the Bluetooth link, the screen will go completely into _sleep mode_. The ICMultiMeter screen will come back as soon as the Bluetooth link is established again.  
+Note that if the connection between your M5Stack and the Transceiver has been established and you turn off your Transceiver (or disconnect the Bluetooth link, with IC-705), the screen will go completely into _sleep mode_. The screen will come back as soon as the connection is established again after you turn on your Transceiver. 
+
+#### Examples of settings
+
+##### IC-705, BT
+
+| settings        | value           | 
+| ------------- |:-------------:| 
+| IC_MODEL      | 705 | 
+| IC_CONNECT      | BT      | 
+| CI_V_ADDRESS | 0xA4      |
+
+##### IC-705, USB
+
+| settings        | value           | 
+| ------------- |:-------------:| 
+| IC_MODEL      | 705 | 
+| IC_CONNECT      | USB      | 
+| CI_V_ADDRESS | 0xA4      |
+| WIFI_SSID   |  _My WiFi SSID_ |
+| WIFI_PASSWORD | _My WiFi Password_ |
+| SERIAL_DEVICE | "/dev/ttyACM0" |
+| BAUDE_RATE | 115900 | 
+| PROXY_URL | "http://192.168.1.32" |
+| PROXY_PORT | 1234 |    
+
+##### IC-7300, USB
+
+| settings        | value           | 
+| ------------- |:-------------:| 
+| IC_MODEL      | 7300 | 
+| IC_CONNECT      | USB      | 
+| CI_V_ADDRESS | 0x94      |
+| WIFI_SSID   |  _My WiFi SSID_ |
+| WIFI_PASSWORD | _My WiFi Password_ |
+| SERIAL_DEVICE | "/dev/ttyUSB0" |
+| BAUDE_RATE | 115900 | 
+| PROXY_URL | "http://192.168.1.32" |
+| PROXY_PORT | 1234 |    
+
 
 ### File `platformio.ini`
 
@@ -176,7 +215,7 @@ Compile and upload the project to your M5Stack. You are done !
 
 # Usage
 
-Once launched, if you're using Bluetooth with an IC705, you must connect your IC705 to your M5Stack via the menu (Set / Bluetooth Set) of your transceiver. Refer to the documentation, if needed.
+Once launched, if you're using Bluetooth with an IC-705, you must connect your IC-705 to your M5Stack via the menu (Set / Bluetooth Set) of your transceiver. Refer to the documentation, if needed.
 
 If you're using USB with [ICUSBProxy](https://github.com/armel/ICUSBProxy), plug your Transceiver via the USB cable (USB type A to USB type B) to your PC. It's time to start the Python3 script :
 
@@ -196,19 +235,19 @@ It's possible to store several applications on the SPI Flash File Storage of you
 
 ## Preparation
 
-I will detail here the procedure to deploy IC705SMeter and ICMultiMeter applications on the same M5Stack.
+I will detail here the procedure to deploy ICSMeter and ICMultiMeter applications on the same M5Stack.
 
 ### Step 1 - Compile
 
-Start by compiling your applications, as you used to do. Nothing changes here. For example, start by compiling the IC705SMeter application. Then do the same with the ICMultiMeter application. 
+Start by compiling your applications, as you used to do. Nothing changes here. For example, start by compiling the ICSMeter application. Then do the same with the ICMultiMeter application. 
 
 ### Step 2 - Collecting the binary files
 
-That's it, you have compiled the IC705SMeter and ICMultiMeter application? It's perfect.
+That's it, you have compiled the ICSMeter and ICMultiMeter application? It's perfect.
 
 Each compilation has produced a binary. It is this binary that is sent / flashed to your M5Stack, via the USB connection.
 
-Go to the root of the IC705SMeter folder, which contains the whole project. And go to the :
+Go to the root of the ICSMeter folder, which contains the whole project. And go to the :
 
 - `.pio/build/m5stack-basic-grey`, if you compiled for a GREY or BASIC M5Stack
 - `.pio/build/m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
@@ -219,15 +258,15 @@ You will find a `firmware.bin` file there. Now, there are 2 solutions...
 
 Format an SD Card as FAT32.
 
-Copy the `firmware.bin` at the root of the SD Card. And take the opportunity to rename it, for example, `IC705SMeter.bin`.
+Copy the `firmware.bin` at the root of the SD Card. And take the opportunity to rename it, for example, `ICSMeter.bin`.
 
 Do the same with the ICMultiMeter application. Of course rename it with a different name, for example, `ICMultiMeter.bin`.
 
-At this point, you should have 2 clearly identified binaries in the root of your SD Card : `IC705SMeter.bin` and `ICMultiMeter.bin`.
+At this point, you should have 2 clearly identified binaries in the root of your SD Card : `ICSMeter.bin` and `ICMultiMeter.bin`.
 
 ### Step 2.2 - SPI Flash File Storage (more difficult)
 
-Copy `firmware.bin` in the `data` directory at the root of the IC705SMeter folder. And take the opportunity to rename it, for example, `IC705SMeter.bin`.
+Copy `firmware.bin` in the `data` directory at the root of the ICSMeter folder. And take the opportunity to rename it, for example, `ICSMeter.bin`.
 
 > If the `data` folder does not exist, create it.
 
@@ -236,13 +275,13 @@ Do the same with the ICMultiMeter application. Go to the root of the ICMultiMete
 - `.pio/build/m5stack-basic-grey`, if you have compiled for a M5Stack GREY or BASIC
 - `.pio/build/m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
 
-You will also find a `firmware.bin` file. Copy it, too, in the `data` directory at the __root of the IC705SMeter folder__. And take the opportunity to rename it to, for example, `ICMultiMeter.bin`.
+You will also find a `firmware.bin` file. Copy it, too, in the `data` directory at the __root of the ICSMeter folder__. And take the opportunity to rename it to, for example, `ICMultiMeter.bin`.
 
-> Important, the idea is to copy these 2 binaries in the same directory `data`** (located at the root of the IC705SMeter folder).
+> Important, the idea is to copy these 2 binaries in the same directory `data`** (located at the root of the ICSMeter folder).
 
-At this point, you should have 2 clearly identified binaries: `IC705SMeter.bin` and `ICMultiMeter.bin` in the `data` directory at the root of the IC705SMeter folder.
+At this point, you should have 2 clearly identified binaries: `ICSMeter.bin` and `ICMultiMeter.bin` in the `data` directory at the root of the ICSMeter folder.
 
-So let's move on to what is probably the most complicated step. Open the IC705SMeter project from Visual Studio Code, as you would compile it. 
+So let's move on to what is probably the most complicated step. Open the ICSMeter project from Visual Studio Code, as you would compile it. 
 
 ![Capture](https://github.com/armel/RRFRemote/blob/main/img/flash_1.png)
 
@@ -266,7 +305,7 @@ As soon as the first little dot appears, you can :
 - either press the left or right button, to launch the default application.
 - or press the central button. In this case, the Bin Loader menu appears and offers you the list of available binaries in SPI Flash File Storage or SD Card. 
 
-If you have followed the procedure perfectly, you should have a choice between `IC705SMeter.bin` and `ICMultiMeter.bin`.
+If you have followed the procedure perfectly, you should have a choice between `ICSMeter.bin` and `ICMultiMeter.bin`.
 
 The left and right buttons allow you to switch from one binary to another. And the middle button validates the selected binary. In this case, the selected application will be loaded ;)
 
