@@ -316,9 +316,10 @@ The left and right buttons allow you to switch from one binary to another. And t
 I think it is possible to have 3 or 4 applications cohabit in SPI Flash File Storage. If need more, use SD Card Storage.
 
 # Credits
-
-Many thanks to...
  
+Many thanks to...
+
+| Project             | Author           |  Link                                        |
 |:------------------- | :--------------- | :------------------------------------------- |
 | M5Stack             | M5Stack          | https://github.com/m5stack/M5Stack           |
 | M5Stack-SD-Updater  | Tobozo           | https://github.com/tobozo/M5Stack-SD-Updater |
