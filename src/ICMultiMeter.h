@@ -39,7 +39,7 @@
 #include "SPIFFS.h"
 #include <M5StackUpdater.h>
 
-#define VERSION "0.0.1"
+#define VERSION "0.0.2"
 #define AUTHOR "F4HWN"
 #define NAME "ICMultiMeter"
 

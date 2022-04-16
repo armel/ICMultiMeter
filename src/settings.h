@@ -21,7 +21,7 @@
 #define SERIAL_DEVICE "/dev/ttyUSB0"            // Proxy Serial Device
 #define BAUDE_RATE 115900                       // Proxy Serial Device Baude Rate
 #define PROXY_URL "http://192.168.1.32"         // Proxy HTTP URL
-#define PROXY_PORT "1234"                       // Proxy HTTP Port
+#define PROXY_PORT 1234                         // Proxy HTTP Port
 
 // Screen Saver Time Out
 #define TIMEOUT_SCREENSAVER 60 * 60 * 1000      // 60 min default timeout (in milli seconds)
