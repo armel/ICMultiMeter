@@ -374,8 +374,6 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
 void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
 {
   static uint8_t proxyError = 0;
-  uint8_t byte1, byte2, byte3;
-  uint8_t counter = 0;
 
   HTTPClient http;
   uint16_t httpCode;
@@ -930,34 +928,29 @@ void getScreenshot()
                 // If no specific target is requested
                 if (currentLine.startsWith("GET / "))
                 {
-                  htmlGetRefresh = 3;
                   htmlGetRequest = GET_index_page;
                 }
                 // If the screenshot image is requested
                 if (currentLine.startsWith("GET /screenshot.bmp"))
                 {
-                  htmlGetRefresh = 3;
                   htmlGetRequest = GET_screenshot;
                 }
                 // If the button left was pressed on the HTML page
                 if (currentLine.startsWith("GET /buttonLeft"))
                 {
                   buttonLeftPressed = true;
-                  htmlGetRefresh = 1;
                   htmlGetRequest = GET_index_page;
                 }
                 // If the button center was pressed on the HTML page
                 if (currentLine.startsWith("GET /buttonCenter"))
                 {
                   buttonCenterPressed = true;
-                  htmlGetRefresh = 1;
                   htmlGetRequest = GET_index_page;
                 }
                 // If the button right was pressed on the HTML page
                 if (currentLine.startsWith("GET /buttonRight"))
                 {
                   buttonRightPressed = true;
-                  htmlGetRefresh = 1;
                   htmlGetRequest = GET_index_page;
                 }
               }
@@ -1098,10 +1091,9 @@ boolean checkConnection()
   String command = "";
   String response = "";
 
-  char buffer[8];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
-
   char s[4];
+  
   for (uint8_t i = 0; i < 6; i++)
   {
     sprintf(s, "%02x,", request[i]);
@@ -1110,7 +1102,7 @@ boolean checkConnection()
 
   command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
 
-  if (screensaverMode == 0)
+  if (screensaverMode == 0 && screenshot == false)
   {
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
       message = "Check Pairing";
