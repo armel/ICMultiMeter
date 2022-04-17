@@ -13,7 +13,7 @@ void button(void *pvParameters)
     // Get button
     getButton();
 
-    if(screensaverMode == 0)
+    if(screensaverMode == false)
     {
       if(btnA || btnB || btnC) {
         screensaver = millis();

@@ -125,7 +125,7 @@ void loop()
     tx = getTX();
     if(tx != 0) screensaver = millis();   // If transmit, refresh tempo
 
-    if (screensaverMode == 0 && screenshot == false)
+    if (screensaverMode == false && screenshot == false)
     {
       if(charge != chargeOld) {
         chargeOld = charge;

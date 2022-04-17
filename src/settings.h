@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // M5Stack Board
-#define BOARD BASIC                             // Your M5Stack Board
+#define BOARD CORE2                             // Your M5Stack Board
 
 // IC Transceiver Model
 #define IC_MODEL 7300                          // 705, 7300 (and may be 9700)
