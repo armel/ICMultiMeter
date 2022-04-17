@@ -13,12 +13,12 @@ void button(void *pvParameters)
     // Get button
     getButton();
 
+    if(btnA || btnB || btnC) {
+      screensaver = millis();
+    }
+
     if(screensaverMode == false)
     {
-      if(btnA || btnB || btnC) {
-        screensaver = millis();
-      }
-
       if (btnA == 1 || buttonLeftPressed == 1)
       {
         option = 0;
