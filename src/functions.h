@@ -242,7 +242,7 @@ void viewBattery()
   uint8_t batteryLevel;
   boolean batteryCharging;
 
-  if (screensaverMode == 0)
+  if (screensaverMode == false)
   {
     // On left, view battery level
     batteryLevel = map(getBatteryLevel(1), 0, 100, 0, 16);
@@ -284,7 +284,7 @@ void viewBaseline()
 {
   static uint8_t temporisation = 0;
 
-  if (screensaverMode == 0)
+  if (screensaverMode == false)
   {
     if (btnL || btnR)
     {
@@ -374,8 +374,6 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
 void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
 {
   static uint8_t proxyError = 0;
-  uint8_t byte1, byte2, byte3;
-  uint8_t counter = 0;
 
   HTTPClient http;
   uint16_t httpCode;
@@ -930,34 +928,29 @@ void getScreenshot()
                 // If no specific target is requested
                 if (currentLine.startsWith("GET / "))
                 {
-                  htmlGetRefresh = 3;
                   htmlGetRequest = GET_index_page;
                 }
                 // If the screenshot image is requested
                 if (currentLine.startsWith("GET /screenshot.bmp"))
                 {
-                  htmlGetRefresh = 3;
                   htmlGetRequest = GET_screenshot;
                 }
                 // If the button left was pressed on the HTML page
                 if (currentLine.startsWith("GET /buttonLeft"))
                 {
                   buttonLeftPressed = true;
-                  htmlGetRefresh = 1;
                   htmlGetRequest = GET_index_page;
                 }
                 // If the button center was pressed on the HTML page
                 if (currentLine.startsWith("GET /buttonCenter"))
                 {
                   buttonCenterPressed = true;
-                  htmlGetRefresh = 1;
                   htmlGetRequest = GET_index_page;
                 }
                 // If the button right was pressed on the HTML page
                 if (currentLine.startsWith("GET /buttonRight"))
                 {
                   buttonRightPressed = true;
-                  htmlGetRefresh = 1;
                   htmlGetRequest = GET_index_page;
                 }
               }
@@ -987,46 +980,22 @@ void wakeAndSleep()
   static boolean xDir = rand() & 1;
   static boolean yDir = rand() & 1;
 
-  /*
-  if (screensaverMode == 0 && millis() - screensaver > TIMEOUT_SCREENSAVER)
+  if (screensaverMode == false && millis() - screensaver > TIMEOUT_SCREENSAVER)
   {
-    for (uint8_t i = brightness; i >= 1; i--)
-    {
-      setBrightness(i);
-      delay(10);
-    }
-    screensaverMode = 1;
-    screensaver = 0;
-    M5.Lcd.sleep();
-  }
-  else if (screensaverMode == 1 && screensaver != 0)
-  {
-    M5.Lcd.wakeup();
-    screensaverMode = 0;
-    for (uint8_t i = 1; i <= brightness; i++)
-    {
-      setBrightness(i);
-      delay(10);
-    }
-  }
-  */
-
-  if (screensaverMode == 0 && millis() - screensaver > TIMEOUT_SCREENSAVER)
-  {
-    screensaverMode = 1;
+    screensaverMode = true;
     screensaver = 0;
     M5.Lcd.fillScreen(TFT_BLACK);
   }
-  else if (screensaverMode == 1 && screensaver != 0)
+  else if (screensaverMode == true && screensaver != 0)
   {
     M5.Lcd.fillScreen(TFT_BLACK);
     clearData();
     viewGUI();
-    screensaverMode = 0;
+    screensaverMode = false;
 
     vTaskDelay(100);
   }
-  else if (screensaverMode == 1)
+  else if (screensaverMode == true)
   {
 
     M5.Lcd.fillRect(x, y, 44, 22, TFT_BLACK);
@@ -1098,10 +1067,9 @@ boolean checkConnection()
   String command = "";
   String response = "";
 
-  char buffer[8];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
-
   char s[4];
+  
   for (uint8_t i = 0; i < 6; i++)
   {
     sprintf(s, "%02x,", request[i]);
@@ -1110,7 +1078,7 @@ boolean checkConnection()
 
   command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
 
-  if (screensaverMode == 0)
+  if (screenshot == false)
   {
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
       message = "Check Pairing";
@@ -1134,6 +1102,8 @@ boolean checkConnection()
         {
           if(startup == false)
           {
+            clearData();
+            screensaver = millis();
             M5.Lcd.wakeup();
             Serial.println("TX connected");
           }
@@ -1158,7 +1128,7 @@ boolean checkConnection()
       }
     }
 
-    if (message != "")
+    if (message != "" && screensaverMode == false)
     {
       M5.Lcd.setTextDatum(CC_DATUM);
       M5.Lcd.setFreeFont(&UniversCondensed20pt7b);

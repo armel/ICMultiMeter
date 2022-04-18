@@ -125,7 +125,7 @@ void loop()
     tx = getTX();
     if(tx != 0) screensaver = millis();   // If transmit, refresh tempo
 
-    if(screensaverMode == 0)
+    if (screensaverMode == false && screenshot == false)
     {
       if(charge != chargeOld) {
         chargeOld = charge;
@@ -223,14 +223,8 @@ void loop()
       }
     }
   }
-
+  
   alternance = (alternance++ < 2) ? alternance : 0;
-
-  if(DEBUG) {
-    Serial.println("----------");
-    Serial.print("Alternance ");
-    Serial.println(alternance);
-  }
 
   // View battery
   viewBattery();
@@ -240,13 +234,4 @@ void loop()
 
   // Manage Screen Saver
   wakeAndSleep();
-
-  // Manage Web Server if enable
-  if (WiFi.status() == WL_CONNECTED)
-  {
-    getScreenshot();
-  }
-  else {
-    wifiConnected = false;
-  }
 }

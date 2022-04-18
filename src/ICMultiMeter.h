@@ -39,7 +39,7 @@
 #include "SPIFFS.h"
 #include <M5StackUpdater.h>
 
-#define VERSION "0.0.2"
+#define VERSION "0.0.3"
 #define AUTHOR "F4HWN"
 #define NAME "ICMultiMeter"
 
@@ -69,20 +69,10 @@ int16_t pos = 0;
 // Global Variables
 WiFiServer httpServer(80);
 WiFiClient httpClient, civClient;
+
 uint8_t htmlGetRequest;
-uint8_t htmlGetRefresh = 3;
 uint8_t option = 2;
 uint8_t brightness = 64;
-uint16_t bande = 28;
-uint32_t screensaver;
-boolean screensaverMode = 0;
-boolean btConnected = false;
-boolean wifiConnected = false;
-boolean proxyConnected = false;
-boolean txConnected = true;
-boolean needClear = true;
-boolean startup = true;
-
 uint8_t sOld = 255;
 uint8_t SWROld = 255;
 uint8_t powerOld = 255;
@@ -102,13 +92,24 @@ uint8_t SQLOld = 127;
 uint8_t COMPOld = 127;
 uint8_t VdOld = 0;
 uint8_t batteryLevelOld = 0;
+uint16_t bande = 28;
+
+uint32_t screensaver;
+
+boolean screensaverMode = false;
+boolean screenshot = false;
+boolean btConnected = false;
+boolean wifiConnected = false;
+boolean proxyConnected = false;
+boolean txConnected = true;
+boolean needClear = true;
+boolean startup = true;
+boolean batteryCharginglOld = true;
 
 String frequencyOld = "";
 String filterOld = "";
 String modeOld = "";
 String RITOld = "";
-
-boolean batteryCharginglOld = true;
 
 // LED
 #define NUM_LEDS 10
