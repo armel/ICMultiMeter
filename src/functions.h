@@ -1078,7 +1078,7 @@ boolean checkConnection()
 
   command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
 
-  if (screensaverMode == false && screenshot == false)
+  if (screenshot == false)
   {
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
       message = "Check Pairing";
