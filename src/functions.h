@@ -645,7 +645,13 @@ void viewGUI()
   M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
   M5.Lcd.drawRect(220, 200, 100, 40, TFT_FIL_BORDER);
   M5.Lcd.drawString("Vd", 220, 200);
-  M5.Lcd.drawString("5", 230, 216);
+
+  if(IC_MODEL == 705) {
+    M5.Lcd.drawString("5", 230, 216);
+  }
+  else {
+    M5.Lcd.drawString("10", 230, 216);
+  }
 
   M5.Lcd.setTextDatum(CR_DATUM);
   M5.Lcd.drawString("16V", 312, 216);
@@ -658,8 +664,14 @@ void viewGUI()
     M5.Lcd.drawFastVLine(230 + i, 224, 8, TFT_FIL_BACK);
   }
 
-  M5.Lcd.drawFastHLine(230, 232, 50, TFT_RED);
-  M5.Lcd.drawFastHLine(280, 232, 30, TFT_FIL_BORDER);
+  if(IC_MODEL == 705) {
+    M5.Lcd.drawFastHLine(230, 232, 50, TFT_RED);
+    M5.Lcd.drawFastHLine(280, 232, 30, TFT_FIL_BORDER);
+  }
+  else {
+    M5.Lcd.drawFastHLine(230, 232, 25, TFT_RED);
+    M5.Lcd.drawFastHLine(255, 232, 55, TFT_FIL_BORDER);
+  }
 
   // AF Gain & SQL
   // M5.Lcd.fillRect(220, 146, 100, 45, TFT_BLACK);
@@ -772,6 +784,7 @@ void clearData()
   SQLOld = 127;
   COMPOld = 127;
   VdOld = 0;
+  IPOld = 0;
   batteryLevelOld = 0;
 
   frequencyOld = "";
@@ -1133,18 +1146,23 @@ boolean checkConnection()
       }
     }
 
-    if (message != "" && screensaverMode == false)
+    if (message != "")
     {
-      M5.Lcd.setTextDatum(CC_DATUM);
-      M5.Lcd.setFont(&UniversCondensed20pt7b);
-      M5.Lcd.setTextPadding(200);
-      M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-      M5.Lcd.drawString(message, 160, 70);
-      vTaskDelay(500);
-      M5.Lcd.drawString("", 160, 70);
-      vTaskDelay(100);
-      frequencyOld = "";
-      return false;
+      if(screensaverMode == false) {
+        M5.Lcd.setTextDatum(CC_DATUM);
+        M5.Lcd.setFont(&UniversCondensed20pt7b);
+        M5.Lcd.setTextPadding(200);
+        M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+        M5.Lcd.drawString(message, 160, 70);
+        vTaskDelay(750);
+        M5.Lcd.drawString("", 160, 70);
+        vTaskDelay(250);
+        frequencyOld = "";
+        return false;
+      }
+      else {
+        vTaskDelay(1000);
+      }
     }
   }
 

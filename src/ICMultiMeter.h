@@ -71,6 +71,7 @@ uint8_t MICOld = 127;
 uint8_t SQLOld = 127;
 uint8_t COMPOld = 127;
 uint8_t VdOld = 0;
+uint8_t IPOld = 0;
 uint8_t batteryLevelOld = 0;
 uint16_t bande = 28;
 

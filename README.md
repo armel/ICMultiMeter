@@ -279,7 +279,7 @@ Many thanks to...
 
 # Donations
 
-Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson, Tadeusz Pater and Frederic Ulmer for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson, Tadeusz Pater, Frederic Ulmer and Joshua Murray for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 

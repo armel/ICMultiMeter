@@ -200,6 +200,7 @@ void loop()
           getAF();
           getSQL();
           getMIC();
+          getIP();
           break;
       }
     

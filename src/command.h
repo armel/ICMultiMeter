@@ -381,9 +381,17 @@ void getVdLevel()
     Serial.println(value);
   }
 
-  if (value < 75)
-  {
-    value = 75;
+  if(IC_MODEL == 705) {
+    if (value < 75)
+    {
+      value = 75;
+    }
+  }
+  else {
+    if (value < 13)
+    {
+      value = 13;
+    }
   }
 
   if (value != VdOld)
@@ -395,7 +403,13 @@ void getVdLevel()
       M5.Lcd.drawFastVLine(230 + i, 224, 8, TFT_FIL_BACK);
     }
 
-    limit = map(value, 75, 241, 0, 80);
+    if(IC_MODEL == 705) {
+      limit = map(value, 75, 241, 0, 80);
+    }
+    else 
+    {
+      limit = map(value, 13, 241, 0, 80);
+    }
 
     for (uint8_t i = 0; i <= limit; i += 2)
     {
@@ -676,7 +690,7 @@ void getNB()
     M5.Lcd.setTextPadding(24);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CL_DATUM);
-    M5.Lcd.drawString(String(mode[value]), 160, 12);
+    M5.Lcd.drawString(String(mode[value]), 150, 12);
   }
 }
 
@@ -716,7 +730,7 @@ void getNR()
     M5.Lcd.setTextPadding(24);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CL_DATUM);
-    M5.Lcd.drawString(String(mode[value]), 200, 12);
+    M5.Lcd.drawString(String(mode[value]), 180, 12);
   }
 }
 
@@ -1123,5 +1137,47 @@ void getRIT()
     M5.Lcd.setTextDatum(CR_DATUM);
     M5.Lcd.drawString("RIT", 316, 66);
     M5.Lcd.drawString(RIT, 316, 81);
+  }
+}
+
+// Get IP+
+void getIP()
+{
+  uint8_t value;
+
+  static char buffer[5];
+  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x07, 0xFD};
+
+  const char *mode[] = {"  ", "IP+"};
+
+  size_t n = sizeof(request) / sizeof(request[0]);
+
+  if(IC_MODEL != 7300) return;
+
+  sendCommand(request, n, buffer, 5);
+
+  if (buffer[4] <= 1)
+  {
+    value = buffer[4];
+  }
+  else
+  {
+    value = 0;
+  }
+
+  if(DEBUG) {
+    Serial.print("IP+ ");
+    Serial.println(String(mode[value]));
+  }
+
+  if (value != IPOld)
+  {
+    IPOld = value;
+
+    M5.Lcd.setFont(&tahoma8pt7b);
+    M5.Lcd.setTextPadding(26);
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+    M5.Lcd.setTextDatum(CL_DATUM);
+    M5.Lcd.drawString(String(mode[value]), 210, 12);
   }
 }
