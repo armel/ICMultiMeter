@@ -74,27 +74,6 @@ Open the ICMultiMeter project with PlateformIO for VSCode.
 
 ### File `src/settings.h`
 
-#### Model of M5Stack
-
-Line 5, check that the constant `BOARD` corresponds to your M5Stack model (by default, the constant is initialized to `BASIC`). So, indicate : 
-
-- `BASIC` if you have an M5Stack BASIC
-
-```
-#define BOARD BASIC
-```
-
-- `GREY` if you have an M5Stack GREY
-
-```
-#define BOARD GREY
-```
-
-- `CORE2` if you have an M5Stack CORE2
-
-```
-#define BOARD CORE2
-```
 #### IC Transceiver Model
 
 Line 8, the constant `IC_MODEL` set your Transceiver model.
@@ -189,25 +168,6 @@ Note that if the connection between your M5Stack and the Transceiver has been es
 | BAUDE_RATE | 115900 | 
 | PROXY_URL | "http://192.168.1.32" |
 | PROXY_PORT | 1234 |    
-
-
-### File `platformio.ini`
-
-If and only if __you are using the M5Stack Core2__, edit the `platformio.ini` file and modify the lines,
-
-```
-default_envs = m5stack-basic-grey
-;default_envs = m5stack-core2
-```
-
-By,
-
-```
-;default_envs = m5stack-basic-grey
-default_envs = m5stack-core2
-```
-
-This is the same as changing the target platform, the semicolon being a comment.
 
 ## Compiling and flashing the M5Stack
 
@@ -328,8 +288,7 @@ Many thanks to...
 
 # Donations
 
-Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson
-and Tadeusz Pater for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson, Tadeusz Pater and Frederic Ulmer for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 
