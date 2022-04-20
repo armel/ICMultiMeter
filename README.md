@@ -207,10 +207,7 @@ That's it, you have compiled the ICSMeter and ICMultiMeter application? It's per
 
 Each compilation has produced a binary. It is this binary that is sent / flashed to your M5Stack, via the USB connection.
 
-Go to the root of the ICSMeter folder, which contains the whole project. And go to the :
-
-- `.pio/build/m5stack-basic-grey`, if you compiled for a GREY or BASIC M5Stack
-- `.pio/build/m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
+Go to the root of the ICSMeter folder, which contains the whole project. And go to the directory `.pio/build/m5stack`.
 
 You will find a `firmware.bin` file there. Now, there are 2 solutions...
 
@@ -230,10 +227,7 @@ Copy `firmware.bin` in the `data` directory at the root of the ICSMeter folder. 
 
 > If the `data` folder does not exist, create it.
 
-Do the same with the ICMultiMeter application. Go to the root of the ICMultiMeter folder, which contains the whole project. And go to the directory :
-
-- `.pio/build/m5stack-basic-grey`, if you have compiled for a M5Stack GREY or BASIC
-- `.pio/build/m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
+Do the same with the ICMultiMeter application. Go to the root of the ICMultiMeter folder, which contains the whole project. And go to the directory `.pio/build/m5stack`.
 
 You will also find a `firmware.bin` file. Copy it, too, in the `data` directory at the __root of the ICSMeter folder__. And take the opportunity to rename it to, for example, `ICMultiMeter.bin`.
 
@@ -245,10 +239,7 @@ So let's move on to what is probably the most complicated step. Open the ICSMete
 
 ![Capture](https://github.com/armel/RRFRemote/blob/main/img/flash_1.png)
 
-Step 1, click on the Platformio icon (the icon with an ant's head...). Step 2, unroll the section :
-
-- `m5stack-basic-grey`, if you have compiled for an M5Stack GREY or BASIC
-- `m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
+Step 1, click on the Platformio icon (the icon with an ant's head...). Step 2, unroll the section `m5stack`.
 
 ![Capture](https://github.com/armel/RRFRemote/blob/main/img/flash_2.png)
 
