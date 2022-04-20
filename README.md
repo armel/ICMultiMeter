@@ -141,7 +141,7 @@ Connectors > CI-V > CI-V USB Baud Rate  115200
 Connectors > CI-V > CI-V USB Echo Back  OFF
 ```
 
-Next, in `settings.h`... 
+Next, in `settings.h` ... 
 
 ##### IC-705, BT
 
