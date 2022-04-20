@@ -136,9 +136,9 @@ Note that if the connection between your M5Stack and the Transceiver has been es
 First of all, here is a part of my transceiver settings, on IC-7300 :
 
 ```
-Connectors > CI-V > CI-V USB Port 		Unlink from [REMOTE]
-Connectors > CI-V > CI-V USB Baud Rate 	115200
-Connectors > CI-V > CI-V USB Echo Back 	OFF
+Connectors > CI-V > CI-V USB Port       Unlink from [REMOTE]
+Connectors > CI-V > CI-V USB Baud Rate  115200
+Connectors > CI-V > CI-V USB Echo Back  OFF
 ```
 
 Next,
