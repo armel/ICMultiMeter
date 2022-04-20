@@ -107,7 +107,7 @@ void binLoader()
   root = SPIFFS.open("/");
   getBinaryList(root, "SP");
 
-  if (SD.begin())
+  if (SD.begin(GPIO_NUM_4, SPI, 25000000)) 
   {
     root = SD.open("/");
     getBinaryList(root, "SD");
@@ -262,7 +262,7 @@ void viewBattery()
       if (batteryCharging)
       {
         M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-        M5.Lcd.setFreeFont(0);
+        M5.Lcd.setFont(0);
         M5.Lcd.setTextDatum(CR_DATUM);
         M5.Lcd.setTextPadding(28);
         M5.Lcd.drawString("+", 290, 11);
@@ -270,7 +270,7 @@ void viewBattery()
       else
       {
         M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-        M5.Lcd.setFreeFont(0);
+        M5.Lcd.setFont(0);
         M5.Lcd.setTextDatum(CR_DATUM);
         M5.Lcd.setTextPadding(28);
         M5.Lcd.drawString(String(getBatteryLevel(1)) + "%", 290, 11);
@@ -289,7 +289,7 @@ void viewBaseline()
     if (btnL || btnR)
     {
       M5.Lcd.setTextDatum(CC_DATUM);
-      M5.Lcd.setFreeFont(0);
+      M5.Lcd.setFont(0);
       M5.Lcd.setTextPadding(200);
       M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BLACK);
       M5.Lcd.drawString("Brightness " + String(map(brightness, 1, 254, 1, 100)) + "%", 160, 100);
@@ -301,7 +301,7 @@ void viewBaseline()
       if (temporisation > 36 && temporisation < 40 && WiFi.status() == WL_CONNECTED)
       {
         M5.Lcd.setTextDatum(CC_DATUM);
-        M5.Lcd.setFreeFont(0);
+        M5.Lcd.setFont(0);
         M5.Lcd.setTextPadding(200);
         M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BLACK);
         M5.Lcd.drawString(String(WiFi.localIP().toString().c_str()), 160, 100);
@@ -309,7 +309,7 @@ void viewBaseline()
       else if (temporisation > 16 && temporisation < 20)
       {
         M5.Lcd.setTextDatum(CC_DATUM);
-        M5.Lcd.setFreeFont(0);
+        M5.Lcd.setFont(0);
         M5.Lcd.setTextPadding(200);
         M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BLACK);
         M5.Lcd.drawString(String(NAME) + " V" + String(VERSION) + " by " + String(AUTHOR), 160, 100);
@@ -317,7 +317,7 @@ void viewBaseline()
       else
       {
         M5.Lcd.setTextDatum(CC_DATUM);
-        M5.Lcd.setFreeFont(0);
+        M5.Lcd.setFont(0);
         M5.Lcd.setTextPadding(200);
         M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BLACK);
         M5.Lcd.drawString(" ", 160, 100);
@@ -461,7 +461,7 @@ void sendCommand(char *request, size_t n, char *buffer, uint8_t limit)
 void viewGUI()
 {
   // IC Connect
-  M5.Lcd.setFreeFont(0);
+  M5.Lcd.setFont(0);
   M5.Lcd.setTextDatum(CC_DATUM);
 
   M5.Lcd.fillRoundRect(283, 90, 34, 20, 2, TFT_MODE_BACK);
@@ -484,7 +484,7 @@ void viewGUI()
 
   M5.Lcd.drawJpg(logo, sizeof(logo), 0, 49, 44, 22);
 
-  M5.Lcd.setFreeFont(0);
+  M5.Lcd.setFont(0);
   M5.Lcd.setTextPadding(0);
 
   // Id
@@ -740,7 +740,7 @@ void clearGUI()
     M5.Lcd.drawFastVLine(30 + i, 170, 8, TFT_FIL_BACK);
   }
 
-  M5.Lcd.setFreeFont(0);
+  M5.Lcd.setFont(0);
   M5.Lcd.setTextDatum(CC_DATUM);
   M5.Lcd.setTextColor(TFT_WHITE);
 
@@ -895,7 +895,12 @@ void getScreenshot()
                 httpClient.println("HTTP/1.1 200 OK");
                 httpClient.println("Content-type:text/html");
                 httpClient.println();
-                httpClient.write_P(index_html, sizeof(index_html));
+                if(M5.getBoard() == m5::board_t::board_M5Stack) {
+                  httpClient.write_P(index_m5stack_html, sizeof(index_m5stack_html));
+                }
+                else if(M5.getBoard() == m5::board_t::board_M5StackCore2) {
+                  httpClient.write_P(index_core2_html, sizeof(index_core2_html));
+                }
                 break;
               }
               case GET_screenshot:
@@ -1131,7 +1136,7 @@ boolean checkConnection()
     if (message != "" && screensaverMode == false)
     {
       M5.Lcd.setTextDatum(CC_DATUM);
-      M5.Lcd.setFreeFont(&UniversCondensed20pt7b);
+      M5.Lcd.setFont(&UniversCondensed20pt7b);
       M5.Lcd.setTextPadding(200);
       M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
       M5.Lcd.drawString(message, 160, 70);

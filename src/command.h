@@ -270,11 +270,11 @@ void getFrequency()
     frequencyOld = frequency;
 
     M5.Lcd.setTextDatum(CC_DATUM);
-    M5.Lcd.setFreeFont(&UniversCondensed20pt7b);
+    M5.Lcd.setFont(&UniversCondensed20pt7b);
     M5.Lcd.setTextPadding(200);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     // valString.replace(".", ",");
-    M5.Lcd.drawString(frequency, 160, 70);
+    M5.Lcd.drawString(frequency, 160, 76);
   }
 
   if(DEBUG) {
@@ -310,7 +310,7 @@ uint8_t getModeFilter()
 
   sendCommand(request, n, buffer, 5);
 
-  M5.Lcd.setFreeFont(&tahoma8pt7b);
+  M5.Lcd.setFont(&tahoma8pt7b);
   M5.Lcd.setTextPadding(24);
   M5.Lcd.setTextColor(TFT_WHITE);
   M5.Lcd.setTextDatum(CC_DATUM);
@@ -324,7 +324,7 @@ uint8_t getModeFilter()
       filterOld = value;
       M5.Lcd.fillRoundRect(70, 24, 44, 18, 2, TFT_FIL_BACK);
       M5.Lcd.drawRoundRect(70, 24, 44, 18, 2, TFT_FIL_BORDER);
-      M5.Lcd.drawString(value, 92, 32);
+      M5.Lcd.drawString(value, 92, 34);
     }
 
     if(DEBUG) {
@@ -347,7 +347,7 @@ uint8_t getModeFilter()
       modeOld = value;
       M5.Lcd.fillRoundRect(2, 24, 60, 18, 2, TFT_MODE_BACK);
       M5.Lcd.drawRoundRect(2, 24, 60, 18, 2, TFT_MODE_BORDER);
-      M5.Lcd.drawString(value, 31, 32);
+      M5.Lcd.drawString(value, 31, 34);
     }
 
     if(DEBUG) {
@@ -537,7 +537,7 @@ uint8_t getTX()
   {
     TXOld = value;
 
-    M5.Lcd.setFreeFont(&tahoma8pt7b);
+    M5.Lcd.setFont(&tahoma8pt7b);
     M5.Lcd.setTextPadding(24);
     M5.Lcd.setTextDatum(CC_DATUM);
 
@@ -546,14 +546,14 @@ uint8_t getTX()
       M5.Lcd.fillRoundRect(2, 2, 28, 18, 2, TFT_RED);
       M5.Lcd.drawRoundRect(2, 2, 28, 18, 2, TFT_WHITE);
       M5.Lcd.setTextColor(TFT_WHITE);
-      M5.Lcd.drawString("TX", 15, 10);
+      M5.Lcd.drawString("TX", 15, 12);
     }
     else
     {
       M5.Lcd.fillRoundRect(2, 2, 28, 18, 2, TFT_BLACK);
       M5.Lcd.drawRoundRect(2, 2, 28, 18, 2, TFT_RED);
       M5.Lcd.setTextColor(TFT_RED);
-      M5.Lcd.drawString("TX", 15, 10);
+      M5.Lcd.drawString("TX", 15, 12);
     }
   }
 
@@ -592,11 +592,11 @@ void getAGC()
   {
     agcOld = value;
 
-    M5.Lcd.setFreeFont(&tahoma8pt7b);
+    M5.Lcd.setFont(&tahoma8pt7b);
     M5.Lcd.setTextPadding(50);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CR_DATUM);
-    M5.Lcd.drawString(String(mode[value]), 316, 32);
+    M5.Lcd.drawString(String(mode[value]), 316, 34);
   }
 }
 
@@ -632,11 +632,11 @@ void getAN()
   {
     ANOld = value;
 
-    M5.Lcd.setFreeFont(&tahoma8pt7b);
+    M5.Lcd.setFont(&tahoma8pt7b);
     M5.Lcd.setTextPadding(24);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CL_DATUM);
-    M5.Lcd.drawString(String(mode[value]), 120, 10);
+    M5.Lcd.drawString(String(mode[value]), 120, 12);
   }
 }
 
@@ -672,11 +672,11 @@ void getNB()
   {
     NBOld = value;
 
-    M5.Lcd.setFreeFont(&tahoma8pt7b);
+    M5.Lcd.setFont(&tahoma8pt7b);
     M5.Lcd.setTextPadding(24);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CL_DATUM);
-    M5.Lcd.drawString(String(mode[value]), 160, 10);
+    M5.Lcd.drawString(String(mode[value]), 160, 12);
   }
 }
 
@@ -712,11 +712,11 @@ void getNR()
   {
     NROld = value;
 
-    M5.Lcd.setFreeFont(&tahoma8pt7b);
+    M5.Lcd.setFont(&tahoma8pt7b);
     M5.Lcd.setTextPadding(24);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CL_DATUM);
-    M5.Lcd.drawString(String(mode[value]), 200, 10);
+    M5.Lcd.drawString(String(mode[value]), 200, 12);
   }
 }
 
@@ -752,15 +752,15 @@ void getAMP()
   {
     AMPOld = value;
 
-    M5.Lcd.setFreeFont(&tahoma8pt7b);
+    M5.Lcd.setFont(&tahoma8pt7b);
     M5.Lcd.setTextPadding(55);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CL_DATUM);
     if(bande > 100 && value != 0) {
-      M5.Lcd.drawString("P.AMP", 120, 32);
+      M5.Lcd.drawString("P.AMP", 120, 34);
     }
     else {
-      M5.Lcd.drawString(String(mode[value]), 120, 32);
+      M5.Lcd.drawString(String(mode[value]), 120, 34);
     }
   }
 }
@@ -802,11 +802,11 @@ void getTone(boolean retry = true)
   {
     toneOld = value;
 
-    M5.Lcd.setFreeFont(&tahoma8pt7b);
+    M5.Lcd.setFont(&tahoma8pt7b);
     M5.Lcd.setTextPadding(90);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CL_DATUM);
-    M5.Lcd.drawString(String(mode[value]), 180, 32);
+    M5.Lcd.drawString(String(mode[value]), 180, 34);
   }
 }
 
@@ -849,7 +849,7 @@ uint8_t getAF()
       //M5.Lcd.fillRect(232, 137, limit, 6, TFT_DARKGREEN);
     }
 
-    M5.Lcd.setFreeFont(0);
+    M5.Lcd.setFont(0);
     M5.Lcd.setTextPadding(24);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CR_DATUM);
@@ -898,7 +898,7 @@ uint8_t getMIC()
       //M5.Lcd.fillRect(232, 159, limit, 6, TFT_DARKGREEN);
     }
 
-    M5.Lcd.setFreeFont(0);
+    M5.Lcd.setFont(0);
     M5.Lcd.setTextPadding(24);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CR_DATUM);
@@ -947,7 +947,7 @@ uint8_t getSQL()
       //M5.Lcd.fillRect(232, 181, limit, 6, TFT_DARKGREEN);
     }
 
-    M5.Lcd.setFreeFont(0);
+    M5.Lcd.setFont(0);
     M5.Lcd.setTextPadding(24);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CR_DATUM);
@@ -994,7 +994,7 @@ uint8_t getCOMP(boolean retry = true)
   {
     COMPOld = value;
 
-    M5.Lcd.setFreeFont(&tahoma8pt7b);
+    M5.Lcd.setFont(&tahoma8pt7b);
     M5.Lcd.setTextPadding(50);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CL_DATUM);
@@ -1049,7 +1049,7 @@ void getCOMPLevel()
       M5.Lcd.drawFastVLine(30 + i, 170, 8, TFT_BLUE);
     }
 
-    M5.Lcd.setFreeFont(0);
+    M5.Lcd.setFont(0);
     M5.Lcd.setTextDatum(CC_DATUM);
     M5.Lcd.setTextColor(TFT_WHITE);
 
@@ -1117,11 +1117,11 @@ void getRIT()
   {
     RITOld = RIT;
 
-    M5.Lcd.setFreeFont(&tahoma8pt7b);
+    M5.Lcd.setFont(&tahoma8pt7b);
     M5.Lcd.setTextPadding(50);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CR_DATUM);
-    M5.Lcd.drawString("RIT", 316, 64);
-    M5.Lcd.drawString(RIT, 316, 79);
+    M5.Lcd.drawString("RIT", 316, 66);
+    M5.Lcd.drawString(RIT, 316, 81);
   }
 }

@@ -1,8 +1,12 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#include <ICMultiMeter.h>
+#include "settings.h"
+#include "ICMultiMeter.h"
+#include "font.h"
 #include "image.h"
+#include "tools.h"
+#include "webIndex.h"
 #include "functions.h"
 #include "command.h"
 #include "tasks.h"
@@ -12,20 +16,17 @@ void setup()
 {
   uint8_t loop = 0;
 
-  // Debug
-  Serial.begin(115200);
-
-  // Init screensaver timer
-  screensaver = millis();
-
   // Init M5
-  M5.begin(true, true, false, false);
+  auto cfg = M5.config();
+  M5.begin(cfg);
 
   // Init Led
-  FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);  // GRB ordering is assumed
-
-  // Init Power
-  power();
+  if(M5.getBoard() == m5::board_t::board_M5Stack) {
+    FastLED.addLeds<NEOPIXEL, 15>(leds, NUM_LEDS);  // GRB ordering is assumed
+  }
+  else if(M5.getBoard() == m5::board_t::board_M5StackCore2) {
+    FastLED.addLeds<NEOPIXEL, 25>(leds, NUM_LEDS);  // GRB ordering is assumed
+  }
 
   // Preferences
   preferences.begin(NAME);
@@ -42,27 +43,14 @@ void setup()
 
   while (WiFi.status() != WL_CONNECTED && loop <= 10)
   {
-    delay(250);
+    vTaskDelay(250);
     loop += 1;
   }
 
   Serial.println(WiFi.localIP());
-
-  // Scroll
-  pos = M5.Lcd.width();
-  Sprite.setTextSize(1);  // Font size scaling is x1
-  Sprite.setTextFont(2);  // Font 2 selected
-  Sprite.createSprite(M5.Lcd.width(), 12);
-
-  message = String(NAME) + " V" + String(VERSION) + " by " + String(AUTHOR);
  
   // Start server (for Web site Screen Capture)
   httpServer.begin();
-
-  // Let's go
-  #if BOARD == CORE2
-    M5.Axp.SetLed(0);
-  #endif
 
   setBrightness(brightness);
   M5.Lcd.setRotation(1);
@@ -129,7 +117,7 @@ void loop()
     {
       if(charge != chargeOld) {
         chargeOld = charge;
-        M5.Lcd.setFreeFont(0);
+        M5.Lcd.setFont(0);
         M5.Lcd.setTextPadding(35);
         M5.Lcd.setTextDatum(CR_DATUM);
         M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -234,4 +222,7 @@ void loop()
 
   // Manage Screen Saver
   wakeAndSleep();
+
+  //M5.Lcd.drawFastHLine(0, 57, 320, TFT_FIL_BORDER);
+  //M5.Lcd.drawFastHLine(0, 86, 320, TFT_FIL_BORDER);
 }
