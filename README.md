@@ -11,7 +11,7 @@
 ![version](https://img.shields.io/github/v/release/armel/ICMultiMeter)
 ![activity](https://img.shields.io/github/commit-activity/y/armel/ICMultiMeter)
 
-**An excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_channel=HAMRADIODUDE) was released by @HamRadioDude about the installation of the IC705SMeter project. It can help you ! This is the same approach here.** 
+**An excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_channel=HAMRADIODUDE) was released by @HamRadioDude about the installation of the IC705SMeter project. It can help you ! This is the same approach here. Many thanks to him 🙏🏻** 
 
 The ICMultiMeter project allows you to display the equivalent of the Meter screen of the IC-705, IC-7300 and IC-9700, directly on the M5Stack screen. This allows you to dedicate the IC screen to the Waterfall while having all the measurements on the M5Stack screen.
 
@@ -289,7 +289,7 @@ Many thanks to...
 
 # Donations
 
-Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson, Tadeusz Pater, Frederic Ulmer and Joshua Murray for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson, Tadeusz Pater, Frederic Ulmer, Joshua Murray and Mark Hammond for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 
