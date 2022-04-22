@@ -1,49 +1,25 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#include "settings.h"
+#define VERSION "0.0.4"
+#define AUTHOR "F4HWN"
+#define NAME "ICMultiMeter"
 
-#define BASIC 1
-#define GREY 2
-#define CORE2 3
+#include <Preferences.h>
+#include <FastLED.h>
+#include <HTTPClient.h>
+#include <SD.h>
+#include <FS.h>
+#include <SPIFFS.h>
+#include <M5Unified.h>
+#include <BluetoothSerial.h>
+#include <M5StackUpdater.h>
 
 #define BT 1
 #define USB 2
 
 #define TIMEOUT_BIN_LOADER  3                 // 3 sec
-#define DEBUG false
-
-#if BOARD == BASIC
-  #define LED_PIN 15
-  #include <M5Stack.h>
-  #include "BasicAndGrey.h"
-  #include "WebIndexBasicAndGrey.h"
-#elif BOARD == GREY
-  #define LED_PIN 15
-  #include <M5Stack.h>
-  #include "BasicAndGrey.h"
-  #include "WebIndexBasicAndGrey.h"
-#elif BOARD == CORE2
-  #define LED_PIN 25
-  #include <M5Core2.h>
-  #include "Core2.h"
-  #include "WebIndexCore2.h"
-#endif
-
-#include <Preferences.h>
-#include <FastLED.h>
-#include <HTTPClient.h>
-#include "BluetoothSerial.h"
-#include <font.h>
-#include "FS.h"
-#include "SPIFFS.h"
-#include <M5StackUpdater.h>
-
-#define VERSION "0.0.3"
-#define AUTHOR "F4HWN"
-#define NAME "ICMultiMeter"
-
-#define FASTLED_INTERNAL // To disable pragma messages on compile
+#define DEBUG 0
 #define STEP 2
 
 // Color
@@ -55,16 +31,20 @@
 
 #define TFT_GAUGE M5.Lcd.color565(255, 64, 0)
 
+// Web site Screen Capture stuff
+#define GET_unknown 0
+#define GET_index_page  1
+#define GET_screenshot  2
+
+// LED
+#define NUM_LEDS 10
+CRGB leds[NUM_LEDS];
+
 // Bluetooth connector
 BluetoothSerial CAT;
 
 // Preferences
 Preferences preferences;
-
-// Scroll
-TFT_eSprite Sprite = TFT_eSprite(&M5.Lcd); // Create Sprite object "img" with pointer to "tft" object
-String message;
-int16_t pos = 0;
 
 // Global Variables
 WiFiServer httpServer(80);
@@ -91,6 +71,7 @@ uint8_t MICOld = 127;
 uint8_t SQLOld = 127;
 uint8_t COMPOld = 127;
 uint8_t VdOld = 0;
+uint8_t IPOld = 0;
 uint8_t batteryLevelOld = 0;
 uint16_t bande = 28;
 
@@ -111,15 +92,6 @@ String filterOld = "";
 String modeOld = "";
 String RITOld = "";
 
-// LED
-#define NUM_LEDS 10
-CRGB leds[NUM_LEDS];
-
-// Web site Screen Capture stuff
-#define GET_unknown 0
-#define GET_index_page  1
-#define GET_screenshot  2
-
 // Flags for button presses via Web site Screen Capture
 bool buttonLeftPressed = false;
 bool buttonCenterPressed = false;
@@ -129,7 +101,3 @@ bool buttonRightPressed = false;
 File root;
 String binFilename[128];
 uint8_t binIndex = 0;
-
-// Optimize SPI Speed
-#undef SPI_READ_FREQUENCY
-#define SPI_READ_FREQUENCY 40000000

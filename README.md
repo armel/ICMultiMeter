@@ -11,7 +11,9 @@
 ![version](https://img.shields.io/github/v/release/armel/ICMultiMeter)
 ![activity](https://img.shields.io/github/commit-activity/y/armel/ICMultiMeter)
 
-**An excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_channel=HAMRADIODUDE) was released by @HamRadioDude about the installation of the IC705SMeter project. It can help you ! This is the same approach here.** 
+**An excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_channel=HAMRADIODUDE) was released by [@HamRadioDude](https://twitter.com/HamRadioDude) about the installation of the IC705SMeter project. It can help you ! This is the same approach here. 
+For Germans, take a look at this other excellent [video](https://www.youtube.com/watch?v=DrcMoVNwG_8) released by [@ManuelLausmann](https://twitter.com/ManuelLausmann).
+Many thanks to them 🙏🏻** 
 
 The ICMultiMeter project allows you to display the equivalent of the Meter screen of the IC-705, IC-7300 and IC-9700, directly on the M5Stack screen. This allows you to dedicate the IC screen to the Waterfall while having all the measurements on the M5Stack screen.
 
@@ -74,30 +76,9 @@ Open the ICMultiMeter project with PlateformIO for VSCode.
 
 ### File `src/settings.h`
 
-#### Model of M5Stack
-
-Line 5, check that the constant `BOARD` corresponds to your M5Stack model (by default, the constant is initialized to `BASIC`). So, indicate : 
-
-- `BASIC` if you have an M5Stack BASIC
-
-```
-#define BOARD BASIC
-```
-
-- `GREY` if you have an M5Stack GREY
-
-```
-#define BOARD GREY
-```
-
-- `CORE2` if you have an M5Stack CORE2
-
-```
-#define BOARD CORE2
-```
 #### IC Transceiver Model
 
-Line 8, the constant `IC_MODEL` set your Transceiver model.
+Line 5, the constant `IC_MODEL` set your Transceiver model.
 Choose between : 705, 7300 or 9700.
 
 > I don't own the IC-9700, so I haven't tested it.
@@ -106,14 +87,14 @@ Choose between : 705, 7300 or 9700.
 
 If you're a using an IC-7300 or IC-9700, choose __USB__ !
 
-Line 11, the constant `IC_CONNECT` set your connect method.
+Line 8, the constant `IC_CONNECT` set your connect method.
 Choose between : BT or USB
 
 > Note that BT only works with IC-705.
 
 #### CI-V Address of your Transceiver
 
-Line 14, the constant `CI_V_ADDRESS` set the CI-V Address of your Transceiver. I have indicated the default value. Refer to the documentation, if needed.
+Line 11, the constant `CI_V_ADDRESS` set the CI-V Address of your Transceiver. I have indicated the default value. Refer to the documentation, if needed.
 
 > Note that, if you read 94h as `CI_V_ADDRESS` on your Transceiver, you must indicate 0x94. If it's A4h, you must indicate 0xA4. And so on. 
 
@@ -121,7 +102,7 @@ Line 14, the constant `CI_V_ADDRESS` set the CI-V Address of your Transceiver. I
 
 If you're a using an IC-7300 or IC-9700, __it's necessary__ !
 
-Line 17 and 18, the constants `WIFI_SSID` and `WIFI_PASSWORD` set your Wifi configuration.
+Line 14 and 15, the constants `WIFI_SSID` and `WIFI_PASSWORD` set your Wifi configuration.
 
 In complement, you can view your ICMultiMeter from a simple browser. It is even possible to control it by this way, as the buttons are clickable. In order to display your ICMultiMeter in your browser, just go to `http://ip_address_of_your_ICMultiMeter/`. As a reminder, the IP address that your ICMultiMeter retrieves is sometimes displayed on the screen.
 
@@ -137,8 +118,8 @@ Please, take the time to read the [README.md](https://github.com/armel/ICUSBProx
 
 It's done ? Nice, so we can move forward.
 
-Line 21 and 22, the constants `SERIAL_DEVICE` and `BAUDE_RATE` set the CI-V COM port settings. So COM port number (COM1, /dev/ttyUSB0, etc.) and Baude rate (115900, 19200, 9600, etc.).
-Line 23 and 24, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port of the Proxy.
+Line 18 and 19, the constants `SERIAL_DEVICE` and `BAUDE_RATE` set the CI-V COM port settings. So COM port number (COM1, /dev/ttyUSB0, etc.) and Baude rate (115200, 19200, 9600, etc.).
+Line 20 and 21, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port of the Proxy.
 
 > About Proxy, the idea is to use a PC or a nano computer (like a Raspberry Pi) to connect the IC-7300 or IC-9700 transceiver via the USB cable (USB type A to USB type B). The M5Stack will talk to this PC by Wifi and the PC will talk to the transceiver by the USB cable. By this way, the M5Stack keeps the big advantage of being wireless.
 
@@ -146,13 +127,23 @@ Line 23 and 24, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port 
 
 To avoid TFT image retention (also called _Burn In_), there is a kind of screen saver. If there is no action on the buttons or PTT, after a delay of 60 minutes, the screen will show the Icom logo. 
 
-You can change the constant `TIMEOUT_SCREENSAVER` to set the delay, line 27. 
+You can change the constant `TIMEOUT_SCREENSAVER` to set the delay, line 24. 
 
 If the screen saver is active and you press a button or the PTT to transmit, the ICMultiMeter screen will come back.
 
 Note that if the connection between your M5Stack and the Transceiver has been established and you turn off your Transceiver (or disconnect the Bluetooth link, with IC-705), the screen will go completely into _sleep mode_. The screen will come back as soon as the connection is established again after you turn on your Transceiver. 
 
 #### Examples of settings
+
+First of all, here is a part of my transceiver settings, on IC-7300 :
+
+```
+Connectors > CI-V > CI-V USB Port       Unlink from [REMOTE]
+Connectors > CI-V > CI-V USB Baud Rate  115200
+Connectors > CI-V > CI-V USB Echo Back  OFF
+```
+
+Next, in `settings.h` ... 
 
 ##### IC-705, BT
 
@@ -172,7 +163,7 @@ Note that if the connection between your M5Stack and the Transceiver has been es
 | WIFI_SSID   |  _My WiFi SSID_ |
 | WIFI_PASSWORD | _My WiFi Password_ |
 | SERIAL_DEVICE | "/dev/ttyACM0" |
-| BAUDE_RATE | 115900 | 
+| BAUDE_RATE | 115200 | 
 | PROXY_URL | "http://192.168.1.32" |
 | PROXY_PORT | 1234 |    
 
@@ -186,28 +177,9 @@ Note that if the connection between your M5Stack and the Transceiver has been es
 | WIFI_SSID   |  _My WiFi SSID_ |
 | WIFI_PASSWORD | _My WiFi Password_ |
 | SERIAL_DEVICE | "/dev/ttyUSB0" |
-| BAUDE_RATE | 115900 | 
+| BAUDE_RATE | 115200 | 
 | PROXY_URL | "http://192.168.1.32" |
 | PROXY_PORT | 1234 |    
-
-
-### File `platformio.ini`
-
-If and only if __you are using the M5Stack Core2__, edit the `platformio.ini` file and modify the lines,
-
-```
-default_envs = m5stack-basic-grey
-;default_envs = m5stack-core2
-```
-
-By,
-
-```
-;default_envs = m5stack-basic-grey
-default_envs = m5stack-core2
-```
-
-This is the same as changing the target platform, the semicolon being a comment.
 
 ## Compiling and flashing the M5Stack
 
@@ -247,10 +219,7 @@ That's it, you have compiled the ICSMeter and ICMultiMeter application? It's per
 
 Each compilation has produced a binary. It is this binary that is sent / flashed to your M5Stack, via the USB connection.
 
-Go to the root of the ICSMeter folder, which contains the whole project. And go to the :
-
-- `.pio/build/m5stack-basic-grey`, if you compiled for a GREY or BASIC M5Stack
-- `.pio/build/m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
+Go to the root of the ICSMeter folder, which contains the whole project. And go to the directory `.pio/build/m5stack`.
 
 You will find a `firmware.bin` file there. Now, there are 2 solutions...
 
@@ -270,10 +239,7 @@ Copy `firmware.bin` in the `data` directory at the root of the ICSMeter folder. 
 
 > If the `data` folder does not exist, create it.
 
-Do the same with the ICMultiMeter application. Go to the root of the ICMultiMeter folder, which contains the whole project. And go to the directory :
-
-- `.pio/build/m5stack-basic-grey`, if you have compiled for a M5Stack GREY or BASIC
-- `.pio/build/m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
+Do the same with the ICMultiMeter application. Go to the root of the ICMultiMeter folder, which contains the whole project. And go to the directory `.pio/build/m5stack`.
 
 You will also find a `firmware.bin` file. Copy it, too, in the `data` directory at the __root of the ICSMeter folder__. And take the opportunity to rename it to, for example, `ICMultiMeter.bin`.
 
@@ -285,10 +251,7 @@ So let's move on to what is probably the most complicated step. Open the ICSMete
 
 ![Capture](https://github.com/armel/RRFRemote/blob/main/img/flash_1.png)
 
-Step 1, click on the Platformio icon (the icon with an ant's head...). Step 2, unroll the section :
-
-- `m5stack-basic-grey`, if you have compiled for an M5Stack GREY or BASIC
-- `m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
+Step 1, click on the Platformio icon (the icon with an ant's head...). Step 2, unroll the section `m5stack`.
 
 ![Capture](https://github.com/armel/RRFRemote/blob/main/img/flash_2.png)
 
@@ -328,8 +291,7 @@ Many thanks to...
 
 # Donations
 
-Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson
-and Tadeusz Pater for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson, Tadeusz Pater, Frederic Ulmer, Joshua Murray, Mark Hammond and Angel Mateu Muzzio for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 
