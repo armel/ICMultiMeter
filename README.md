@@ -249,11 +249,11 @@ At this point, you should have 2 clearly identified binaries: `ICSMeter.bin` and
 
 So let's move on to what is probably the most complicated step. Open the ICSMeter project from Visual Studio Code, as you would compile it. 
 
-![Capture](https://github.com/armel/RRFRemote/blob/main/img/flash_1.png)
+![Capture](https://github.com/armel/ICMultiMeter/blob/main/img/flash_1.png)
 
 Step 1, click on the Platformio icon (the icon with an ant's head...). Step 2, unroll the section `m5stack`.
 
-![Capture](https://github.com/armel/RRFRemote/blob/main/img/flash_2.png)
+![Capture](https://github.com/armel/ICMultiMeter/blob/main/img/flash_2.png)
 
 Finally, step 3, go to the `Platform` sub-section. And click on `Upload Filesystem Image`.
 
