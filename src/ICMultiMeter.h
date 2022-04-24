@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.0.4"
+#define VERSION "0.0.5"
 #define AUTHOR "F4HWN"
 #define NAME "ICMultiMeter"
 
