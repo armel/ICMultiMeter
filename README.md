@@ -11,7 +11,8 @@
 ![version](https://img.shields.io/github/v/release/armel/ICMultiMeter)
 ![activity](https://img.shields.io/github/commit-activity/y/armel/ICMultiMeter)
 
-**An excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_channel=HAMRADIODUDE) was released by [@HamRadioDude](https://twitter.com/HamRadioDude) about the installation of the IC705SMeter project. It can help you ! This is the same approach here. 
+**An excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_channel=HAMRADIODUDE) was released by [@HamRadioDude](https://twitter.com/HamRadioDude) about the installation of the IC705SMeter project. It can help you ! This is the same approach here.
+Another excellent [video](https://www.youtube.com/watch?v=_UbwZrT2O8w) was published by [@TechMindsYT](https://twitter.com/TechMindsYT) about the installation of the ICMultiMeter.  It can help you too ! 
 For Germans, take a look at this other excellent [video](https://www.youtube.com/watch?v=DrcMoVNwG_8) released by [@ManuelLausmann](https://twitter.com/ManuelLausmann).
 Many thanks to them 🙏🏻** 
 
@@ -123,11 +124,15 @@ Line 20 and 21, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port 
 
 > About Proxy, the idea is to use a PC or a nano computer (like a Raspberry Pi) to connect the IC-7300 or IC-9700 transceiver via the USB cable (USB type A to USB type B). The M5Stack will talk to this PC by Wifi and the PC will talk to the transceiver by the USB cable. By this way, the M5Stack keeps the big advantage of being wireless.
 
+#### Transverter Configuration
+
+If you are using a Transverter, you can configure a Local Oscillator frequency, line 24. For example, if you are on 28500000 Hz and the constant `TRANSVERTER_LO` is set to 116000000, your M5Stack will display 144.500.000 (not 28.500.000). This can be useful. Of course, default value is 0. Change the constant `TRANSVERTER_LO` only if you need.
+
 #### TFT image retention
 
 To avoid TFT image retention (also called _Burn In_), there is a kind of screen saver. If there is no action on the buttons or PTT, after a delay of 60 minutes, the screen will show the Icom logo. 
 
-You can change the constant `TIMEOUT_SCREENSAVER` to set the delay, line 24. 
+You can change the constant `TIMEOUT_SCREENSAVER` to set the delay, line 27. 
 
 If the screen saver is active and you press a button or the PTT to transmit, the ICMultiMeter screen will come back.
 
@@ -291,7 +296,7 @@ Many thanks to...
 
 # Donations
 
-Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson, Tadeusz Pater, Frederic Ulmer, Joshua Murray, Mark Hammond and Angel Mateu Muzzio for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson, Tadeusz Pater, Frederic Ulmer, Joshua Murray, Mark Hammond, Angel Mateu Muzzio and JL7KGW hiro for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 

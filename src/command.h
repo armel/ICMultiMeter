@@ -234,6 +234,7 @@ void getFrequency()
   String val0;
   String val1;
   String val2;
+  String val3;
 
   uint32_t freq; // Current frequency in Hz
   const uint32_t decMulti[] = {1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10, 1};
@@ -251,14 +252,25 @@ void getFrequency()
     freq += (buffer[9 - i] & 0x0F) * decMulti[(i - 2) * 2 + 1];
   }
 
+  freq += TRANSVERTER_LO;
+
   frequency = String(freq);
   lenght = frequency.length();
-  val0 = frequency.substring(lenght - 3, lenght);
-  val1 = frequency.substring(lenght - 6, lenght - 3);
-  val2 = frequency.substring(0, lenght - 6);
-
-  frequency = val2 + "." + val1 + "." + val0;
-  bande = val2.toInt();
+  if(lenght <= 9) {
+    val0 = frequency.substring(lenght - 3, lenght);
+    val1 = frequency.substring(lenght - 6, lenght - 3);
+    val2 = frequency.substring(0, lenght - 6);
+    frequency = val2 + "." + val1 + "." + val0;
+    bande = val2.toInt();
+  }
+  else {
+    val0 = frequency.substring(lenght - 3, lenght);
+    val1 = frequency.substring(lenght - 6, lenght - 3);
+    val2 = frequency.substring(lenght - 9, lenght - 6);
+    val3 = frequency.substring(0, lenght - 9);
+    frequency = val3 + "." + val2 + "." + val1 + "." + val0;
+    bande = (val3.toInt() * 1000) + val2.toInt();
+  }
 
   if(frequency == "" || frequency == "0.." || frequency == "163.163.163")
     txConnected = false;
@@ -277,10 +289,10 @@ void getFrequency()
     M5.Lcd.drawString(frequency, 160, 76);
   }
 
-  if(DEBUG) {
+  //if(DEBUG) {
     Serial.print("Frequency ");
     Serial.println(frequency);
-  }
+  //}
 }
 
 // Get Data Mode
