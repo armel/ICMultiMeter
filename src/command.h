@@ -289,10 +289,10 @@ void getFrequency()
     M5.Lcd.drawString(frequency, 160, 76);
   }
 
-  //if(DEBUG) {
+  if(DEBUG) {
     Serial.print("Frequency ");
     Serial.println(frequency);
-  //}
+  }
 }
 
 // Get Data Mode
