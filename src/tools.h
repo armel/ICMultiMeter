@@ -19,28 +19,14 @@ bool isCharging()
 void getButton()
 {
   M5.update();
+  
   btnA = M5.BtnA.isPressed();
   btnB = M5.BtnB.isPressed();
   btnC = M5.BtnC.isPressed();
+
   btnL = M5.BtnA.pressedFor(2000);
   btnM = M5.BtnB.pressedFor(2000);
   btnR = M5.BtnC.pressedFor(2000);
-
-  if (btnL)
-  {
-    btnA = 0;
-    //Serial.println("Left");
-  }
-  else if (btnM)
-  {
-    btnB = 0;
-    //Serial.println("Middle");
-  }
-  else if (btnR)
-  {
-    btnC = 0;
-    //Serial.println("Right");
-  }
 
   /*
   Serial.print(btnA);

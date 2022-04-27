@@ -9,6 +9,7 @@
 #include "webIndex.h"
 #include "functions.h"
 #include "command.h"
+#include "menu.h"
 #include "tasks.h"
 
 // Setup
@@ -30,8 +31,8 @@ void setup()
 
   // Preferences
   preferences.begin(NAME);
-  option = preferences.getUInt("option", 2);
   brightness = preferences.getUInt("brightness", 64);
+  transverter = preferences.getUInt("transverter", 0);
 
   // Bin Loader
   binLoader();
@@ -113,8 +114,10 @@ void loop()
     tx = getTX();
     if(tx != 0) screensaver = millis();   // If transmit, refresh tempo
 
-    if (screensaverMode == false && screenshot == false)
+    if (screensaverMode == false && screenshot == false && settingsMode == false)
     {
+      settingLock = true;
+
       if(charge != chargeOld) {
         chargeOld = charge;
         M5.Lcd.setFont(0);
@@ -130,7 +133,14 @@ void loop()
         {
           M5.Lcd.drawString("(5W)", 194, 138);
         }
-      }  
+      }
+      
+      settingLock = false;
+    }  
+
+    if (screensaverMode == false && screenshot == false && settingsMode == false)
+    {
+      settingLock = true;
 
       getFrequency();
       
@@ -166,6 +176,13 @@ void loop()
         }
         getPowerLevel(charge);
       }
+
+      settingLock = false;
+    }
+
+    if (screensaverMode == false && screenshot == false && settingsMode == false)
+    {
+      settingLock = true;
 
       switch (alternance)
       {
@@ -210,16 +227,15 @@ void loop()
       else {
         getPowerLevel(charge);
       }
+
+      // View battery
+      viewBattery();
+
+      settingLock = false;
     }
   }
   
   alternance = (alternance++ < 2) ? alternance : 0;
-
-  // View battery
-  viewBattery();
-
-  // View baseline
-  viewBaseline();
 
   // Manage Screen Saver
   wakeAndSleep();

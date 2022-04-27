@@ -279,53 +279,6 @@ void viewBattery()
   }
 }
 
-// Print baseline
-void viewBaseline()
-{
-  static uint8_t temporisation = 0;
-
-  if (screensaverMode == false)
-  {
-    if (btnL || btnR)
-    {
-      M5.Lcd.setTextDatum(CC_DATUM);
-      M5.Lcd.setFont(0);
-      M5.Lcd.setTextPadding(200);
-      M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BLACK);
-      M5.Lcd.drawString("Brightness " + String(map(brightness, 1, 254, 1, 100)) + "%", 160, 100);
-    }
-    else
-    {
-      temporisation = (temporisation++ < 40) ? temporisation : 0;
-
-      if (temporisation > 36 && temporisation < 40 && WiFi.status() == WL_CONNECTED)
-      {
-        M5.Lcd.setTextDatum(CC_DATUM);
-        M5.Lcd.setFont(0);
-        M5.Lcd.setTextPadding(200);
-        M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BLACK);
-        M5.Lcd.drawString(String(WiFi.localIP().toString().c_str()), 160, 100);
-      }
-      else if (temporisation > 16 && temporisation < 20)
-      {
-        M5.Lcd.setTextDatum(CC_DATUM);
-        M5.Lcd.setFont(0);
-        M5.Lcd.setTextPadding(200);
-        M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BLACK);
-        M5.Lcd.drawString(String(NAME) + " V" + String(VERSION) + " by " + String(AUTHOR), 160, 100);
-      }
-      else
-      {
-        M5.Lcd.setTextDatum(CC_DATUM);
-        M5.Lcd.setFont(0);
-        M5.Lcd.setTextPadding(200);
-        M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BLACK);
-        M5.Lcd.drawString(" ", 160, 100);
-      }
-    }
-  }
-}
-
 // Send CI-V Command by Bluetooth
 void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
 {
@@ -460,7 +413,31 @@ void sendCommand(char *request, size_t n, char *buffer, uint8_t limit)
 // View GUI
 void viewGUI()
 {
+  // Clear
+  M5.Lcd.fillRect(0, 0, 320, 240, TFT_BLACK);
+  
   // IC Connect
+
+  M5.Lcd.setFont(0);
+  M5.Lcd.setTextDatum(CC_DATUM);
+
+  M5.Lcd.fillRoundRect(261, 90, 56, 13, 2, TFT_MODE_BACK);
+  M5.Lcd.drawRoundRect(261, 90, 56, 13, 2, TFT_MODE_BORDER);
+  M5.Lcd.setTextColor(TFT_WHITE);
+
+  if (IC_CONNECT == BT)
+    M5.Lcd.drawString(String(IC_MODEL) + " BT", 289, 97);
+  else
+    M5.Lcd.drawString(String(IC_MODEL) + " USB", 289, 97);
+
+  if (transverter == 1) {
+    M5.Lcd.fillRoundRect(4, 90, 24, 13, 2, TFT_MODE_BACK);
+    M5.Lcd.drawRoundRect(4, 90, 24, 13, 2, TFT_MODE_BORDER);
+    M5.Lcd.setTextColor(TFT_WHITE);
+    M5.Lcd.drawString("LO", 16, 97);
+  }
+
+  /*
   M5.Lcd.setFont(0);
   M5.Lcd.setTextDatum(CC_DATUM);
 
@@ -481,6 +458,7 @@ void viewGUI()
   // M5.Lcd.drawJpg(logo, sizeof(logo), 272, 0, 44, 22);
   // M5.Lcd.drawJpg(logo, sizeof(logo), 40, 0, 44, 22);
   // M5.Lcd.drawJpg(logo, sizeof(logo), 272, 94, 44, 22);
+  */
 
   M5.Lcd.drawJpg(logo, sizeof(logo), 0, 49, 44, 22);
 
@@ -1148,7 +1126,7 @@ boolean checkConnection()
 
     if (message != "")
     {
-      if(screensaverMode == false) {
+      if(screensaverMode == false && settingsMode == false) {
         M5.Lcd.setTextDatum(CC_DATUM);
         M5.Lcd.setFont(&UniversCondensed20pt7b);
         M5.Lcd.setTextPadding(200);

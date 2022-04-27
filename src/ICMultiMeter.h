@@ -31,6 +31,10 @@
 
 #define TFT_GAUGE M5.Lcd.color565(255, 64, 0)
 
+#define TFT_MENU_BORDER M5.Lcd.color565(115, 135, 159)
+#define TFT_MENU_BACK M5.Lcd.color565(24, 57, 92)
+#define TFT_MENU_SELECT M5.Lcd.color565(255, 255, 255)
+
 // Web site Screen Capture stuff
 #define GET_unknown 0
 #define GET_index_page  1
@@ -50,6 +54,7 @@ Preferences preferences;
 WiFiServer httpServer(80);
 WiFiClient httpClient, civClient;
 
+int8_t transverter = 0;
 uint8_t htmlGetRequest;
 uint8_t option = 2;
 uint8_t brightness = 64;
@@ -79,6 +84,8 @@ uint32_t screensaver;
 
 boolean screensaverMode = false;
 boolean screenshot = false;
+boolean settingsMode = false;
+boolean settingLock = true;
 boolean btConnected = false;
 boolean wifiConnected = false;
 boolean proxyConnected = false;
@@ -101,3 +108,8 @@ bool buttonRightPressed = false;
 File root;
 String binFilename[128];
 uint8_t binIndex = 0;
+
+// Menu
+const char *settings[] = {"Brightness", "Transverter Mode", "IP Address", "Shutdown", "Exit"};
+const char *choiceBrightness[] = {"BRIGHTNESS"};
+const char *choiceTransverter[] = {"OFF", "ON"};
