@@ -155,7 +155,7 @@ Next, in `settings.h` ...
 
 ##### IC-705, BT
 
-| settings        | value           | 
+| Settings        | Value           | 
 | ------------- |:-------------:| 
 | IC_MODEL      | 705 | 
 | IC_CONNECT      | BT      | 
@@ -163,7 +163,7 @@ Next, in `settings.h` ...
 
 ##### IC-705, USB
 
-| settings        | value           | 
+| Settings        | Value           | 
 | ------------- |:-------------:| 
 | IC_MODEL      | 705 | 
 | IC_CONNECT      | USB      | 
@@ -177,7 +177,7 @@ Next, in `settings.h` ...
 
 ##### IC-7300, USB
 
-| settings        | value           | 
+| Settings        | Value           | 
 | ------------- |:-------------:| 
 | IC_MODEL      | 7300 | 
 | IC_CONNECT      | USB      | 
@@ -201,13 +201,19 @@ If you're using USB with [ICUSBProxy](https://github.com/armel/ICUSBProxy), plug
 
 `./ICUSBProxy.py`
 
-In addition :
+If you click on the middle button, you enter the settings menu. Use the right and left buttons to select a menu option and confirm with the middle button. If necessary, use the right and left buttons again to select the sub-options and the middle button to confirm. 
 
-- a long press on the left button allows to decrease the brightness, 
-- a long press on the central button allows to switch off the M5Stack,
-- a long press on the right button allows to increase the brightness.
+The following options are available :
 
-> The value of the brightness is preserved at the next restart.
+| Settings             | Value                         | 
+| -------------------- |:-----------------------------:| 
+| Brightness           | Set Brightness from 0 to 100% | 
+| Transverter Mode     | Set ON or ON                  | 
+| IP Address           | Display your IP               |
+| Shutdown             | Shutdown your M5Stack         |
+| Exit                 | Menu Exit                     |
+ 
+> Brightness and Transverter Mode are preserved at the next restart.
 
 # Using the Bin Loader (power user only...)
 
@@ -269,7 +275,7 @@ Wait ! It's coffee time (or beer) :) The contents of the `data` directory will b
 
 ## Usage
 
-Start your M5Stack. You should see a black screen, followed by 1, 2 and 3 small dots at the top of the screen. This is the famous Bin Loader ;)
+Start your M5Stack. You should see a black screen with a QR code, followed by 1, 2 and 3 small dots at the top of the screen. This is the famous Bin Loader ;)
 
 As soon as the first little dot appears, you can :
 

@@ -115,6 +115,9 @@ void binLoader()
 
   if (binIndex != 0)
   {
+    // QRCode
+    M5.Lcd.qrcode("https://github.com/armel/ICMultiMeter", 90, 80, 140, 6);
+
     M5.Lcd.setTextFont(1);
     M5.Lcd.setTextSize(1);
 
@@ -139,6 +142,8 @@ void binLoader()
       else if (btnB)
       {
         click = 1;
+        M5.Lcd.fillRect(0, 0, 320, 240, TFT_BLACK);
+
         break;
       }
 
