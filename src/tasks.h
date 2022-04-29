@@ -83,6 +83,7 @@ void button(void *pvParameters)
       M5.Lcd.setTextDatum(CC_DATUM);
       M5.Lcd.setFont(&YELLOWCRE8pt7b);
       M5.Lcd.setTextPadding(w - 2);
+      M5.Lcd.setTextColor(TFT_MENU_SELECT, TFT_MENU_BACK);
 
       // Brightness
       if(settingsString == "Brightness")
@@ -140,6 +141,37 @@ void button(void *pvParameters)
             preferences.putUInt("transverter", transverter);
           clearData();
           viewGUI();
+          settingsSelect = false;
+          settingsMode = false;
+          vTaskDelay(pdMS_TO_TICKS(150));
+        }
+        vTaskDelay(pdMS_TO_TICKS(150));
+      }
+
+      // Voice TX
+      else if(settingsString == "Voice TX")
+      {
+        M5.Lcd.drawString(String(choiceVoice[voice]), 160, h - 6);
+
+        if(btnA || btnC) {
+          if(btnA == 1) {
+            voice -= 1;
+            if(voice < 0) {
+              voice = 8;
+            }
+          }
+          else if(btnC == 1) {
+            voice += 1;
+            if(voice > 8) {
+              voice = 0;
+            }
+          }
+        }
+        else if(btnB == 1) {
+          clearData();
+          viewGUI();
+          voiceMode = 2;
+          voiceCounter = 1;
           settingsSelect = false;
           settingsMode = false;
           vTaskDelay(pdMS_TO_TICKS(150));

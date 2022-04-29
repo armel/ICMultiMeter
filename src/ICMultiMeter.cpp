@@ -220,7 +220,31 @@ void loop()
           getIP();
           break;
       }
-    
+
+      if(voiceMode == 2) {
+        if(tx == 0) {
+          sendVoice();
+          voiceMode--;
+          voiceCounter--;
+        }
+      }
+      else if(voiceMode == 1) {
+        if(tx == 1) {
+          transmit = millis();
+        }
+        else 
+        {
+          if(voiceCounter == 0) {
+            voiceMode = 0;
+            M5.Lcd.fillRect(32, 2, 28, 18, TFT_BLACK);
+          }
+          else if(millis() - transmit > voiceTimeout * 1000) {
+            sendVoice();
+            voiceCounter--;
+          }
+        }        
+      }
+
       if(tx == 0) {
         getSmeterLevel();
       }

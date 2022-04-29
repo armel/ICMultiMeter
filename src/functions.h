@@ -983,6 +983,7 @@ void wakeAndSleep()
 
   if (screensaverMode == false && millis() - screensaver > TIMEOUT_SCREENSAVER)
   {
+    settingsMode = false;
     screensaverMode = true;
     screensaver = 0;
     M5.Lcd.fillScreen(TFT_BLACK);
@@ -993,6 +994,7 @@ void wakeAndSleep()
     clearData();
     viewGUI();
     screensaverMode = false;
+    settingsMode = false;
 
     vTaskDelay(100);
   }
@@ -1127,11 +1129,13 @@ boolean checkConnection()
       {
         message = "Check Proxy";
       }
+      http.end();
     }
 
     if (message != "")
     {
-      if(screensaverMode == false && settingsMode == false) {
+      if(screensaverMode == false && settingsMode == false)
+      {
         M5.Lcd.setTextDatum(CC_DATUM);
         M5.Lcd.setFont(&UniversCondensed20pt7b);
         M5.Lcd.setTextPadding(200);
@@ -1145,9 +1149,9 @@ boolean checkConnection()
       }
       else {
         vTaskDelay(1000);
+        return false;
       }
     }
   }
-
   return true;
 }

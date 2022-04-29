@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.0.6"
+#define VERSION "0.1.7"
 #define AUTHOR "F4HWN"
 #define NAME "ICMultiMeter"
 
@@ -55,6 +55,10 @@ WiFiServer httpServer(80);
 WiFiClient httpClient, civClient;
 
 int8_t transverter = 0;
+int8_t voice = 0;
+int8_t voiceMode = 0;
+int8_t voiceCounter = 0;
+int8_t voiceTimeout = 0;
 uint8_t htmlGetRequest;
 uint8_t option = 2;
 uint8_t brightness = 64;
@@ -81,6 +85,7 @@ uint8_t batteryLevelOld = 0;
 uint16_t bande = 28;
 
 uint32_t screensaver;
+uint32_t transmit;
 
 boolean screensaverMode = false;
 boolean screenshot = false;
@@ -110,6 +115,7 @@ String binFilename[128];
 uint8_t binIndex = 0;
 
 // Menu
-const char *settings[] = {"Brightness", "Transverter Mode", "IP Address", "Shutdown", "Exit"};
+const char *settings[] = {"Voice TX", "Brightness", "Transverter Mode", "IP Address", "Shutdown", "Exit"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceTransverter[] = {"OFF", "ON"};
+const char *choiceVoice[] = {"OFF", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8"};

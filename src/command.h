@@ -1194,3 +1194,81 @@ void getIP()
     M5.Lcd.drawString(String(mode[value]), 210, 12);
   }
 }
+
+// Send Voice
+void sendVoice()
+{
+  uint8_t value;
+  static char buffer[7];
+  size_t n;
+  
+  // Repeat Time
+  char repeat[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x02, 0x45, 0xFD};
+
+  n = sizeof(repeat) / sizeof(repeat[0]);
+
+  sendCommand(repeat, n, buffer, 7);
+
+  if (buffer[6] > 0)
+  {
+    value = buffer[6];
+  }
+  else
+  {
+    value = 0;
+  }
+
+  voiceTimeout = value;
+
+  // Send
+  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x28, 0x00, 0x00, 0xFD};
+
+  request[6] += voice;
+
+  n = sizeof(request) / sizeof(request[0]);
+
+  sendCommand(request, n, buffer, 5);
+
+  M5.Lcd.setFont(&tahoma8pt7b);
+  M5.Lcd.setTextPadding(24);
+  M5.Lcd.setTextDatum(CC_DATUM);
+
+  if (voiceCounter > 0)
+  {
+    M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_RED);
+    M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_WHITE);
+    M5.Lcd.setTextColor(TFT_WHITE);
+    M5.Lcd.drawString("T" + String(voice), 45, 12);
+  }
+
+  if(DEBUG) {
+    Serial.print("Voice TX ");
+    Serial.println(String(choiceVoice[voice]));
+  }
+}
+
+// get PTT
+boolean getPTT()
+{
+  uint8_t value;
+  static char buffer[7];
+  size_t n;
+  
+  // Repeat Time
+  char repeat[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x00, 0x48, 0xFD};
+
+  n = sizeof(repeat) / sizeof(repeat[0]);
+
+  sendCommand(repeat, n, buffer, 7);
+
+  if (buffer[6] > 0)
+  {
+    value = 1;
+  }
+  else
+  {
+    value = 0;
+  }
+
+  return 0;
+}
