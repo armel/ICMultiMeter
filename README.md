@@ -23,6 +23,7 @@ The ICMultiMeter project allows you to display the equivalent of the Meter scree
 
 ![ICMultiMeter FM](https://github.com/armel/ICMultiMeter/blob/main/img/FM.png)
 ![ICMultiMeter SSB](https://github.com/armel/ICMultiMeter/blob/main/img/SSB.png)
+![ICMultiMeter Settings](https://github.com/armel/ICMultiMeter/blob/main/img/Settings.png)
 
 # Technical architecture
 
