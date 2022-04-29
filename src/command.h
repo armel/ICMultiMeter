@@ -1246,29 +1246,3 @@ void sendVoice()
     Serial.println(String(choiceVoice[voice]));
   }
 }
-
-// get PTT
-boolean getPTT()
-{
-  uint8_t value;
-  static char buffer[7];
-  size_t n;
-  
-  // Repeat Time
-  char repeat[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x00, 0x48, 0xFD};
-
-  n = sizeof(repeat) / sizeof(repeat[0]);
-
-  sendCommand(repeat, n, buffer, 7);
-
-  if (buffer[6] > 0)
-  {
-    value = 1;
-  }
-  else
-  {
-    value = 0;
-  }
-
-  return 0;
-}

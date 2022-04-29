@@ -205,13 +205,14 @@ If you click on the middle button, you enter the settings menu. Use the right an
 
 The following options are available :
 
-| Settings             | Value                         | 
-| -------------------- |:-----------------------------:| 
-| Brightness           | Set Brightness from 0 to 100% | 
-| Transverter Mode     | Set ON or ON                  | 
-| IP Address           | Display your IP               |
-| Shutdown             | Shutdown your M5Stack         |
-| Exit                 | Menu Exit                     |
+| Settings             | Value                                 | 
+| -------------------- |:-------------------------------------:| 
+| Voice TX             | Transmit Voice TX Memory (T1 ~ T8)    | 
+| Brightness           | Set Brightness (0 ~ 100%)             | 
+| Transverter Mode     | Set Transverter Mode (OFF ~ ON)       | 
+| IP Address           | Display your IP                       |
+| Shutdown             | Shutdown your M5Stack                 |
+| Exit                 | Menu Exit                             |
  
 > Brightness and Transverter Mode are preserved at the next restart.
 
