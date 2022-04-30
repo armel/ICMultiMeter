@@ -24,16 +24,14 @@ void getButton()
   btnB = M5.BtnB.isPressed();
   btnC = M5.BtnC.isPressed();
 
+  /*
   btnL = M5.BtnA.pressedFor(2000);
   btnM = M5.BtnB.pressedFor(2000);
   btnR = M5.BtnC.pressedFor(2000);
 
-  /*
   Serial.print(btnA);
   Serial.print(btnB);
-  Serial.print(btnC);
-  Serial.print(btnL);
-  Serial.println(btnR);
+  Serial.println(btnC);
   */
 }
 

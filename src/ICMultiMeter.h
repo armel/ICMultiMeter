@@ -57,8 +57,8 @@ WiFiClient httpClient, civClient;
 int8_t transverter = 0;
 int8_t voice = 0;
 int8_t voiceMode = 0;
-int8_t voiceCounter = 0;
 int8_t voiceTimeout = 0;
+uint8_t voiceCounter = 0;
 uint8_t htmlGetRequest;
 uint8_t option = 2;
 uint8_t brightness = 64;
@@ -98,6 +98,7 @@ boolean txConnected = true;
 boolean needClear = true;
 boolean startup = true;
 boolean batteryCharginglOld = true;
+boolean voiceRefresh = true;
 
 String frequencyOld = "";
 String filterOld = "";

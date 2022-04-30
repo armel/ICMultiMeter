@@ -284,137 +284,6 @@ void viewBattery()
   }
 }
 
-// Send CI-V Command by Bluetooth
-void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
-{
-  uint8_t byte1, byte2, byte3;
-  uint8_t counter = 0;
-
-  while (counter != limit)
-  {
-    for (uint8_t i = 0; i < n; i++)
-    {
-      CAT.write(request[i]);
-    }
-
-    vTaskDelay(100);
-
-    while (CAT.available())
-    {
-      byte1 = CAT.read();
-      byte2 = CAT.read();
-
-      if (byte1 == 0xFE && byte2 == 0xFE)
-      {
-        counter = 0;
-        byte3 = CAT.read();
-        while (byte3 != 0xFD)
-        {
-          buffer[counter] = byte3;
-          byte3 = CAT.read();
-          counter++;
-          if (counter > limit)
-          {
-            if (DEBUG)
-            {
-              Serial.print(" Overflow");
-            }
-            break;
-          }
-        }
-      }
-    }
-  }
-  // Serial.println(" Ok");
-}
-
-// Send CI-V Command by Wifi
-void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
-{
-  static uint8_t proxyError = 0;
-
-  HTTPClient http;
-  uint16_t httpCode;
-
-  String command = "";
-  String response = "";
-
-  char s[4];
-
-  for (uint8_t i = 0; i < n; i++)
-  {
-    sprintf(s, "%02x,", request[i]);
-    command += String(s);
-  }
-
-  command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
-
-  http.begin(civClient, PROXY_URL + String(":") + PROXY_PORT + String("/") + String("?civ=") + command); // Specify the URL
-  http.addHeader("User-Agent", "M5Stack");                                                               // Specify header
-  http.addHeader("Connection", "keep-alive");                                                            // Specify header
-  http.setTimeout(100);                                                                                  // Set Time Out
-  httpCode = http.GET();                                                                                 // Make the request
-  if (httpCode == 200)
-  {
-    proxyConnected = true;
-    proxyError = 0;
-
-    response = http.getString(); // Get data
-    response.trim();
-    response = response.substring(4);
-
-    if (response == "")
-    {
-      txConnected = false;
-    }
-    else
-    {
-      txConnected = true;
-      startup = false;
-
-      for (uint8_t i = 0; i < limit; i++)
-      {
-        buffer[i] = strtol(response.substring(i * 2, (i * 2) + 2).c_str(), NULL, 16);
-      }
-
-      if (DEBUG)
-      {
-        Serial.println("-----");
-        Serial.print(response);
-        Serial.print(" ");
-        Serial.println(response.length());
-
-        for (uint8_t i = 0; i < limit; i++)
-        {
-          Serial.print(int(buffer[i]));
-          Serial.print(" ");
-        }
-        Serial.println(" ");
-        Serial.println("-----");
-      }
-    }
-  }
-  else
-  {
-    proxyError++;
-    if (proxyError > 10)
-    {
-      proxyError = 10;
-      proxyConnected = false;
-    }
-  }
-  http.end(); // Free the resources
-}
-
-// Send CI-V Command dispatcher
-void sendCommand(char *request, size_t n, char *buffer, uint8_t limit)
-{
-  if (IC_MODEL == 705 && IC_CONNECT == BT)
-    sendCommandBt(request, n, buffer, limit);
-  else
-    sendCommandWifi(request, n, buffer, limit);
-}
-
 // View GUI
 void viewGUI()
 {
@@ -679,13 +548,6 @@ void viewGUI()
   M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
   M5.Lcd.setTextDatum(CL_DATUM);
   M5.Lcd.drawString("SQL", 230, 174);
-
-  // Title
-  /*
-  M5.Lcd.setTextDatum(CC_DATUM);
-  M5.Lcd.setTextColor(TFT_DARKGREY);
-  M5.Lcd.drawString(String(NAME) + " V" + String(VERSION) + " by " + String(AUTHOR), 160, 100);
-  */
 }
 
 // Clear GUI
@@ -1154,4 +1016,76 @@ boolean checkConnection()
     }
   }
   return true;
+}
+
+// Manage voice
+void voiceManager(uint8_t tx, uint8_t alternance)
+{
+  M5.Lcd.setFont(&tahoma8pt7b);
+  M5.Lcd.setTextPadding(24);
+  M5.Lcd.setTextDatum(CC_DATUM);
+
+  Serial.print(voice);
+  Serial.print("-");
+  Serial.print(voiceMode);
+  Serial.print("-");
+  Serial.println(voiceCounter);
+  
+  if(voice == 0)
+  {
+    M5.Lcd.fillRect(32, 2, 28, 18, TFT_BLACK);
+    return;
+  }
+  else {
+    if(voiceMode == 2) {
+      if(tx == 0) {
+        sendVoice();
+        voiceMode--;
+        voiceCounter--;
+        voiceRefresh = true;
+      }
+      else {
+        if(voiceRefresh == true) {
+          M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_BLACK);
+          M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_RED);
+          M5.Lcd.setTextColor(TFT_RED);
+          M5.Lcd.drawString("T" + String(voice), 45, 12);
+          voiceRefresh = false;
+        }
+      }
+    }
+    else if(voiceMode == 1) {
+      if(tx == 1) {
+        transmit = millis();
+      }
+      else 
+      {
+        if(voiceCounter == 0) {
+          voiceMode = 0;
+
+          if(voiceRefresh == true) {
+            M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_BLACK);
+            M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_RED);
+            M5.Lcd.setTextColor(TFT_RED);
+            M5.Lcd.drawString("T" + String(voice), 45, 12);
+            voiceRefresh = false;
+          }
+        }
+        else if(millis() - transmit > voiceTimeout * 1000) {
+          sendVoice();
+          voiceCounter--;
+          voiceRefresh = true;
+        }
+      }        
+    }
+    else {
+      if(voiceRefresh == true) {
+        M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_BLACK);
+        M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_RED);
+        M5.Lcd.setTextColor(TFT_RED);
+        M5.Lcd.drawString("T" + String(voice), 45, 12);
+        voiceRefresh = false;
+      }
+    }
+  }
 }

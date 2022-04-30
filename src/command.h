@@ -1,6 +1,137 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+// Send CI-V Command by Bluetooth
+void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
+{
+  uint8_t byte1, byte2, byte3;
+  uint8_t counter = 0;
+
+  while (counter != limit)
+  {
+    for (uint8_t i = 0; i < n; i++)
+    {
+      CAT.write(request[i]);
+    }
+
+    vTaskDelay(100);
+
+    while (CAT.available())
+    {
+      byte1 = CAT.read();
+      byte2 = CAT.read();
+
+      if (byte1 == 0xFE && byte2 == 0xFE)
+      {
+        counter = 0;
+        byte3 = CAT.read();
+        while (byte3 != 0xFD)
+        {
+          buffer[counter] = byte3;
+          byte3 = CAT.read();
+          counter++;
+          if (counter > limit)
+          {
+            if (DEBUG)
+            {
+              Serial.print(" Overflow");
+            }
+            break;
+          }
+        }
+      }
+    }
+  }
+  // Serial.println(" Ok");
+}
+
+// Send CI-V Command by Wifi
+void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
+{
+  static uint8_t proxyError = 0;
+
+  HTTPClient http;
+  uint16_t httpCode;
+
+  String command = "";
+  String response = "";
+
+  char s[4];
+
+  for (uint8_t i = 0; i < n; i++)
+  {
+    sprintf(s, "%02x,", request[i]);
+    command += String(s);
+  }
+
+  command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
+
+  http.begin(civClient, PROXY_URL + String(":") + PROXY_PORT + String("/") + String("?civ=") + command); // Specify the URL
+  http.addHeader("User-Agent", "M5Stack");                                                               // Specify header
+  http.addHeader("Connection", "keep-alive");                                                            // Specify header
+  http.setTimeout(100);                                                                                  // Set Time Out
+  httpCode = http.GET();                                                                                 // Make the request
+  if (httpCode == 200)
+  {
+    proxyConnected = true;
+    proxyError = 0;
+
+    response = http.getString(); // Get data
+    response.trim();
+    response = response.substring(4);
+
+    if (response == "")
+    {
+      txConnected = false;
+    }
+    else
+    {
+      txConnected = true;
+      startup = false;
+
+      for (uint8_t i = 0; i < limit; i++)
+      {
+        buffer[i] = strtol(response.substring(i * 2, (i * 2) + 2).c_str(), NULL, 16);
+      }
+
+      if (DEBUG)
+      {
+        Serial.println("-----");
+        Serial.print(response);
+        Serial.print(" ");
+        Serial.println(response.length());
+
+        for (uint8_t i = 0; i < limit; i++)
+        {
+          Serial.print(int(buffer[i]));
+          Serial.print(" ");
+        }
+        Serial.println(" ");
+        Serial.println("-----");
+      }
+    }
+  }
+  else
+  {
+    proxyError++;
+    if (proxyError > 10)
+    {
+      proxyError = 10;
+      proxyConnected = false;
+    }
+  }
+  http.end(); // Free the resources
+}
+
+// Send CI-V Command dispatcher
+void sendCommand(char *request, size_t n, char *buffer, uint8_t limit)
+{
+  if (IC_MODEL == 705 && IC_CONNECT == BT)
+    sendCommandBt(request, n, buffer, limit);
+  else
+    sendCommandWifi(request, n, buffer, limit);
+}
+
 // Get Smeter Level
 void getSmeterLevel()
 {

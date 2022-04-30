@@ -7,8 +7,8 @@
 #include "image.h"
 #include "tools.h"
 #include "webIndex.h"
-#include "functions.h"
 #include "command.h"
+#include "functions.h"
 #include "menu.h"
 #include "tasks.h"
 
@@ -33,6 +33,7 @@ void setup()
   preferences.begin(NAME);
   brightness = preferences.getUInt("brightness", 64);
   transverter = preferences.getUInt("transverter", 0);
+  voice = preferences.getUInt("voice", 0);
 
   // Bin Loader
   binLoader();
@@ -221,29 +222,8 @@ void loop()
           break;
       }
 
-      if(voiceMode == 2) {
-        if(tx == 0) {
-          sendVoice();
-          voiceMode--;
-          voiceCounter--;
-        }
-      }
-      else if(voiceMode == 1) {
-        if(tx == 1) {
-          transmit = millis();
-        }
-        else 
-        {
-          if(voiceCounter == 0) {
-            voiceMode = 0;
-            M5.Lcd.fillRect(32, 2, 28, 18, TFT_BLACK);
-          }
-          else if(millis() - transmit > voiceTimeout * 1000) {
-            sendVoice();
-            voiceCounter--;
-          }
-        }        
-      }
+      // Manage voice
+      voiceManager(tx, alternance);
 
       if(tx == 0) {
         getSmeterLevel();
@@ -263,7 +243,4 @@ void loop()
 
   // Manage Screen Saver
   wakeAndSleep();
-
-  //M5.Lcd.drawFastHLine(0, 57, 320, TFT_FIL_BORDER);
-  //M5.Lcd.drawFastHLine(0, 86, 320, TFT_FIL_BORDER);
 }

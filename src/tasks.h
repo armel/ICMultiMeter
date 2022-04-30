@@ -5,6 +5,7 @@
 void button(void *pvParameters)
 {
   int8_t transverterOld = 0;
+  int8_t voiceOld = 0;
   uint8_t brightnessOld = 64;
   static int8_t settingsChoice = 0;
   static boolean settingsSelect = false;
@@ -26,6 +27,32 @@ void button(void *pvParameters)
       screensaver = millis();
       brightnessOld = preferences.getUInt("brightness");
       transverterOld = preferences.getUInt("transverter");
+      voiceOld = preferences.getUInt("voice");
+    }
+
+    // Voice mode
+    if(settingsMode == false && voice != 0)
+    {
+      if(btnA) { // 1 time
+        if(voiceCounter == 0)
+        {
+          voiceMode = 2;
+          voiceCounter = 1;
+        }
+        vTaskDelay(pdMS_TO_TICKS(250));
+      }
+      else if(btnC) { // n time
+        if(voiceCounter == 0)
+        {
+          voiceMode = 2;
+          voiceCounter = 255;
+        }
+        else {
+          voiceMode = 1;
+          voiceCounter = 0;
+        }
+        vTaskDelay(pdMS_TO_TICKS(250));
+      }
     }
 
     // Enter settings
@@ -168,10 +195,12 @@ void button(void *pvParameters)
           }
         }
         else if(btnB == 1) {
+          if(voiceOld != voice)
+            preferences.putUInt("voice", voice);
+
           clearData();
           viewGUI();
-          voiceMode = 2;
-          voiceCounter = 1;
+          voiceRefresh = true;
           settingsSelect = false;
           settingsMode = false;
           vTaskDelay(pdMS_TO_TICKS(150));
