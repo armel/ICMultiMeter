@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.0.5"
+#define VERSION "0.1.0"
 #define AUTHOR "F4HWN"
 #define NAME "ICMultiMeter"
 
@@ -31,6 +31,10 @@
 
 #define TFT_GAUGE M5.Lcd.color565(255, 64, 0)
 
+#define TFT_MENU_BORDER M5.Lcd.color565(115, 135, 159)
+#define TFT_MENU_BACK M5.Lcd.color565(24, 57, 92)
+#define TFT_MENU_SELECT M5.Lcd.color565(255, 255, 255)
+
 // Web site Screen Capture stuff
 #define GET_unknown 0
 #define GET_index_page  1
@@ -50,6 +54,11 @@ Preferences preferences;
 WiFiServer httpServer(80);
 WiFiClient httpClient, civClient;
 
+int8_t transverter = 0;
+int8_t voice = 0;
+int8_t voiceMode = 0;
+int8_t voiceTimeout = 0;
+uint8_t voiceCounter = 0;
 uint8_t htmlGetRequest;
 uint8_t option = 2;
 uint8_t brightness = 64;
@@ -76,9 +85,12 @@ uint8_t batteryLevelOld = 0;
 uint16_t bande = 28;
 
 uint32_t screensaver;
+uint32_t transmit;
 
 boolean screensaverMode = false;
 boolean screenshot = false;
+boolean settingsMode = false;
+boolean settingLock = true;
 boolean btConnected = false;
 boolean wifiConnected = false;
 boolean proxyConnected = false;
@@ -86,6 +98,7 @@ boolean txConnected = true;
 boolean needClear = true;
 boolean startup = true;
 boolean batteryCharginglOld = true;
+boolean voiceRefresh = true;
 
 String frequencyOld = "";
 String filterOld = "";
@@ -101,3 +114,9 @@ bool buttonRightPressed = false;
 File root;
 String binFilename[128];
 uint8_t binIndex = 0;
+
+// Menu
+const char *settings[] = {"Voice TX", "Brightness", "Transverter Mode", "IP Address", "Shutdown", "Exit"};
+const char *choiceBrightness[] = {"BRIGHTNESS"};
+const char *choiceTransverter[] = {"OFF", "ON"};
+const char *choiceVoice[] = {"OFF", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8"};

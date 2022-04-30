@@ -1,6 +1,137 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+// Send CI-V Command by Bluetooth
+void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
+{
+  uint8_t byte1, byte2, byte3;
+  uint8_t counter = 0;
+
+  while (counter != limit)
+  {
+    for (uint8_t i = 0; i < n; i++)
+    {
+      CAT.write(request[i]);
+    }
+
+    vTaskDelay(100);
+
+    while (CAT.available())
+    {
+      byte1 = CAT.read();
+      byte2 = CAT.read();
+
+      if (byte1 == 0xFE && byte2 == 0xFE)
+      {
+        counter = 0;
+        byte3 = CAT.read();
+        while (byte3 != 0xFD)
+        {
+          buffer[counter] = byte3;
+          byte3 = CAT.read();
+          counter++;
+          if (counter > limit)
+          {
+            if (DEBUG)
+            {
+              Serial.print(" Overflow");
+            }
+            break;
+          }
+        }
+      }
+    }
+  }
+  // Serial.println(" Ok");
+}
+
+// Send CI-V Command by Wifi
+void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
+{
+  static uint8_t proxyError = 0;
+
+  HTTPClient http;
+  uint16_t httpCode;
+
+  String command = "";
+  String response = "";
+
+  char s[4];
+
+  for (uint8_t i = 0; i < n; i++)
+  {
+    sprintf(s, "%02x,", request[i]);
+    command += String(s);
+  }
+
+  command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
+
+  http.begin(civClient, PROXY_URL + String(":") + PROXY_PORT + String("/") + String("?civ=") + command); // Specify the URL
+  http.addHeader("User-Agent", "M5Stack");                                                               // Specify header
+  http.addHeader("Connection", "keep-alive");                                                            // Specify header
+  http.setTimeout(100);                                                                                  // Set Time Out
+  httpCode = http.GET();                                                                                 // Make the request
+  if (httpCode == 200)
+  {
+    proxyConnected = true;
+    proxyError = 0;
+
+    response = http.getString(); // Get data
+    response.trim();
+    response = response.substring(4);
+
+    if (response == "")
+    {
+      txConnected = false;
+    }
+    else
+    {
+      txConnected = true;
+      startup = false;
+
+      for (uint8_t i = 0; i < limit; i++)
+      {
+        buffer[i] = strtol(response.substring(i * 2, (i * 2) + 2).c_str(), NULL, 16);
+      }
+
+      if (DEBUG)
+      {
+        Serial.println("-----");
+        Serial.print(response);
+        Serial.print(" ");
+        Serial.println(response.length());
+
+        for (uint8_t i = 0; i < limit; i++)
+        {
+          Serial.print(int(buffer[i]));
+          Serial.print(" ");
+        }
+        Serial.println(" ");
+        Serial.println("-----");
+      }
+    }
+  }
+  else
+  {
+    proxyError++;
+    if (proxyError > 10)
+    {
+      proxyError = 10;
+      proxyConnected = false;
+    }
+  }
+  http.end(); // Free the resources
+}
+
+// Send CI-V Command dispatcher
+void sendCommand(char *request, size_t n, char *buffer, uint8_t limit)
+{
+  if (IC_MODEL == 705 && IC_CONNECT == BT)
+    sendCommandBt(request, n, buffer, limit);
+  else
+    sendCommandWifi(request, n, buffer, limit);
+}
+
 // Get Smeter Level
 void getSmeterLevel()
 {
@@ -234,6 +365,7 @@ void getFrequency()
   String val0;
   String val1;
   String val2;
+  String val3;
 
   uint32_t freq; // Current frequency in Hz
   const uint32_t decMulti[] = {1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10, 1};
@@ -251,14 +383,26 @@ void getFrequency()
     freq += (buffer[9 - i] & 0x0F) * decMulti[(i - 2) * 2 + 1];
   }
 
+  if(transverter == 1)
+    freq += TRANSVERTER_LO;
+
   frequency = String(freq);
   lenght = frequency.length();
-  val0 = frequency.substring(lenght - 3, lenght);
-  val1 = frequency.substring(lenght - 6, lenght - 3);
-  val2 = frequency.substring(0, lenght - 6);
-
-  frequency = val2 + "." + val1 + "." + val0;
-  bande = val2.toInt();
+  if(lenght <= 9) {
+    val0 = frequency.substring(lenght - 3, lenght);
+    val1 = frequency.substring(lenght - 6, lenght - 3);
+    val2 = frequency.substring(0, lenght - 6);
+    frequency = val2 + "." + val1 + "." + val0;
+    bande = val2.toInt();
+  }
+  else {
+    val0 = frequency.substring(lenght - 3, lenght);
+    val1 = frequency.substring(lenght - 6, lenght - 3);
+    val2 = frequency.substring(lenght - 9, lenght - 6);
+    val3 = frequency.substring(0, lenght - 9);
+    frequency = val3 + "." + val2 + "." + val1 + "." + val0;
+    bande = (val3.toInt() * 1000) + val2.toInt();
+  }
 
   if(frequency == "" || frequency == "0.." || frequency == "163.163.163")
     txConnected = false;
@@ -1179,5 +1323,77 @@ void getIP()
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CL_DATUM);
     M5.Lcd.drawString(String(mode[value]), 210, 12);
+  }
+}
+
+// Send Voice
+void sendVoice()
+{
+  uint8_t value;
+  static char buffer[7];
+  size_t n;
+
+  // Repeat Time
+  char repeat[][9] = {
+    {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x02, 0x45, 0xFD},   // IC-705
+    {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x01, 0x81, 0xFD},   // IC-7300
+    {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x02, 0x17, 0xFD}    // IC-9700
+  };
+
+  if(IC_MODEL == 705)
+  {
+    n = sizeof(repeat[0]) / sizeof(repeat[0][0]);
+    sendCommand(repeat[0], n, buffer, 7);
+  }
+  else if(IC_MODEL == 7300)
+  {
+    n = sizeof(repeat[1]) / sizeof(repeat[1][0]);
+    sendCommand(repeat[1], n, buffer, 7);
+  }
+  else {
+    n = sizeof(repeat[2]) / sizeof(repeat[2][0]);
+    sendCommand(repeat[2], n, buffer, 7);
+  }
+
+  if (buffer[6] < 9)
+  {
+    value = buffer[6];
+  }
+  else if (buffer[6] > 9)
+  {
+    value = buffer[6] - 6; // Bug in the documentation !!! Fix it Icom !!!
+  }
+  else
+  {
+    value = 0;
+  }
+
+  voiceTimeout = value;
+  Serial.println(voiceTimeout);
+
+  // Send
+  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x28, 0x00, 0x00, 0xFD};
+
+  request[6] += voice;
+
+  n = sizeof(request) / sizeof(request[0]);
+
+  sendCommand(request, n, buffer, 5);
+
+  M5.Lcd.setFont(&tahoma8pt7b);
+  M5.Lcd.setTextPadding(24);
+  M5.Lcd.setTextDatum(CC_DATUM);
+
+  if (voiceCounter > 0)
+  {
+    M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_RED);
+    M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_WHITE);
+    M5.Lcd.setTextColor(TFT_WHITE);
+    M5.Lcd.drawString("T" + String(voice), 45, 12);
+  }
+
+  if(DEBUG) {
+    Serial.print("Voice TX ");
+    Serial.println(String(choiceVoice[voice]));
   }
 }
