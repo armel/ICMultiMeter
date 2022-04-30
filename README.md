@@ -217,7 +217,7 @@ The following options are available :
  
 > Brightness and Transverter Mode are preserved at the next restart.
 
-If you have chosen a memory in the Voice TX setting, after exiting the settings menu, use the left button to send it once and the right button to send it multiple times (and click the right button again to stop). Note that, this feature is experimental.
+If you have chosen a memory in the Voice TX setting, after exiting the settings menu, you will see the memory number in the upper left corner of the screen. Use the left button to send it once and the right button to send it multiple times (and click the right button again to stop). If you send it multiple times, you will see a counter in the upper left corner, before each transmission (this is the timer of your transceiver). Note that, this Voice TX feature is experimental, but would be usefull.
 
 # Using the Bin Loader (power user only...)
 

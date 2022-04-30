@@ -1079,6 +1079,14 @@ void voiceManager(uint8_t tx, uint8_t alternance)
           voiceCounter--;
           voiceRefresh = true;
         }
+        else if(millis() - transmit < voiceTimeout * 1000) {
+            uint8_t value = voiceTimeout - int((millis() - transmit) / 1000);
+
+            M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_RED);
+            M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_WHITE);
+            M5.Lcd.setTextColor(TFT_WHITE);
+            M5.Lcd.drawString(String(value) + "s", 45, 12);  
+        }
       }        
     }
     else {

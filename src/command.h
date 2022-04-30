@@ -1340,9 +1340,13 @@ void sendVoice()
 
   sendCommand(repeat, n, buffer, 7);
 
-  if (buffer[6] > 0)
+  if (buffer[6] < 9)
   {
     value = buffer[6];
+  }
+  else if (buffer[6] > 9)
+  {
+    value = buffer[6] - 6; // Bug in the documentation !!! Fix it Icom !!!
   }
   else
   {
@@ -1350,6 +1354,7 @@ void sendVoice()
   }
 
   voiceTimeout = value;
+  //Serial.println(voiceTimeout);
 
   // Send
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x28, 0x00, 0x00, 0xFD};
