@@ -208,7 +208,7 @@ The following options are available :
 
 | Settings             | Value                                     | 
 | -------------------- |:-----------------------------------------:| 
-| Voice TX             | Transmit Voice TX Memory (T1 ~ T8)        | 
+| Voice TX             | Transmit Voice TX Memory (OFF or T1 ~ T8) | 
 | Brightness           | Set Brightness (0 ~ 100%)                 | 
 | Transverter Mode     | Set Transverter Mode (OFF ~ ON)           | 
 | IP Address           | Display your IP                           |
@@ -216,6 +216,8 @@ The following options are available :
 | Exit                 | Menu Exit                                 |
  
 > Brightness and Transverter Mode are preserved at the next restart.
+
+If you have chosen a memory in the Voice TX setting, after exiting the settings menu, use the left button to send it once and the right button to send it multiple times (and click the right button again to stop). Note that, this feature is experimental.
 
 # Using the Bin Loader (power user only...)
 

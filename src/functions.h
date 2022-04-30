@@ -1021,16 +1021,19 @@ boolean checkConnection()
 // Manage voice
 void voiceManager(uint8_t tx, uint8_t alternance)
 {
+  if(DEBUG) 
+  {
+    Serial.print(voice);
+    Serial.print("-");
+    Serial.print(voiceMode);
+    Serial.print("-");
+    Serial.println(voiceCounter);
+  }
+
   M5.Lcd.setFont(&tahoma8pt7b);
   M5.Lcd.setTextPadding(24);
   M5.Lcd.setTextDatum(CC_DATUM);
 
-  Serial.print(voice);
-  Serial.print("-");
-  Serial.print(voiceMode);
-  Serial.print("-");
-  Serial.println(voiceCounter);
-  
   if(voice == 0)
   {
     M5.Lcd.fillRect(32, 2, 28, 18, TFT_BLACK);
