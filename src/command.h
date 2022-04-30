@@ -1332,13 +1332,28 @@ void sendVoice()
   uint8_t value;
   static char buffer[7];
   size_t n;
-  
+
   // Repeat Time
-  char repeat[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x02, 0x45, 0xFD};
+  char repeat[][9] = {
+    {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x02, 0x45, 0xFD},   // IC-705
+    {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x01, 0x81, 0xFD},   // IC-7300
+    {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x02, 0x17, 0xFD}    // IC-9700
+  };
 
-  n = sizeof(repeat) / sizeof(repeat[0]);
-
-  sendCommand(repeat, n, buffer, 7);
+  if(IC_MODEL == 705)
+  {
+    n = sizeof(repeat[0]) / sizeof(repeat[0][0]);
+    sendCommand(repeat[0], n, buffer, 7);
+  }
+  else if(IC_MODEL == 7300)
+  {
+    n = sizeof(repeat[1]) / sizeof(repeat[1][0]);
+    sendCommand(repeat[1], n, buffer, 7);
+  }
+  else {
+    n = sizeof(repeat[2]) / sizeof(repeat[2][0]);
+    sendCommand(repeat[2], n, buffer, 7);
+  }
 
   if (buffer[6] < 9)
   {
@@ -1354,7 +1369,7 @@ void sendVoice()
   }
 
   voiceTimeout = value;
-  //Serial.println(voiceTimeout);
+  Serial.println(voiceTimeout);
 
   // Send
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x28, 0x00, 0x00, 0xFD};
