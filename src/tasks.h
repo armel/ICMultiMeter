@@ -14,7 +14,7 @@ void button(void *pvParameters)
   uint8_t x = 44;
   uint8_t y = 4;
   uint16_t w = 320 - (x * 2);
-  uint8_t h = 190;
+  uint8_t h = 185;
 
   for (;;)
   {
