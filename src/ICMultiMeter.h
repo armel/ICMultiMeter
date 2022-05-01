@@ -118,7 +118,7 @@ uint8_t binIndex = 0;
 
 // Menu
 const char *settings[] = {"Voice TX", "Brightness", "Transverter Mode", "IP Address", "Beep", "Shutdown", "Exit"};
+const char *choiceVoice[] = {"OFF", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceTransverter[] = {"OFF", "ON"};
 const char *choiceBeep[] = {"OFF", "ON"};
-const char *choiceVoice[] = {"OFF", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8"};
