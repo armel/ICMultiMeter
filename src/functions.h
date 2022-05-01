@@ -996,10 +996,10 @@ boolean checkConnection()
       http.end();
     }
 
-    settingLock = true;
-
     if (message != "")
     {
+      settingLock = true;
+
       if(screensaverMode == false && settingsMode == false)
       {
         M5.Lcd.setTextDatum(CC_DATUM);
@@ -1009,8 +1009,9 @@ boolean checkConnection()
         M5.Lcd.drawString(message, 160, 70);
         vTaskDelay(750);
         M5.Lcd.drawString("", 160, 70);
-        vTaskDelay(250);
         frequencyOld = "";
+        settingLock = false;
+        vTaskDelay(250);
         return false;
       }
       else {
