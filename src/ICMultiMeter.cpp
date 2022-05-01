@@ -34,6 +34,7 @@ void setup()
   brightness = preferences.getUInt("brightness", 64);
   transverter = preferences.getUInt("transverter", 0);
   voice = preferences.getUInt("voice", 0);
+  beep = preferences.getUInt("beep", 0);
 
   // Bin Loader
   binLoader();
@@ -54,7 +55,7 @@ void setup()
   // Start server (for Web site Screen Capture)
   httpServer.begin();
 
-  setBrightness(brightness);
+  setBrightness(map(brightness, 1, 100, 1, 254));
   M5.Lcd.setRotation(1);
   M5.Lcd.fillScreen(TFT_BLACK);
 
