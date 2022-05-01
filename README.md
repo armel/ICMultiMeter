@@ -212,7 +212,7 @@ The following options are available :
 | Brightness           | Set Brightness (0 ~ 100%)                 | 
 | Transverter Mode     | Set Transverter Mode (OFF ~ ON)           | 
 | IP Address           | Display your IP                           |
-| Beep                 | Set Beep (OFF ~ON)                        |
+| Beep                 | Set Beep (0 ~ 100%)                        |
 | Shutdown             | Shutdown your M5Stack (even if in charge) |
 | Exit                 | Menu Exit                                 |
  

@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.1"
+#define VERSION "0.1.2"
 #define AUTHOR "F4HWN"
 #define NAME "ICMultiMeter"
 
@@ -121,4 +121,4 @@ const char *settings[] = {"Voice TX", "Brightness", "Transverter Mode", "IP Addr
 const char *choiceVoice[] = {"OFF", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceTransverter[] = {"OFF", "ON"};
-const char *choiceBeep[] = {"OFF", "ON"};
+const char *choiceBeep[] = {"BEEP LEVEL"};
