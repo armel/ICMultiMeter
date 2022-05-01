@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // Send CI-V Command by Bluetooth
-void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
+void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit, boolean sendOnly = false)
 {
   uint8_t byte1, byte2, byte3;
   uint8_t counter = 0;
@@ -15,6 +15,8 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
     }
 
     vTaskDelay(100);
+
+    if(sendOnly == true) return;
 
     while (CAT.available())
     {
@@ -46,7 +48,7 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
 }
 
 // Send CI-V Command by Wifi
-void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
+void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit, boolean sendOnly = false)
 {
   static uint8_t proxyError = 0;
 
@@ -124,10 +126,10 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
 }
 
 // Send CI-V Command dispatcher
-void sendCommand(char *request, size_t n, char *buffer, uint8_t limit)
+void sendCommand(char *request, size_t n, char *buffer, uint8_t limit, boolean sendOnly = false)
 {
   if (IC_MODEL == 705 && IC_CONNECT == BT)
-    sendCommandBt(request, n, buffer, limit);
+    sendCommandBt(request, n, buffer, limit, sendOnly);
   else
     sendCommandWifi(request, n, buffer, limit);
 }
@@ -1378,7 +1380,7 @@ void sendVoice()
 
   n = sizeof(request) / sizeof(request[0]);
 
-  sendCommand(request, n, buffer, 5);
+  sendCommand(request, n, buffer, 5, true);
 
   M5.Lcd.setFont(&tahoma8pt7b);
   M5.Lcd.setTextPadding(24);

@@ -4,6 +4,7 @@
 // Get Button
 void button(void *pvParameters)
 {
+  int8_t beepOld = 0;
   int8_t transverterOld = 0;
   int8_t voiceOld = 0;
   uint8_t brightnessOld = 64;
@@ -24,6 +25,25 @@ void button(void *pvParameters)
     getButton();
             
     if(btnA || btnB || btnC) {
+
+      if (M5.Speaker.isEnabled() && beep == 1)
+      {
+        // set master volume (0~255)
+        M5.Speaker.setVolume(16);
+        if(btnA || btnC)
+        {
+          // play beep sound 1000Hz 100msec (background task)
+          M5.Speaker.tone(1000, 50);
+        }
+        else if(btnB)
+        {
+          // play beep sound 2000Hz 100msec (background task)
+          M5.Speaker.tone(2000, 50);
+        }
+        // wait done
+        while (M5.Speaker.isPlaying()) { vTaskDelay(1); }
+      }
+
       screensaver = millis();
       brightnessOld = preferences.getUInt("brightness");
       transverterOld = preferences.getUInt("transverter");
@@ -120,7 +140,7 @@ void button(void *pvParameters)
         // Brightness
         if(settingsString == "Brightness")
         {
-          M5.Lcd.drawString(String(choiceBrightness[0]) + " " + String(map(brightness, 1, 254, 1, 100)) + "%", 160, h - 6);
+          M5.Lcd.drawString(String(choiceBrightness[0]) + " " + String(brightness) + "%", 160, h - 6);
 
           if(btnA || btnC) {
             if(btnA == 1) {
@@ -131,8 +151,8 @@ void button(void *pvParameters)
             }
             else if(btnC == 1) {
               brightness += 1;
-              if(brightness > 254) {
-                brightness = 254;
+              if(brightness > 100) {
+                brightness = 100;
               }
             }
           }
@@ -145,7 +165,7 @@ void button(void *pvParameters)
             settingsMode = false;
             vTaskDelay(pdMS_TO_TICKS(150));
           }
-          setBrightness(brightness);
+          setBrightness(map(brightness, 1, 100, 1, 254));
           vTaskDelay(pdMS_TO_TICKS(25));
         }
 
@@ -171,6 +191,37 @@ void button(void *pvParameters)
           else if(btnB == 1) {
             if(transverterOld != transverter)
               preferences.putUInt("transverter", transverter);
+            clearData();
+            viewGUI();
+            settingsSelect = false;
+            settingsMode = false;
+            vTaskDelay(pdMS_TO_TICKS(150));
+          }
+          vTaskDelay(pdMS_TO_TICKS(150));
+        }
+
+        // Beep
+        else if(settingsString == "Beep")
+        {
+          M5.Lcd.drawString(String(choiceBeep[beep]), 160, h - 6);
+
+          if(btnA || btnC) {
+            if(btnA == 1) {
+              beep -= 1;
+              if(beep < 0) {
+                beep = 1;
+              }
+            }
+            else if(btnC == 1) {
+              beep += 1;
+              if(beep > 1) {
+                beep = 0;
+              }
+            }
+          }
+          else if(btnB == 1) {
+            if(beepOld != beep)
+              preferences.putUInt("beep", beep);
             clearData();
             viewGUI();
             settingsSelect = false;
