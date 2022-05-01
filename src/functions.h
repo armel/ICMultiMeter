@@ -935,6 +935,8 @@ boolean checkConnection()
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
   char s[4];
   
+  settingLock = false;
+
   for (uint8_t i = 0; i < 6; i++)
   {
     sprintf(s, "%02x,", request[i]);
@@ -996,6 +998,8 @@ boolean checkConnection()
 
     if (message != "")
     {
+      settingLock = true;
+
       if(screensaverMode == false && settingsMode == false)
       {
         M5.Lcd.setTextDatum(CC_DATUM);
@@ -1005,11 +1009,13 @@ boolean checkConnection()
         M5.Lcd.drawString(message, 160, 70);
         vTaskDelay(750);
         M5.Lcd.drawString("", 160, 70);
-        vTaskDelay(250);
         frequencyOld = "";
+        settingLock = false;
+        vTaskDelay(250);
         return false;
       }
       else {
+        settingLock = false;
         vTaskDelay(1000);
         return false;
       }

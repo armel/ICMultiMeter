@@ -14,7 +14,7 @@ void button(void *pvParameters)
   uint8_t x = 44;
   uint8_t y = 4;
   uint16_t w = 320 - (x * 2);
-  uint8_t h = 190;
+  uint8_t h = 185;
 
   for (;;)
   {
@@ -26,10 +26,10 @@ void button(void *pvParameters)
             
     if(btnA || btnB || btnC) {
 
-      if (M5.Speaker.isEnabled() && beep == 1)
+      if (M5.Speaker.isEnabled() && beep > 0)
       {
         // set master volume (0~255)
-        M5.Speaker.setVolume(16);
+        M5.Speaker.setVolume(beep);
         if(btnA || btnC)
         {
           // play beep sound 1000Hz 100msec (background task)
@@ -203,19 +203,19 @@ void button(void *pvParameters)
         // Beep
         else if(settingsString == "Beep")
         {
-          M5.Lcd.drawString(String(choiceBeep[beep]), 160, h - 6);
+          M5.Lcd.drawString(String(choiceBeep[0]) + " " + String(beep) + "%", 160, h - 6);
 
           if(btnA || btnC) {
             if(btnA == 1) {
               beep -= 1;
               if(beep < 0) {
-                beep = 1;
+                beep = 0;
               }
             }
             else if(btnC == 1) {
               beep += 1;
-              if(beep > 1) {
-                beep = 0;
+              if(beep > 100) {
+                beep = 100;
               }
             }
           }
@@ -228,7 +228,7 @@ void button(void *pvParameters)
             settingsMode = false;
             vTaskDelay(pdMS_TO_TICKS(150));
           }
-          vTaskDelay(pdMS_TO_TICKS(150));
+          vTaskDelay(pdMS_TO_TICKS(25));
         }
 
         // Voice TX

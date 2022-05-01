@@ -22,24 +22,43 @@ void viewMenu(uint8_t x, uint8_t y, uint16_t w, uint8_t h) {
 }
 
 void viewOption(int8_t settingsChoice, boolean settingsSelect, uint8_t x, uint8_t y, uint16_t w) {
+    uint8_t start = 0;
+    uint8_t i, j;
+
     M5.Lcd.setTextDatum(CC_DATUM);
     M5.Lcd.setFont(&tahoma8pt7b);
     M5.Lcd.setTextPadding(w - 2);
     M5.Lcd.setTextColor(TFT_MENU_SELECT, TFT_MENU_BACK);
 
     size_t stop = sizeof(settings) / sizeof(settings[0]);
-    for(uint8_t i = 0; i < stop; i++) {
+
+    if(settingsChoice > 6)
+    {
+        start = settingsChoice - 6;
+    }
+    else {
+        start = 0;
+    }
+    
+    stop = start + 7;
+
+    j = 0;
+    for(i = start; i < stop; i++) {
         if(settingsChoice == i && settingsSelect == false) {
             M5.Lcd.setTextColor(TFT_BLACK, TFT_MENU_SELECT);
-            M5.Lcd.drawString(settings[i], 160, 45 + y + (i * 18));
+            M5.Lcd.drawString(settings[i], 160, 45 + y + (j * 18));
         }
         else if(settingsChoice == i && settingsSelect == true) {
             M5.Lcd.setTextColor(TFT_BLACK, TFT_MENU_SELECT);
-            M5.Lcd.drawString(settings[i], 160, 45 + y + (i * 18));
+            M5.Lcd.drawString(settings[i], 160, 45 + y + (j * 18));
         }
         else {
             M5.Lcd.setTextColor(TFT_MENU_SELECT, TFT_MENU_BACK);
-            M5.Lcd.drawString(settings[i], 160, 45 + y + (i * 18));
+            M5.Lcd.drawString(settings[i], 160, 45 + y + (j * 18));
+        }
+        j++;
+        if(j > 7) {
+            j = 7;
         }
     }
 }
