@@ -35,6 +35,7 @@ void setup()
   transverter = preferences.getUInt("transverter", 0);
   voice = preferences.getUInt("voice", 0);
   beep = preferences.getUInt("beep", 0);
+  screensaver = preferences.getUInt("screensaver", 60);
 
   // Bin Loader
   binLoader();
@@ -114,7 +115,7 @@ void loop()
   
   if(checkConnection()) {
     tx = getTX();
-    if(tx != 0) screensaver = millis();   // If transmit, refresh tempo
+    if(tx != 0) screensaverTimer = millis();   // If transmit, refresh tempo
 
     if (screensaverMode == false && screenshot == false && settingsMode == false)
     {
@@ -160,7 +161,7 @@ void loop()
         getSmeterLevel();
       }
       else {
-        screensaver = millis();   // If transmit, refresh tempo
+        screensaverTimer = millis();   // If transmit, refresh tempo
         if(needClear) {
           for(uint8_t i = 0; i <= 9; i++){
             leds[i] = CRGB::Red;

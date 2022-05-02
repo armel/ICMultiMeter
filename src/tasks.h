@@ -7,6 +7,7 @@ void button(void *pvParameters)
   int8_t beepOld = 0;
   int8_t transverterOld = 0;
   int8_t voiceOld = 0;
+  int8_t screensaverOld = 0;
   uint8_t brightnessOld = 64;
   static int8_t settingsChoice = 0;
   static boolean settingsSelect = false;
@@ -44,10 +45,11 @@ void button(void *pvParameters)
         while (M5.Speaker.isPlaying()) { vTaskDelay(1); }
       }
 
-      screensaver = millis();
+      screensaverTimer = millis();
       brightnessOld = preferences.getUInt("brightness");
       transverterOld = preferences.getUInt("transverter");
       voiceOld = preferences.getUInt("voice");
+      screensaverOld = preferences.getUInt("screensaver");
     }
 
     if(settingsMode == false)
@@ -222,6 +224,37 @@ void button(void *pvParameters)
           else if(btnB == 1) {
             if(beepOld != beep)
               preferences.putUInt("beep", beep);
+            clearData();
+            viewGUI();
+            settingsSelect = false;
+            settingsMode = false;
+            vTaskDelay(pdMS_TO_TICKS(150));
+          }
+          vTaskDelay(pdMS_TO_TICKS(25));
+        }
+
+        // Screensaver
+        else if(settingsString == "Screensaver")
+        {
+          M5.Lcd.drawString(String(choiceScreensaver[0]) + " " + String(screensaver) + " MIN", 160, h - 6);
+
+          if(btnA || btnC) {
+            if(btnA == 1) {
+              screensaver -= 1;
+              if(screensaver < 1) {
+                screensaver = 1;
+              }
+            }
+            else if(btnC == 1) {
+              screensaver += 1;
+              if(screensaver > 60) {
+                screensaver = 60;
+              }
+            }
+          }
+          else if(btnB == 1) {
+            if(screensaverOld != screensaver)
+              preferences.putUInt("screensaver", screensaver);
             clearData();
             viewGUI();
             settingsSelect = false;

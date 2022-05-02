@@ -6,7 +6,7 @@ void callbackBT(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 {
   if (event == ESP_SPP_SRV_OPEN_EVT)
   {
-    screensaver = millis();
+    screensaverTimer = millis();
     M5.Lcd.wakeup();
     Serial.println("BT Client Connected");
     frequencyOld = "";
@@ -33,7 +33,7 @@ void callbackWifiOff(WiFiEvent_t event, WiFiEventInfo_t info)
 // Wifi callback On
 void callbackWifiOn(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-  screensaver = millis();
+  screensaverTimer = millis();
   //M5.Lcd.wakeup();
   Serial.println("Wifi Client Connected");
   frequencyOld = "";
@@ -744,7 +744,7 @@ void getScreenshot()
               // and a content-type so the client knows what's coming, then a blank line,
               // followed by the content:
 
-              screensaver = millis(); // Screensaver update !!!
+              screensaverTimer = millis(); // Screensaver update !!!
 
               switch (htmlGetRequest)
               {
@@ -843,14 +843,14 @@ void wakeAndSleep()
   static boolean xDir = rand() & 1;
   static boolean yDir = rand() & 1;
 
-  if (screensaverMode == false && millis() - screensaver > TIMEOUT_SCREENSAVER)
+  if (screensaverMode == false && millis() - screensaverTimer > screensaver * 60 * 1000)
   {
     settingsMode = false;
     screensaverMode = true;
-    screensaver = 0;
+    screensaverTimer = 0;
     M5.Lcd.fillScreen(TFT_BLACK);
   }
-  else if (screensaverMode == true && screensaver != 0)
+  else if (screensaverMode == true && screensaverTimer != 0)
   {
     M5.Lcd.fillScreen(TFT_BLACK);
     clearData();
@@ -917,7 +917,7 @@ void wakeAndSleep()
   {
     Serial.print(screensaverMode);
     Serial.print(" ");
-    Serial.println(millis() - screensaver);
+    Serial.println(millis() - screensaverTimer);
   }
 }
 
@@ -970,7 +970,7 @@ boolean checkConnection()
           if(startup == false)
           {
             clearData();
-            screensaver = millis();
+            screensaverTimer = millis();
             M5.Lcd.wakeup();
             Serial.println("TX connected");
           }
