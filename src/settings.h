@@ -22,6 +22,3 @@
 
 // Transverter
 #define TRANSVERTER_LO 0                        // LO Frequency if you're using a Transverter
-
-// Screen Saver Time Out
-#define TIMEOUT_SCREENSAVER 60 * 60 * 1000      // 60 min default timeout (in milli seconds)
