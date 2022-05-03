@@ -969,8 +969,10 @@ boolean checkConnection()
         {
           if(startup == false)
           {
-            clearData();
-            screensaverTimer = millis();
+            if(screensaverMode == true) {
+              clearData();
+              screensaverTimer = millis();
+            }
             M5.Lcd.wakeup();
             Serial.println("TX connected");
           }
