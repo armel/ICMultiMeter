@@ -99,6 +99,7 @@ boolean proxyConnected = false;
 boolean txConnected = true;
 boolean needClear = true;
 boolean startup = true;
+boolean wakeup = true;
 boolean batteryCharginglOld = true;
 boolean voiceRefresh = true;
 
@@ -121,6 +122,13 @@ uint8_t binIndex = 0;
 const char *settings[] = {"Voice TX", "Transverter Mode", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
 const char *choiceVoice[] = {"OFF", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
-const char *choiceTransverter[] = {"OFF", "ON"};
 const char *choiceBeep[] = {"BEEP LEVEL"};
 const char *choiceScreensaver[] = {"TIMEOUT"};
+const u32_t choiceTransverter[] = {
+    0,
+    TRANSVERTER_LO_1,
+    TRANSVERTER_LO_2,
+    TRANSVERTER_LO_3,
+    TRANSVERTER_LO_4,
+    TRANSVERTER_LO_5
+};

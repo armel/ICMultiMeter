@@ -64,7 +64,7 @@ void button(void *pvParameters)
               voiceMode = 2;
               voiceCounter = 1;
             }
-            vTaskDelay(pdMS_TO_TICKS(250));
+            vTaskDelay(pdMS_TO_TICKS(150));
           }
           else if(btnC) { // n time
             if(voiceCounter == 0)
@@ -76,7 +76,7 @@ void button(void *pvParameters)
               voiceMode = 1;
               voiceCounter = 0;
             }
-            vTaskDelay(pdMS_TO_TICKS(250));
+            vTaskDelay(pdMS_TO_TICKS(150));
           }
         }
       }
@@ -88,8 +88,9 @@ void button(void *pvParameters)
         }
         viewMenu(x, y, w, h);
         viewOption(settingsChoice, settingsSelect, x, y, w);
-        vTaskDelay(500);
+        vTaskDelay(300);
       }
+      vTaskDelay(100);
     }
     // Select settings
     else if(settingsMode == true)
@@ -174,18 +175,53 @@ void button(void *pvParameters)
         // Transverter
         else if(settingsString == "Transverter Mode")
         {
-          M5.Lcd.drawString(String(choiceTransverter[transverter]), 160, h - 6);
+          if(transverter == 0)
+          {
+            M5.Lcd.drawString("OFF", 160, h - 6);
+          }
+          else
+          {
+            String val0, val1, val2, val3 = "";
+
+            String transverterStringOld = String(choiceTransverter[transverter]);
+            String transverterStringNew = "";
+            uint8_t lenght = transverterStringOld.length();
+
+            if(lenght <= 9) {
+              transverterStringNew = 
+                transverterStringOld.substring(0, lenght - 6) + 
+                "." +
+                transverterStringOld.substring(lenght - 6, lenght - 3) + 
+                "." +
+                transverterStringOld.substring(lenght - 3, lenght);
+            }
+            else {
+              transverterStringNew = 
+                transverterStringOld.substring(0, lenght - 9) +
+                "." +
+                transverterStringOld.substring(lenght - 9, lenght - 6) +
+                "." +
+                transverterStringOld.substring(lenght - 6, lenght - 3) +
+                "." +
+                transverterStringOld.substring(lenght - 3, lenght);
+            }
+
+            M5.Lcd.drawString(transverterStringNew, 160, h - 6);
+          }
+
+          size_t stop = sizeof(choiceTransverter) / sizeof(choiceTransverter[0]);
+          stop--;
 
           if(btnA || btnC) {
             if(btnA == 1) {
               transverter -= 1;
               if(transverter < 0) {
-                transverter = 1;
+                transverter = stop;
               }
             }
             else if(btnC == 1) {
               transverter += 1;
-              if(transverter > 1) {
+              if(transverter > stop) {
                 transverter = 0;
               }
             }

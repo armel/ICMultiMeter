@@ -385,8 +385,8 @@ void getFrequency()
     freq += (buffer[9 - i] & 0x0F) * decMulti[(i - 2) * 2 + 1];
   }
 
-  if(transverter == 1)
-    freq += TRANSVERTER_LO;
+  if(transverter > 0)
+    freq += int(choiceTransverter[transverter]);
 
   frequency = String(freq);
   lenght = frequency.length();

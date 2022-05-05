@@ -6,38 +6,30 @@ void callbackBT(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 {
   if (event == ESP_SPP_SRV_OPEN_EVT)
   {
-    screensaverTimer = millis();
-    M5.Lcd.wakeup();
     Serial.println("BT Client Connected");
-    frequencyOld = "";
     btConnected = true;
   }
   if (event == ESP_SPP_CLOSE_EVT)
   {
-    M5.Lcd.sleep();
     Serial.println("BT Client disconnected");
     btConnected = false;
   }
 }
 
+// Wifi callback On
+void callbackWifiOn(WiFiEvent_t event, WiFiEventInfo_t info)
+{
+  Serial.println("Wifi Client Connected");
+  wifiConnected = true;
+}
+
 // Wifi callback Off
 void callbackWifiOff(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-  //M5.Lcd.sleep();
   Serial.println("Wifi Client disconnected");
   wifiConnected = false;
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-}
-
-// Wifi callback On
-void callbackWifiOn(WiFiEvent_t event, WiFiEventInfo_t info)
-{
-  screensaverTimer = millis();
-  //M5.Lcd.wakeup();
-  Serial.println("Wifi Client Connected");
-  frequencyOld = "";
-  wifiConnected = true;
 }
 
 // List files on SPIFFS or SD
@@ -295,20 +287,20 @@ void viewGUI()
   M5.Lcd.setFont(0);
   M5.Lcd.setTextDatum(CC_DATUM);
 
-  M5.Lcd.fillRoundRect(261, 90, 56, 13, 2, TFT_MODE_BACK);
-  M5.Lcd.drawRoundRect(261, 90, 56, 13, 2, TFT_MODE_BORDER);
+  M5.Lcd.fillRoundRect(261, 96, 56, 13, 2, TFT_MODE_BACK);
+  M5.Lcd.drawRoundRect(261, 96, 56, 13, 2, TFT_MODE_BORDER);
   M5.Lcd.setTextColor(TFT_WHITE);
 
   if (IC_CONNECT == BT)
-    M5.Lcd.drawString(String(IC_MODEL) + " BT", 289, 97);
+    M5.Lcd.drawString(String(IC_MODEL) + " BT", 289, 103);
   else
-    M5.Lcd.drawString(String(IC_MODEL) + " USB", 289, 97);
+    M5.Lcd.drawString(String(IC_MODEL) + " USB", 289, 103);
 
-  if (transverter == 1) {
-    M5.Lcd.fillRoundRect(4, 90, 24, 13, 2, TFT_MODE_BACK);
-    M5.Lcd.drawRoundRect(4, 90, 24, 13, 2, TFT_MODE_BORDER);
+  if (transverter > 0) {
+    M5.Lcd.fillRoundRect(233, 96, 26, 13, 2, TFT_MODE_BACK);
+    M5.Lcd.drawRoundRect(233, 96, 26, 13, 2, TFT_MODE_BORDER);
     M5.Lcd.setTextColor(TFT_WHITE);
-    M5.Lcd.drawString("LO", 16, 97);
+    M5.Lcd.drawString("LO" + String(transverter), 247, 103);
   }
 
   /*
@@ -933,8 +925,9 @@ boolean checkConnection()
   String response = "";
 
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
+
   char s[4];
-  
+
   settingLock = false;
 
   for (uint8_t i = 0; i < 6; i++)
@@ -948,7 +941,7 @@ boolean checkConnection()
   if (screenshot == false)
   {
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
-      message = "Check Pairing";
+      message = "Need Pairing";
     else if (IC_CONNECT == USB && wifiConnected == false)
       message = "Check Wifi";
     else if (IC_CONNECT == USB && (proxyConnected == false || txConnected == false))
@@ -967,27 +960,14 @@ boolean checkConnection()
 
         if (response != "")
         {
-          if(startup == false)
-          {
-            if(screensaverMode == true) {
-              clearData();
-              screensaverTimer = millis();
-            }
-            M5.Lcd.wakeup();
-            Serial.println("TX connected");
-          }
-
+          Serial.println("TX connected");
           txConnected = true;
           message = "";
         }
         else
         {
-          if(startup == false)
-          {
-            M5.Lcd.sleep();
-            Serial.println("TX disconnected");
-          }
-
+          Serial.println("TX disconnected");
+          txConnected = false;
           message = "Check TX";
         }
       }
@@ -998,6 +978,27 @@ boolean checkConnection()
       http.end();
     }
 
+    // Shutdown screen if no TX connexion
+    if(wakeup == true && startup == false) {
+       if ((IC_CONNECT == BT && btConnected == false) || (IC_CONNECT == USB && txConnected == false))
+       {
+          M5.Lcd.sleep();
+          wakeup = false;
+       }
+    }
+    else if(wakeup == false && startup == false) {
+       if ((IC_CONNECT == BT && btConnected == true) || (IC_CONNECT == USB && txConnected == true))
+       {
+          clearData();
+          viewGUI();
+          M5.Lcd.wakeup();
+          wakeup = true;
+          screensaverTimer = millis();
+       }
+    }
+
+    // View message
+
     if (message != "")
     {
       settingLock = true;
@@ -1006,11 +1007,11 @@ boolean checkConnection()
       {
         M5.Lcd.setTextDatum(CC_DATUM);
         M5.Lcd.setFont(&UniversCondensed20pt7b);
-        M5.Lcd.setTextPadding(200);
+        M5.Lcd.setTextPadding(194);
         M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-        M5.Lcd.drawString(message, 160, 70);
+        M5.Lcd.drawString(message, 160, 76);
         vTaskDelay(750);
-        M5.Lcd.drawString("", 160, 70);
+        M5.Lcd.drawString("", 160, 76);
         frequencyOld = "";
         settingLock = false;
         vTaskDelay(250);
