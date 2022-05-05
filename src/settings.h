@@ -21,4 +21,8 @@
 #define PROXY_PORT 1234                         // Proxy HTTP Port
 
 // Transverter
-#define TRANSVERTER_LO 0                        // LO Frequency if you're using a Transverter
+#define TRANSVERTER_LO_1    116000000           // LO Frequency if you're using a Transverter
+#define TRANSVERTER_LO_2    118000000           // LO Frequency if you're using a Transverter
+#define TRANSVERTER_LO_3    404000000           // LO Frequency if you're using a Transverter
+#define TRANSVERTER_LO_4    406000000           // LO Frequency if you're using a Transverter
+#define TRANSVERTER_LO_5   9968000000           // LO Frequency if you're using a Transverter
