@@ -181,29 +181,23 @@ void button(void *pvParameters)
           }
           else
           {
-            String val0, val1, val2, val3 = "";
-
             String transverterStringOld = String(choiceTransverter[transverter]);
             String transverterStringNew = "";
             uint8_t lenght = transverterStringOld.length();
+            int8_t i;
 
-            if(lenght <= 9) {
-              transverterStringNew = 
-                transverterStringOld.substring(0, lenght - 6) + 
-                "." +
-                transverterStringOld.substring(lenght - 6, lenght - 3) + 
-                "." +
-                transverterStringOld.substring(lenght - 3, lenght);
+            for(i = lenght - 6; i >= 0; i -= 3) 
+            {
+              transverterStringNew = "." + transverterStringOld.substring(i, i + 3) + transverterStringNew;
             }
-            else {
-              transverterStringNew = 
-                transverterStringOld.substring(0, lenght - 9) +
-                "." +
-                transverterStringOld.substring(lenght - 9, lenght - 6) +
-                "." +
-                transverterStringOld.substring(lenght - 6, lenght - 3) +
-                "." +
-                transverterStringOld.substring(lenght - 3, lenght);
+
+            if(i == -3) 
+            {
+              transverterStringNew = transverterStringNew.substring(1, transverterStringNew.length());
+            }
+            else 
+            {
+              transverterStringNew = transverterStringOld.substring(0, i + 3) + transverterStringNew;
             }
 
             M5.Lcd.drawString(transverterStringNew, 160, h - 6);

@@ -130,7 +130,7 @@ Line 20 and 21, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port 
 
 #### Transverter Configuration
 
-If you are using a Transverter, you can configure a Local Oscillator frequency, line 24. For example, if you are on 28500000 Hz and the constant `TRANSVERTER_LO` is set to 116000000, your M5Stack will display 144.500.000 (not 28.500.000). This can be useful. Of course, default value is 0. Change the constant `TRANSVERTER_LO` only if you need.
+If you are using a Transverter, you can configure up to 5 Local Oscillator frequencies, lines 24 ~ 28. For example, if you are on 28500000 Hz and the constant `TRANSVERTER_LO_1` is set to 116000000 (default value), your M5Stack will display 144.500.000 (not 28.500.000), if you select this option in the settings menu. This can be useful. Change theses constants only if you need.
 
 #### Examples of settings
 
@@ -199,7 +199,7 @@ The following options are available :
 | Settings             | Value                                     | 
 | -------------------- |:-----------------------------------------:| 
 | Voice TX             | Transmit Voice TX Memory (OFF or T1 ~ T8) | 
-| Transverter Mode     | Set Transverter Mode (OFF ~ ON)           | 
+| Transverter Mode     | Set Transverter Mode (OFF, LO1 ~ LO5)     | 
 | Brightness           | Set Brightness (0 ~ 100%)                 | 
 | Beep                 | Set Beep (0 ~ 100%)                       |
 | Screensaver          | Set Screensaver TimeOut (1 ~ 60 min)      |
@@ -298,6 +298,8 @@ Many thanks to...
 | M5Stack-SD-Updater  | [Tobozo](https://twitter.com/TobozoTagada)            | https://github.com/tobozo/M5Stack-SD-Updater |
 | FastLED             | FastLED                                               | https://github.com/FastLED/FastLED           |
 
+
+Icom and the Icom logo are registered trademarks of Icom Incorporated (Japan) in Japan, the United States, the United Kingdom, Germany, France, Spain, Russia, Australia, New Zealand, and/or other countries.
 
 # Donations
 

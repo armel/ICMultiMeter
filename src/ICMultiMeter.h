@@ -84,10 +84,10 @@ uint8_t COMPOld = 127;
 uint8_t VdOld = 0;
 uint8_t IPOld = 0;
 uint8_t batteryLevelOld = 0;
-uint16_t bande = 28;
 
 uint32_t screensaverTimer;
 uint32_t transmit;
+
 
 boolean screensaverMode = false;
 boolean screenshot = false;
@@ -102,6 +102,7 @@ boolean startup = true;
 boolean wakeup = true;
 boolean batteryCharginglOld = true;
 boolean voiceRefresh = true;
+boolean bandeLow;
 
 String frequencyOld = "";
 String filterOld = "";
@@ -124,7 +125,7 @@ const char *choiceVoice[] = {"OFF", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceBeep[] = {"BEEP LEVEL"};
 const char *choiceScreensaver[] = {"TIMEOUT"};
-const u32_t choiceTransverter[] = {
+const double choiceTransverter[] = {
     0,
     TRANSVERTER_LO_1,
     TRANSVERTER_LO_2,

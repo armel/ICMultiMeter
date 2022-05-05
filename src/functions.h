@@ -300,10 +300,10 @@ void viewGUI()
 
   if (transverter > 0)
   {
-    M5.Lcd.fillRoundRect(233, 96, 26, 13, 2, TFT_MODE_BACK);
-    M5.Lcd.drawRoundRect(233, 96, 26, 13, 2, TFT_MODE_BORDER);
+    M5.Lcd.fillRoundRect(230, 96, 26, 13, 2, TFT_MODE_BACK);
+    M5.Lcd.drawRoundRect(230, 96, 26, 13, 2, TFT_MODE_BORDER);
     M5.Lcd.setTextColor(TFT_WHITE);
-    M5.Lcd.drawString("LO" + String(transverter), 247, 103);
+    M5.Lcd.drawString("LO" + String(transverter), 244, 103);
   }
 
   /*
