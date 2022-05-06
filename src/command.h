@@ -43,6 +43,7 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit, boolean
         }
       }
     }
+    startup = false;
   }
   // Serial.println(" Ok");
 }
@@ -359,17 +360,13 @@ uint8_t getPowerType()
 // Get Frequency
 void getFrequency()
 {
+  String frequency;
+  String frequencyNew;
+
   static char buffer[8];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
 
-  String frequency;
-
-  String val0;
-  String val1;
-  String val2;
-  String val3;
-
-  uint32_t freq; // Current frequency in Hz
+  double freq; // Current frequency in Hz
   const uint32_t decMulti[] = {1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10, 1};
 
   uint8_t lenght = 0;
@@ -385,28 +382,52 @@ void getFrequency()
     freq += (buffer[9 - i] & 0x0F) * decMulti[(i - 2) * 2 + 1];
   }
 
-  if(transverter == 1)
-    freq += TRANSVERTER_LO;
+  if(transverter > 0)
+    freq += double(choiceTransverter[transverter]);
+
+  if(freq <= 50000000)
+  {
+    bandeLow = true;
+  }
+  else
+  {
+    bandeLow = false;
+  }
 
   frequency = String(freq);
   lenght = frequency.length();
-  if(lenght <= 9) {
-    val0 = frequency.substring(lenght - 3, lenght);
-    val1 = frequency.substring(lenght - 6, lenght - 3);
-    val2 = frequency.substring(0, lenght - 6);
-    frequency = val2 + "." + val1 + "." + val0;
-    bande = val2.toInt();
+
+  if(frequency != "0")
+  {
+    int8_t i;
+
+    for(i = lenght - 6; i >= 0; i -= 3) 
+    {
+      frequencyNew = "." + frequency.substring(i, i + 3) + frequencyNew;
+    }
+
+    if(i == -3) 
+    {
+      frequencyNew = frequencyNew.substring(1, frequencyNew.length());
+    }
+    else 
+    {
+      frequencyNew = frequency.substring(0, i + 3) + frequencyNew;
+    }
   }
   else {
-    val0 = frequency.substring(lenght - 3, lenght);
-    val1 = frequency.substring(lenght - 6, lenght - 3);
-    val2 = frequency.substring(lenght - 9, lenght - 6);
-    val3 = frequency.substring(0, lenght - 9);
-    frequency = val3 + "." + val2 + "." + val1 + "." + val0;
-    bande = (val3.toInt() * 1000) + val2.toInt();
+    frequencyNew = "-";
   }
 
-  if(frequency == "" || frequency == "0.." || frequency == "163.163.163")
+  frequency = frequencyNew;
+
+  // If too long...
+
+  if(frequency.length() >= 14) {
+    frequency = frequency.substring(0, frequency.length() - 1);
+  }
+
+  if(frequency == "" || frequency == "-" || frequency == "163.163.163")
     txConnected = false;
   else
     txConnected = true;
@@ -916,7 +937,8 @@ void getAMP()
     M5.Lcd.setTextPadding(55);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     M5.Lcd.setTextDatum(CL_DATUM);
-    if(bande > 100 && value != 0) {
+    
+    if(bandeLow == false && value != 0) {
       M5.Lcd.drawString("P.AMP", 120, 34);
     }
     else {

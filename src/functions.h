@@ -6,38 +6,32 @@ void callbackBT(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 {
   if (event == ESP_SPP_SRV_OPEN_EVT)
   {
-    screensaverTimer = millis();
-    M5.Lcd.wakeup();
-    Serial.println("BT Client Connected");
-    frequencyOld = "";
     btConnected = true;
+    Serial.println("BT Client Connected");
   }
   if (event == ESP_SPP_CLOSE_EVT)
   {
     M5.Lcd.sleep();
-    Serial.println("BT Client disconnected");
+    wakeup = false;
     btConnected = false;
+    Serial.println("BT Client disconnected");
   }
-}
-
-// Wifi callback Off
-void callbackWifiOff(WiFiEvent_t event, WiFiEventInfo_t info)
-{
-  //M5.Lcd.sleep();
-  Serial.println("Wifi Client disconnected");
-  wifiConnected = false;
-
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 }
 
 // Wifi callback On
 void callbackWifiOn(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-  screensaverTimer = millis();
-  //M5.Lcd.wakeup();
-  Serial.println("Wifi Client Connected");
-  frequencyOld = "";
   wifiConnected = true;
+  Serial.println("Wifi Client Connected");
+}
+
+// Wifi callback Off
+void callbackWifiOff(WiFiEvent_t event, WiFiEventInfo_t info)
+{
+  wifiConnected = false;
+  Serial.println("Wifi Client disconnected");
+
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 }
 
 // List files on SPIFFS or SD
@@ -107,7 +101,7 @@ void binLoader()
   root = SPIFFS.open("/");
   getBinaryList(root, "SP");
 
-  if (SD.begin(GPIO_NUM_4, SPI, 25000000)) 
+  if (SD.begin(GPIO_NUM_4, SPI, 25000000))
   {
     root = SD.open("/");
     getBinaryList(root, "SD");
@@ -289,26 +283,27 @@ void viewGUI()
 {
   // Clear
   M5.Lcd.fillRect(0, 0, 320, 240, TFT_BLACK);
-  
+
   // IC Connect
 
   M5.Lcd.setFont(0);
   M5.Lcd.setTextDatum(CC_DATUM);
 
-  M5.Lcd.fillRoundRect(261, 90, 56, 13, 2, TFT_MODE_BACK);
-  M5.Lcd.drawRoundRect(261, 90, 56, 13, 2, TFT_MODE_BORDER);
+  M5.Lcd.fillRoundRect(261, 96, 56, 13, 2, TFT_MODE_BACK);
+  M5.Lcd.drawRoundRect(261, 96, 56, 13, 2, TFT_MODE_BORDER);
   M5.Lcd.setTextColor(TFT_WHITE);
 
   if (IC_CONNECT == BT)
-    M5.Lcd.drawString(String(IC_MODEL) + " BT", 289, 97);
+    M5.Lcd.drawString(String(IC_MODEL) + " BT", 289, 103);
   else
-    M5.Lcd.drawString(String(IC_MODEL) + " USB", 289, 97);
+    M5.Lcd.drawString(String(IC_MODEL) + " USB", 289, 103);
 
-  if (transverter == 1) {
-    M5.Lcd.fillRoundRect(4, 90, 24, 13, 2, TFT_MODE_BACK);
-    M5.Lcd.drawRoundRect(4, 90, 24, 13, 2, TFT_MODE_BORDER);
+  if (transverter > 0)
+  {
+    M5.Lcd.fillRoundRect(230, 96, 26, 13, 2, TFT_MODE_BACK);
+    M5.Lcd.drawRoundRect(230, 96, 26, 13, 2, TFT_MODE_BORDER);
     M5.Lcd.setTextColor(TFT_WHITE);
-    M5.Lcd.drawString("LO", 16, 97);
+    M5.Lcd.drawString("LO" + String(transverter), 244, 103);
   }
 
   /*
@@ -498,10 +493,12 @@ void viewGUI()
   M5.Lcd.drawRect(220, 200, 100, 40, TFT_FIL_BORDER);
   M5.Lcd.drawString("Vd", 220, 200);
 
-  if(IC_MODEL == 705) {
+  if (IC_MODEL == 705)
+  {
     M5.Lcd.drawString("5", 230, 216);
   }
-  else {
+  else
+  {
     M5.Lcd.drawString("10", 230, 216);
   }
 
@@ -516,11 +513,13 @@ void viewGUI()
     M5.Lcd.drawFastVLine(230 + i, 224, 8, TFT_FIL_BACK);
   }
 
-  if(IC_MODEL == 705) {
+  if (IC_MODEL == 705)
+  {
     M5.Lcd.drawFastHLine(230, 232, 50, TFT_RED);
     M5.Lcd.drawFastHLine(280, 232, 30, TFT_FIL_BORDER);
   }
-  else {
+  else
+  {
     M5.Lcd.drawFastHLine(230, 232, 25, TFT_RED);
     M5.Lcd.drawFastHLine(255, 232, 55, TFT_FIL_BORDER);
   }
@@ -753,10 +752,12 @@ void getScreenshot()
                 httpClient.println("HTTP/1.1 200 OK");
                 httpClient.println("Content-type:text/html");
                 httpClient.println();
-                if(M5.getBoard() == m5::board_t::board_M5Stack) {
+                if (M5.getBoard() == m5::board_t::board_M5Stack)
+                {
                   httpClient.write_P(index_m5stack_html, sizeof(index_m5stack_html));
                 }
-                else if(M5.getBoard() == m5::board_t::board_M5StackCore2) {
+                else if (M5.getBoard() == m5::board_t::board_M5StackCore2)
+                {
                   httpClient.write_P(index_core2_html, sizeof(index_core2_html));
                 }
                 break;
@@ -933,8 +934,9 @@ boolean checkConnection()
   String response = "";
 
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
+
   char s[4];
-  
+
   settingLock = false;
 
   for (uint8_t i = 0; i < 6; i++)
@@ -948,7 +950,7 @@ boolean checkConnection()
   if (screenshot == false)
   {
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
-      message = "Check Pairing";
+      message = "Need Pairing";
     else if (IC_CONNECT == USB && wifiConnected == false)
       message = "Check Wifi";
     else if (IC_CONNECT == USB && (proxyConnected == false || txConnected == false))
@@ -967,25 +969,14 @@ boolean checkConnection()
 
         if (response != "")
         {
-          if(startup == false)
-          {
-            clearData();
-            screensaverTimer = millis();
-            M5.Lcd.wakeup();
-            Serial.println("TX connected");
-          }
-
+          Serial.println("TX connected");
           txConnected = true;
           message = "";
         }
         else
         {
-          if(startup == false)
-          {
-            M5.Lcd.sleep();
-            Serial.println("TX disconnected");
-          }
-
+          Serial.println("TX disconnected");
+          txConnected = false;
           message = "Check TX";
         }
       }
@@ -996,25 +987,49 @@ boolean checkConnection()
       http.end();
     }
 
+    // Shutdown screen if no TX connexion
+    if (wakeup == true && startup == false)
+    {
+      if ((IC_CONNECT == BT && btConnected == false) || (IC_CONNECT == USB && txConnected == false))
+      {
+        M5.Lcd.sleep();
+        wakeup = false;
+      }
+    }
+    else if (wakeup == false && startup == false)
+    {
+      if ((IC_CONNECT == BT && btConnected == true) || (IC_CONNECT == USB && txConnected == true))
+      {
+        clearData();
+        viewGUI();
+        M5.Lcd.wakeup();
+        wakeup = true;
+        screensaverTimer = millis();
+      }
+    }
+
+    // View message
+
     if (message != "")
     {
       settingLock = true;
 
-      if(screensaverMode == false && settingsMode == false)
+      if (screensaverMode == false && settingsMode == false)
       {
         M5.Lcd.setTextDatum(CC_DATUM);
         M5.Lcd.setFont(&UniversCondensed20pt7b);
-        M5.Lcd.setTextPadding(200);
+        M5.Lcd.setTextPadding(194);
         M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-        M5.Lcd.drawString(message, 160, 70);
+        M5.Lcd.drawString(message, 160, 76);
         vTaskDelay(750);
-        M5.Lcd.drawString("", 160, 70);
+        M5.Lcd.drawString("", 160, 76);
         frequencyOld = "";
         settingLock = false;
         vTaskDelay(250);
         return false;
       }
-      else {
+      else
+      {
         settingLock = false;
         vTaskDelay(1000);
         return false;
@@ -1027,7 +1042,7 @@ boolean checkConnection()
 // Manage voice
 void voiceManager(uint8_t tx, uint8_t alternance)
 {
-  if(DEBUG) 
+  if (DEBUG)
   {
     Serial.print(voice);
     Serial.print("-");
@@ -1040,21 +1055,26 @@ void voiceManager(uint8_t tx, uint8_t alternance)
   M5.Lcd.setTextPadding(24);
   M5.Lcd.setTextDatum(CC_DATUM);
 
-  if(voice == 0)
+  if (voice == 0)
   {
     M5.Lcd.fillRect(32, 2, 28, 18, TFT_BLACK);
     return;
   }
-  else {
-    if(voiceMode == 2) {
-      if(tx == 0) {
+  else
+  {
+    if (voiceMode == 2)
+    {
+      if (tx == 0)
+      {
         sendVoice();
         voiceMode--;
         voiceCounter--;
         voiceRefresh = true;
       }
-      else {
-        if(voiceRefresh == true) {
+      else
+      {
+        if (voiceRefresh == true)
+        {
           M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_BLACK);
           M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_RED);
           M5.Lcd.setTextColor(TFT_RED);
@@ -1063,16 +1083,20 @@ void voiceManager(uint8_t tx, uint8_t alternance)
         }
       }
     }
-    else if(voiceMode == 1) {
-      if(tx == 1) {
+    else if (voiceMode == 1)
+    {
+      if (tx == 1)
+      {
         transmit = millis();
       }
-      else 
+      else
       {
-        if(voiceCounter == 0) {
+        if (voiceCounter == 0)
+        {
           voiceMode = 0;
 
-          if(voiceRefresh == true) {
+          if (voiceRefresh == true)
+          {
             M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_BLACK);
             M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_RED);
             M5.Lcd.setTextColor(TFT_RED);
@@ -1080,23 +1104,27 @@ void voiceManager(uint8_t tx, uint8_t alternance)
             voiceRefresh = false;
           }
         }
-        else if(millis() - transmit > voiceTimeout * 1000) {
+        else if (millis() - transmit > voiceTimeout * 1000)
+        {
           sendVoice();
           voiceCounter--;
           voiceRefresh = true;
         }
-        else if(millis() - transmit < voiceTimeout * 1000) {
-            uint8_t value = voiceTimeout - int((millis() - transmit) / 1000);
+        else if (millis() - transmit < voiceTimeout * 1000)
+        {
+          uint8_t value = voiceTimeout - int((millis() - transmit) / 1000);
 
-            M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_RED);
-            M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_WHITE);
-            M5.Lcd.setTextColor(TFT_WHITE);
-            M5.Lcd.drawString(String(value) + "s", 45, 12);  
+          M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_RED);
+          M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_WHITE);
+          M5.Lcd.setTextColor(TFT_WHITE);
+          M5.Lcd.drawString(String(value) + "s", 45, 12);
         }
-      }        
+      }
     }
-    else {
-      if(voiceRefresh == true) {
+    else
+    {
+      if (voiceRefresh == true)
+      {
         M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_BLACK);
         M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_RED);
         M5.Lcd.setTextColor(TFT_RED);

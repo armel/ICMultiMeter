@@ -245,4 +245,13 @@ void loop()
 
   // Manage Screen Saver
   wakeAndSleep();
+
+  if(DEBUG)
+  {
+    Serial.print(screensaverMode);
+    Serial.print(" ");
+    Serial.print(millis() - screensaverTimer);
+    Serial.print(" ");
+    Serial.println(screensaver * 60 * 1000);
+  }
 }
