@@ -99,7 +99,6 @@ uint8_t batteryLevelOld = 0;
 uint32_t screensaverTimer;
 uint32_t transmit;
 
-
 boolean screensaverMode = false;
 boolean screenshot = false;
 boolean settingsMode = false;
