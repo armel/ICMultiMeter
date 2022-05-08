@@ -204,8 +204,22 @@ void loop()
 
         case 1:
           mode = getModeFilter();
-          getNR();
-          getNB();
+          if(getNR())
+          {
+            getNRLevel();
+          }
+          else
+          {
+            cleanNRLevel();
+          }
+          if(getNB())
+          {
+            getNBLevel();
+          }
+          else
+          {
+            cleanNBLevel();
+          }
           getAN();
           getRIT();
           break;

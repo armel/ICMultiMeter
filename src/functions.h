@@ -490,63 +490,39 @@ void viewGUI()
   // Vd
   M5.Lcd.setTextDatum(CL_DATUM);
   M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-  M5.Lcd.drawRect(220, 200, 100, 40, TFT_FIL_BORDER);
-  M5.Lcd.drawString("Vd", 220, 200);
+  M5.Lcd.drawRect(220, 208, 100, 32, TFT_FIL_BORDER);
+  M5.Lcd.drawString("Vd", 220, 208);
 
   if (IC_MODEL == 705)
   {
-    M5.Lcd.drawString("5", 230, 216);
+    M5.Lcd.drawString("5", 230, 219);
   }
   else
   {
-    M5.Lcd.drawString("10", 230, 216);
+    M5.Lcd.drawString("10", 230, 219);
   }
 
   M5.Lcd.setTextDatum(CR_DATUM);
-  M5.Lcd.drawString("16V", 312, 216);
+  M5.Lcd.drawString("16V", 312, 219);
 
   M5.Lcd.setTextDatum(CC_DATUM);
   M5.Lcd.setTextColor(TFT_WHITE);
 
   for (uint8_t i = 0; i <= 80; i += STEP)
   {
-    M5.Lcd.drawFastVLine(230 + i, 224, 8, TFT_FIL_BACK);
+    M5.Lcd.drawFastVLine(230 + i, 226, 8, TFT_FIL_BACK);
   }
 
   if (IC_MODEL == 705)
   {
-    M5.Lcd.drawFastHLine(230, 232, 50, TFT_RED);
-    M5.Lcd.drawFastHLine(280, 232, 30, TFT_FIL_BORDER);
+    M5.Lcd.drawFastHLine(230, 234, 50, TFT_RED);
+    M5.Lcd.drawFastHLine(280, 234, 30, TFT_FIL_BORDER);
   }
   else
   {
-    M5.Lcd.drawFastHLine(230, 232, 25, TFT_RED);
-    M5.Lcd.drawFastHLine(255, 232, 55, TFT_FIL_BORDER);
+    M5.Lcd.drawFastHLine(230, 234, 25, TFT_RED);
+    M5.Lcd.drawFastHLine(255, 234, 55, TFT_FIL_BORDER);
   }
-
-  // AF Gain & SQL
-  // M5.Lcd.fillRect(220, 146, 100, 45, TFT_BLACK);
-  // M5.Lcd.drawRect(220, 146, 100, 45, TFT_FIL_BORDER);
-
-  M5.Lcd.fillRect(230, 135, 60, 10, TFT_BLACK);
-  M5.Lcd.fillRect(230, 157, 60, 10, TFT_BLACK);
-  M5.Lcd.fillRect(230, 179, 60, 10, TFT_BLACK);
-
-  M5.Lcd.drawRect(230, 135, 60, 10, TFT_FIL_BORDER);
-  M5.Lcd.drawRect(230, 157, 60, 10, TFT_FIL_BORDER);
-  M5.Lcd.drawRect(230, 179, 60, 10, TFT_FIL_BORDER);
-
-  M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-  M5.Lcd.setTextDatum(CL_DATUM);
-  M5.Lcd.drawString("AF GAIN", 230, 130);
-
-  M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-  M5.Lcd.setTextDatum(CL_DATUM);
-  M5.Lcd.drawString("MIC GAIN", 230, 152);
-
-  M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-  M5.Lcd.setTextDatum(CL_DATUM);
-  M5.Lcd.drawString("SQL", 230, 174);
 }
 
 // Clear GUI
@@ -627,6 +603,8 @@ void clearData()
   MICOld = 127;
   SQLOld = 127;
   COMPOld = 127;
+  NRLevelOld = 127;
+  NBLevelOld = 127;
   VdOld = 0;
   IPOld = 0;
   batteryLevelOld = 0;

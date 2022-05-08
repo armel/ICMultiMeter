@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.4"
+#define VERSION "0.1.5"
 #define AUTHOR "F4HWN"
 #define NAME "ICMultiMeter"
 
@@ -29,7 +29,16 @@
 #define TFT_FIL_BORDER M5.Lcd.color565(99, 99, 99)
 #define TFT_FIL_BACK M5.Lcd.color565(66, 66, 66)
 
-#define TFT_GAUGE M5.Lcd.color565(255, 64, 0)
+/*
+#define TFT_GAUGE_1 M5.Lcd.color565(213, 144, 50)
+#define TFT_GAUGE_2 M5.Lcd.color565(233, 196, 66)
+#define TFT_GAUGE_3 M5.Lcd.color565(194, 106, 39)
+*/
+
+#define TFT_GAUGE_1 M5.Lcd.color565(215, 96, 32)
+#define TFT_GAUGE_2 M5.Lcd.color565(255, 128, 32)
+#define TFT_GAUGE_3 M5.Lcd.color565(200, 64, 16)
+
 
 #define TFT_MENU_BORDER M5.Lcd.color565(115, 135, 159)
 #define TFT_MENU_BACK M5.Lcd.color565(24, 57, 92)
@@ -81,13 +90,14 @@ uint8_t AFOld = 127;
 uint8_t MICOld = 127;
 uint8_t SQLOld = 127;
 uint8_t COMPOld = 127;
+uint8_t NRLevelOld = 127;
+uint8_t NBLevelOld = 127;
 uint8_t VdOld = 0;
 uint8_t IPOld = 0;
 uint8_t batteryLevelOld = 0;
 
 uint32_t screensaverTimer;
 uint32_t transmit;
-
 
 boolean screensaverMode = false;
 boolean screenshot = false;
