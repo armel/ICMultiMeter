@@ -618,11 +618,24 @@ void getIdLevel()
       display.drawFastVLine(30 + i, 218, 8, TFT_FIL_BACK);
     }
 
-    for (uint8_t i = 0; i <= 12; i++)
+    if(IC_MODEL == 705)
     {
-      if (i % 3 == 0)
+      for (uint8_t i = 0; i <= 12; i++)
       {
-        display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+        if (i % 3 == 0)
+        {
+          display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+        }
+      }
+    }
+    else
+    {
+      for (uint8_t i = 0; i <= 15; i++)
+      {
+        if (i % 3 == 0)
+        {
+          display.drawFastVLine(30 + (i * 11.3), 224, 2, TFT_FIL_BORDER);
+        }
       }
     }
 

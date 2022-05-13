@@ -349,21 +349,44 @@ void viewGUI()
     display.drawFastVLine(30 + i, 218, 8, TFT_FIL_BACK);
   }
 
-  for (uint8_t i = 0; i <= 12; i++)
+  if(IC_MODEL == 705)
   {
-    if (i == 12)
+    for (uint8_t i = 0; i <= 12; i++)
     {
-      display.drawString(String(" 4 A"), 30 + (i * 14), 234);
-      display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+      if (i == 12)
+      {
+        display.drawString(String(" 4 A"), 30 + (i * 14), 234);
+        display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+      }
+      else if (i % 3 == 0)
+      {
+        display.drawString(String(i / 3), 30 + (i * 14), 234);
+        display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+      }
+      else
+      {
+        display.drawString(String("."), 30 + (i * 14), 230);
+      }
     }
-    else if (i % 3 == 0)
+  }
+  else
+  {
+    for (uint8_t i = 0; i <= 15; i++)
     {
-      display.drawString(String(i / 3), 30 + (i * 14), 234);
-      display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
-    }
-    else
-    {
-      display.drawString(String("."), 30 + (i * 14), 230);
+      if (i == 15)
+      {
+        display.drawString(String("25A"), 30 + (i * 11.3) + 4, 234);
+        display.drawFastVLine(30 + (i * 11.3), 224, 2, TFT_FIL_BORDER);
+      }
+      else if (i % 3 == 0)
+      {
+        display.drawString(String((i / 3) * 5), 30 + (i * 11.3), 234);
+        display.drawFastVLine(30 + (i * 11.3), 224, 2, TFT_FIL_BORDER);
+      }
+      else
+      {
+        display.drawString(String("."), 30 + (i * 11.3), 230);
+      }
     }
   }
   display.drawFastVLine(30, 218, 8, TFT_FIL_BORDER);
@@ -556,11 +579,24 @@ void clearGUI()
     display.drawFastVLine(30 + i, 218, 8, TFT_FIL_BACK);
   }
 
-  for (uint8_t i = 0; i <= 12; i++)
+  if(IC_MODEL == 705)
   {
-    if (i % 3 == 0)
+    for (uint8_t i = 0; i <= 12; i++)
     {
-      display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+      if (i % 3 == 0)
+      {
+        display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+      }
+    }
+  }
+  else
+  {
+    for (uint8_t i = 0; i <= 15; i++)
+    {
+      if (i % 3 == 0)
+      {
+        display.drawFastVLine(30 + (i * 11.3), 224, 2, TFT_FIL_BORDER);
+      }
     }
   }
 
