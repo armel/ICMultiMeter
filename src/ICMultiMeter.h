@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.5"
+#define VERSION "0.1.6"
 #define AUTHOR "F4HWN"
 #define NAME "ICMultiMeter"
 
@@ -23,31 +23,27 @@
 #define STEP 2
 
 // Color
-#define TFT_MODE_BORDER M5.Lcd.color565(115, 135, 159)
-#define TFT_MODE_BACK M5.Lcd.color565(24, 57, 92)
+#define TFT_MODE_BORDER display.color565(115, 135, 159)
+#define TFT_MODE_BACK display.color565(24, 57, 92)
 
-#define TFT_FIL_BORDER M5.Lcd.color565(99, 99, 99)
-#define TFT_FIL_BACK M5.Lcd.color565(66, 66, 66)
+#define TFT_FIL_BORDER display.color565(99, 99, 99)
+#define TFT_FIL_BACK display.color565(66, 66, 66)
 
-/*
-#define TFT_GAUGE_1 M5.Lcd.color565(213, 144, 50)
-#define TFT_GAUGE_2 M5.Lcd.color565(233, 196, 66)
-#define TFT_GAUGE_3 M5.Lcd.color565(194, 106, 39)
-*/
+#define TFT_GAUGE_1 display.color565(215, 96, 32)
+#define TFT_GAUGE_2 display.color565(255, 128, 32)
+#define TFT_GAUGE_3 display.color565(200, 64, 16)
 
-#define TFT_GAUGE_1 M5.Lcd.color565(215, 96, 32)
-#define TFT_GAUGE_2 M5.Lcd.color565(255, 128, 32)
-#define TFT_GAUGE_3 M5.Lcd.color565(200, 64, 16)
-
-
-#define TFT_MENU_BORDER M5.Lcd.color565(115, 135, 159)
-#define TFT_MENU_BACK M5.Lcd.color565(24, 57, 92)
-#define TFT_MENU_SELECT M5.Lcd.color565(255, 255, 255)
+#define TFT_MENU_BORDER display.color565(115, 135, 159)
+#define TFT_MENU_BACK display.color565(24, 57, 92)
+#define TFT_MENU_SELECT display.color565(255, 255, 255)
 
 // Web site Screen Capture stuff
 #define GET_unknown 0
 #define GET_index_page  1
 #define GET_screenshot  2
+
+// Display
+M5GFX &display(M5.Lcd);
 
 // LED
 #define NUM_LEDS 10
