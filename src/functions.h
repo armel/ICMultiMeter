@@ -11,7 +11,7 @@ void callbackBT(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
   }
   if (event == ESP_SPP_CLOSE_EVT)
   {
-    M5.Lcd.sleep();
+    display.sleep();
     wakeup = false;
     btConnected = false;
     Serial.println("BT Client disconnected");
@@ -77,23 +77,23 @@ void binLoader()
   {
     Serial.println("SPIFFS Mount Failed");
 
-    M5.Lcd.setTextFont(1);
-    M5.Lcd.setTextSize(2);
+    display.setTextFont(1);
+    display.setTextSize(2);
 
-    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-    M5.Lcd.setTextDatum(CC_DATUM);
-    M5.Lcd.drawString("Flash File System", 160, 20);
-    M5.Lcd.drawString("needs to be formated.", 160, 50);
-    M5.Lcd.drawString("It takes around 4 minutes.", 160, 100);
-    M5.Lcd.drawString("Please, wait until ", 160, 150);
-    M5.Lcd.drawString("the application starts !", 160, 180);
+    display.setTextColor(TFT_WHITE, TFT_BLACK);
+    display.setTextDatum(CC_DATUM);
+    display.drawString("Flash File System", 160, 20);
+    display.drawString("needs to be formated.", 160, 50);
+    display.drawString("It takes around 4 minutes.", 160, 100);
+    display.drawString("Please, wait until ", 160, 150);
+    display.drawString("the application starts !", 160, 180);
 
     Serial.println("SPIFFS Formating...");
 
     SPIFFS.format(); // Format SPIFFS...
 
-    M5.Lcd.setTextFont(0);
-    M5.Lcd.setTextSize(0);
+    display.setTextFont(0);
+    display.setTextSize(0);
 
     return;
   }
@@ -110,13 +110,13 @@ void binLoader()
   if (binIndex != 0)
   {
     // QRCode
-    M5.Lcd.qrcode("https://github.com/armel/ICMultiMeter", 90, 80, 140, 6);
+    display.qrcode("https://github.com/armel/ICMultiMeter", 90, 80, 140, 6);
 
-    M5.Lcd.setTextFont(1);
-    M5.Lcd.setTextSize(1);
+    display.setTextFont(1);
+    display.setTextSize(1);
 
-    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-    M5.Lcd.setTextDatum(CC_DATUM);
+    display.setTextColor(TFT_WHITE, TFT_BLACK);
+    display.setTextDatum(CC_DATUM);
 
     for (uint8_t i = TIMEOUT_BIN_LOADER * 10; i > 0; i--)
     {
@@ -125,7 +125,7 @@ void binLoader()
       if (i % 10 == 0)
       {
         tmpName += ".";
-        M5.Lcd.drawString(tmpName, 160, 20);
+        display.drawString(tmpName, 160, 20);
       }
 
       if (btnA || btnC)
@@ -136,7 +136,7 @@ void binLoader()
       else if (btnB)
       {
         click = 1;
-        M5.Lcd.fillRect(0, 0, 320, 240, TFT_BLACK);
+        display.fillRect(0, 0, 320, 240, TFT_BLACK);
 
         break;
       }
@@ -153,12 +153,12 @@ void binLoader()
       vTaskDelay(100);
     }
 
-    M5.Lcd.setTextFont(1);
-    M5.Lcd.setTextSize(2);
+    display.setTextFont(1);
+    display.setTextSize(2);
 
-    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-    M5.Lcd.setTextDatum(CC_DATUM);
-    M5.Lcd.drawString("Bin Loader V0.2", 160, 20);
+    display.setTextColor(TFT_WHITE, TFT_BLACK);
+    display.setTextDatum(CC_DATUM);
+    display.drawString("Bin Loader V0.2", 160, 20);
 
     getButton();
 
@@ -202,7 +202,7 @@ void binLoader()
     if (change != cursor)
     {
       change = cursor;
-      M5.Lcd.setTextPadding(320);
+      display.setTextPadding(320);
 
       uint8_t i = 0;
       for (uint8_t j = (start * limit); j < stop; j++)
@@ -215,18 +215,18 @@ void binLoader()
 
           if (binFilename[cursor].substring(0, 4) == "SP_/")
           {
-            M5.Lcd.setTextSize(1);
-            M5.Lcd.drawString("SPI Flash File Storage", 160, 50);
+            display.setTextSize(1);
+            display.drawString("SPI Flash File Storage", 160, 50);
           }
           else
           {
-            M5.Lcd.setTextSize(1);
-            M5.Lcd.drawString("SD Card Storage", 160, 50);
+            display.setTextSize(1);
+            display.drawString("SD Card Storage", 160, 50);
           }
         }
 
-        M5.Lcd.setTextSize(2);
-        M5.Lcd.drawString(tmpName, 160, 80 + i * 20);
+        display.setTextSize(2);
+        display.drawString(tmpName, 160, 80 + i * 20);
         i++;
       }
     }
@@ -253,26 +253,26 @@ void viewBattery()
       batteryLevelOld = batteryLevel;
       batteryCharginglOld = batteryCharging;
 
-      M5.Lcd.drawRect(294, 4, 20, 12, TFT_WHITE);
-      M5.Lcd.drawRect(313, 7, 4, 6, TFT_WHITE);
-      M5.Lcd.fillRect(296, 6, 16, 8, TFT_BLACK);
-      M5.Lcd.fillRect(296, 6, batteryLevel, 8, TFT_WHITE);
+      display.drawRect(294, 4, 20, 12, TFT_WHITE);
+      display.drawRect(313, 7, 4, 6, TFT_WHITE);
+      display.fillRect(296, 6, 16, 8, TFT_BLACK);
+      display.fillRect(296, 6, batteryLevel, 8, TFT_WHITE);
 
       if (batteryCharging)
       {
-        M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-        M5.Lcd.setFont(0);
-        M5.Lcd.setTextDatum(CR_DATUM);
-        M5.Lcd.setTextPadding(28);
-        M5.Lcd.drawString("+", 290, 11);
+        display.setTextColor(TFT_WHITE, TFT_BLACK);
+        display.setFont(0);
+        display.setTextDatum(CR_DATUM);
+        display.setTextPadding(28);
+        display.drawString("+", 290, 11);
       }
       else
       {
-        M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-        M5.Lcd.setFont(0);
-        M5.Lcd.setTextDatum(CR_DATUM);
-        M5.Lcd.setTextPadding(28);
-        M5.Lcd.drawString(String(getBatteryLevel(1)) + "%", 290, 11);
+        display.setTextColor(TFT_WHITE, TFT_BLACK);
+        display.setFont(0);
+        display.setTextDatum(CR_DATUM);
+        display.setTextPadding(28);
+        display.drawString(String(getBatteryLevel(1)) + "%", 290, 11);
       }
     }
   }
@@ -282,192 +282,192 @@ void viewBattery()
 void viewGUI()
 {
   // Clear
-  M5.Lcd.fillRect(0, 0, 320, 240, TFT_BLACK);
+  display.fillRect(0, 0, 320, 240, TFT_BLACK);
 
   // IC Connect
 
-  M5.Lcd.setFont(0);
-  M5.Lcd.setTextDatum(CC_DATUM);
+  display.setFont(0);
+  display.setTextDatum(CC_DATUM);
 
-  M5.Lcd.fillRoundRect(261, 96, 56, 13, 2, TFT_MODE_BACK);
-  M5.Lcd.drawRoundRect(261, 96, 56, 13, 2, TFT_MODE_BORDER);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.fillRoundRect(261, 96, 56, 13, 2, TFT_MODE_BACK);
+  display.drawRoundRect(261, 96, 56, 13, 2, TFT_MODE_BORDER);
+  display.setTextColor(TFT_WHITE);
 
   if (IC_CONNECT == BT)
-    M5.Lcd.drawString(String(IC_MODEL) + " BT", 289, 103);
+    display.drawString(String(IC_MODEL) + " BT", 289, 103);
   else
-    M5.Lcd.drawString(String(IC_MODEL) + " USB", 289, 103);
+    display.drawString(String(IC_MODEL) + " USB", 289, 103);
 
   if (transverter > 0)
   {
-    M5.Lcd.fillRoundRect(230, 96, 26, 13, 2, TFT_MODE_BACK);
-    M5.Lcd.drawRoundRect(230, 96, 26, 13, 2, TFT_MODE_BORDER);
-    M5.Lcd.setTextColor(TFT_WHITE);
-    M5.Lcd.drawString("LO" + String(transverter), 244, 103);
+    display.fillRoundRect(230, 96, 26, 13, 2, TFT_MODE_BACK);
+    display.drawRoundRect(230, 96, 26, 13, 2, TFT_MODE_BORDER);
+    display.setTextColor(TFT_WHITE);
+    display.drawString("LO" + String(transverter), 244, 103);
   }
 
   /*
-  M5.Lcd.setFont(0);
-  M5.Lcd.setTextDatum(CC_DATUM);
+  display.setFont(0);
+  display.setTextDatum(CC_DATUM);
 
-  M5.Lcd.fillRoundRect(283, 90, 34, 20, 2, TFT_MODE_BACK);
-  M5.Lcd.drawRoundRect(283, 90, 34, 20, 2, TFT_MODE_BORDER);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.fillRoundRect(283, 90, 34, 20, 2, TFT_MODE_BACK);
+  display.drawRoundRect(283, 90, 34, 20, 2, TFT_MODE_BORDER);
+  display.setTextColor(TFT_WHITE);
 
   if (IC_CONNECT == BT)
-    M5.Lcd.drawString("BT", 300, 96);
+    display.drawString("BT", 300, 96);
   else
-    M5.Lcd.drawString("USB", 300, 96);
+    display.drawString("USB", 300, 96);
 
-  M5.Lcd.drawString(String(IC_MODEL), 300, 105);
+  display.drawString(String(IC_MODEL), 300, 105);
 
-  // M5.Lcd.drawFastHLine(0, 57, 320, TFT_FIL_BORDER);
-  // M5.Lcd.drawFastHLine(0, 86, 320, TFT_FIL_BORDER);
+  // display.drawFastHLine(0, 57, 320, TFT_FIL_BORDER);
+  // display.drawFastHLine(0, 86, 320, TFT_FIL_BORDER);
 
-  // M5.Lcd.drawJpg(logo, sizeof(logo), 272, 0, 44, 22);
-  // M5.Lcd.drawJpg(logo, sizeof(logo), 40, 0, 44, 22);
-  // M5.Lcd.drawJpg(logo, sizeof(logo), 272, 94, 44, 22);
+  // display.drawJpg(logo, sizeof(logo), 272, 0, 44, 22);
+  // display.drawJpg(logo, sizeof(logo), 40, 0, 44, 22);
+  // display.drawJpg(logo, sizeof(logo), 272, 94, 44, 22);
   */
 
-  M5.Lcd.drawJpg(logo, sizeof(logo), 0, 49, 44, 22);
+  display.drawJpg(logo, sizeof(logo), 0, 49, 44, 22);
 
-  M5.Lcd.setFont(0);
-  M5.Lcd.setTextPadding(0);
+  display.setFont(0);
+  display.setTextPadding(0);
 
   // Id
-  M5.Lcd.setTextDatum(CR_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.setTextDatum(CR_DATUM);
+  display.setTextColor(TFT_WHITE);
 
-  M5.Lcd.drawFastHLine(30, 226, 180, TFT_FIL_BORDER);
-  M5.Lcd.drawString("Id", 28, 223);
+  display.drawFastHLine(30, 226, 180, TFT_FIL_BORDER);
+  display.drawString("Id", 28, 223);
 
-  M5.Lcd.setTextDatum(CC_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.setTextDatum(CC_DATUM);
+  display.setTextColor(TFT_WHITE);
 
   for (uint8_t i = 0; i <= 180; i += STEP)
   {
-    M5.Lcd.drawFastVLine(30 + i, 218, 8, TFT_FIL_BACK);
+    display.drawFastVLine(30 + i, 218, 8, TFT_FIL_BACK);
   }
 
   for (uint8_t i = 0; i <= 12; i++)
   {
     if (i == 12)
     {
-      M5.Lcd.drawString(String(" 4 A"), 30 + (i * 14), 234);
-      M5.Lcd.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+      display.drawString(String(" 4 A"), 30 + (i * 14), 234);
+      display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
     }
     else if (i % 3 == 0)
     {
-      M5.Lcd.drawString(String(i / 3), 30 + (i * 14), 234);
-      M5.Lcd.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+      display.drawString(String(i / 3), 30 + (i * 14), 234);
+      display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
     }
     else
     {
-      M5.Lcd.drawString(String("."), 30 + (i * 14), 230);
+      display.drawString(String("."), 30 + (i * 14), 230);
     }
   }
-  M5.Lcd.drawFastVLine(30, 218, 8, TFT_FIL_BORDER);
+  display.drawFastVLine(30, 218, 8, TFT_FIL_BORDER);
 
   // SWR
-  M5.Lcd.setTextDatum(CR_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.setTextDatum(CR_DATUM);
+  display.setTextColor(TFT_WHITE);
 
-  M5.Lcd.drawFastHLine(30, 202, 180, TFT_FIL_BORDER);
-  M5.Lcd.drawString("SWR", 28, 200);
+  display.drawFastHLine(30, 202, 180, TFT_FIL_BORDER);
+  display.drawString("SWR", 28, 200);
 
-  M5.Lcd.setTextDatum(CC_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.setTextDatum(CC_DATUM);
+  display.setTextColor(TFT_WHITE);
 
   const char *legendeSWR[] = {"1", "1.5", "2", "2.5", "3"};
 
   for (uint8_t i = 0; i <= 180; i += STEP)
   {
-    M5.Lcd.drawFastVLine(30 + i, 194, 8, TFT_FIL_BACK);
+    display.drawFastVLine(30 + i, 194, 8, TFT_FIL_BACK);
   }
 
   for (uint8_t i = 0; i <= 4; i += 1)
   {
-    M5.Lcd.drawString(legendeSWR[i], 30 + (i * 22), 210);
-    M5.Lcd.drawFastVLine(30 + (i * 22), 200, 2, TFT_FIL_BORDER);
+    display.drawString(legendeSWR[i], 30 + (i * 22), 210);
+    display.drawFastVLine(30 + (i * 22), 200, 2, TFT_FIL_BORDER);
   }
-  M5.Lcd.drawFastVLine(30, 194, 8, TFT_FIL_BORDER);
-  M5.Lcd.drawString("o", 201, 208);
-  M5.Lcd.drawString("o", 206, 208);
+  display.drawFastVLine(30, 194, 8, TFT_FIL_BORDER);
+  display.drawString("o", 201, 208);
+  display.drawString("o", 206, 208);
 
   // COMP
-  M5.Lcd.setTextDatum(CR_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.setTextDatum(CR_DATUM);
+  display.setTextColor(TFT_WHITE);
 
-  M5.Lcd.drawString("COMP", 28, 174);
+  display.drawString("COMP", 28, 174);
 
-  M5.Lcd.setTextDatum(CC_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.setTextDatum(CC_DATUM);
+  display.setTextColor(TFT_WHITE);
 
   const char *legendeCOMP[] = {"0", "5", "10", "15", "20"};
 
   for (uint8_t i = 0; i <= 180; i += STEP)
   {
-    M5.Lcd.drawFastVLine(30 + i, 170, 8, TFT_FIL_BACK);
+    display.drawFastVLine(30 + i, 170, 8, TFT_FIL_BACK);
   }
 
   for (uint8_t i = 0; i <= 4; i += 1)
   {
-    M5.Lcd.drawString(legendeCOMP[i], 34 + (i * 34), 174);
+    display.drawString(legendeCOMP[i], 34 + (i * 34), 174);
   }
-  M5.Lcd.drawString("dB", 204, 174);
+  display.drawString("dB", 204, 174);
 
   // ALC
-  M5.Lcd.setTextDatum(CR_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.setTextDatum(CR_DATUM);
+  display.setTextColor(TFT_WHITE);
 
-  M5.Lcd.drawFastHLine(30, 154, 90, TFT_RED);
-  M5.Lcd.drawString("ALC", 28, 150);
+  display.drawFastHLine(30, 154, 90, TFT_RED);
+  display.drawString("ALC", 28, 150);
 
-  M5.Lcd.setTextDatum(CC_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.setTextDatum(CC_DATUM);
+  display.setTextColor(TFT_WHITE);
 
   for (uint8_t i = 0; i <= 180; i += STEP)
   {
-    M5.Lcd.drawFastVLine(30 + i, 146, 8, TFT_FIL_BACK);
+    display.drawFastVLine(30 + i, 146, 8, TFT_FIL_BACK);
   }
 
   // S and Po
-  M5.Lcd.setTextDatum(CR_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.setTextDatum(CR_DATUM);
+  display.setTextColor(TFT_WHITE);
 
-  M5.Lcd.drawFastHLine(30, 120, 90, TFT_FIL_BORDER);
-  M5.Lcd.drawFastHLine(120, 120, 90, TFT_RED);
+  display.drawFastHLine(30, 120, 90, TFT_FIL_BORDER);
+  display.drawFastHLine(120, 120, 90, TFT_RED);
 
-  M5.Lcd.drawFastHLine(30, 130, 180, TFT_FIL_BORDER);
-  M5.Lcd.drawString("S", 28, 114);
-  M5.Lcd.drawString("Po", 28, 138);
+  display.drawFastHLine(30, 130, 180, TFT_FIL_BORDER);
+  display.drawString("S", 28, 114);
+  display.drawString("Po", 28, 138);
 
-  M5.Lcd.setTextDatum(CC_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.setTextDatum(CC_DATUM);
+  display.setTextColor(TFT_WHITE);
 
   for (uint8_t i = 0; i <= 180; i += STEP)
   {
-    M5.Lcd.drawFastVLine(30 + i, 122, 8, TFT_FIL_BACK);
+    display.drawFastVLine(30 + i, 122, 8, TFT_FIL_BACK);
   }
 
   for (uint8_t i = 1; i <= 9; i++)
   {
     if (i % 2 != 0)
     {
-      M5.Lcd.drawString(String(i), 30 + (i * 10), 114);
+      display.drawString(String(i), 30 + (i * 10), 114);
     }
-    M5.Lcd.drawFastVLine(30 + (i * 10), 119, 2, TFT_FIL_BORDER);
+    display.drawFastVLine(30 + (i * 10), 119, 2, TFT_FIL_BORDER);
   }
 
   const char *legendePO[] = {" 0", "25", "50", "", "100%"};
 
   for (uint8_t i = 0; i <= 4; i++)
   {
-    M5.Lcd.drawString(legendePO[i], 30 + (i * 45), 138);
-    M5.Lcd.drawFastVLine(30 + (i * 45), 129, 2, TFT_FIL_BORDER);
+    display.drawString(legendePO[i], 30 + (i * 45), 138);
+    display.drawFastVLine(30 + (i * 45), 129, 2, TFT_FIL_BORDER);
   }
 
-  M5.Lcd.setTextColor(TFT_RED);
+  display.setTextColor(TFT_RED);
 
   for (uint8_t i = 20; i <= 60; i += 20)
   {
@@ -475,53 +475,53 @@ void viewGUI()
     {
       if (i != 60)
       {
-        M5.Lcd.drawString("+" + String(i), 120 + (i * 1.5), 114);
+        display.drawString("+" + String(i), 120 + (i * 1.5), 114);
       }
       else
       {
-        M5.Lcd.drawString("+" + String(i) + "dB", 120 + (i * 1.5), 114);
+        display.drawString("+" + String(i) + "dB", 120 + (i * 1.5), 114);
       }
     }
-    M5.Lcd.drawFastVLine(120 + (i * 1.5), 119, 2, TFT_RED);
+    display.drawFastVLine(120 + (i * 1.5), 119, 2, TFT_RED);
   }
 
-  M5.Lcd.drawFastVLine(30, 121, 8, TFT_FIL_BORDER);
+  display.drawFastVLine(30, 121, 8, TFT_FIL_BORDER);
 
   // Vd
-  M5.Lcd.setTextDatum(CL_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-  M5.Lcd.drawRect(220, 208, 100, 32, TFT_FIL_BORDER);
-  M5.Lcd.drawString("Vd", 220, 208);
+  display.setTextDatum(CL_DATUM);
+  display.setTextColor(TFT_WHITE, TFT_BLACK);
+  display.drawRect(220, 208, 100, 32, TFT_FIL_BORDER);
+  display.drawString("Vd", 220, 208);
 
   if (IC_MODEL == 705)
   {
-    M5.Lcd.drawString("5", 230, 219);
+    display.drawString("5", 230, 219);
   }
   else
   {
-    M5.Lcd.drawString("10", 230, 219);
+    display.drawString("10", 230, 219);
   }
 
-  M5.Lcd.setTextDatum(CR_DATUM);
-  M5.Lcd.drawString("16V", 312, 219);
+  display.setTextDatum(CR_DATUM);
+  display.drawString("16V", 312, 219);
 
-  M5.Lcd.setTextDatum(CC_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.setTextDatum(CC_DATUM);
+  display.setTextColor(TFT_WHITE);
 
   for (uint8_t i = 0; i <= 80; i += STEP)
   {
-    M5.Lcd.drawFastVLine(230 + i, 226, 8, TFT_FIL_BACK);
+    display.drawFastVLine(230 + i, 226, 8, TFT_FIL_BACK);
   }
 
   if (IC_MODEL == 705)
   {
-    M5.Lcd.drawFastHLine(230, 234, 50, TFT_RED);
-    M5.Lcd.drawFastHLine(280, 234, 30, TFT_FIL_BORDER);
+    display.drawFastHLine(230, 234, 50, TFT_RED);
+    display.drawFastHLine(280, 234, 30, TFT_FIL_BORDER);
   }
   else
   {
-    M5.Lcd.drawFastHLine(230, 234, 25, TFT_RED);
-    M5.Lcd.drawFastHLine(255, 234, 55, TFT_FIL_BORDER);
+    display.drawFastHLine(230, 234, 25, TFT_RED);
+    display.drawFastHLine(255, 234, 55, TFT_FIL_BORDER);
   }
 }
 
@@ -531,36 +531,36 @@ void clearGUI()
   // Power
   for (uint8_t i = 0; i <= 180; i += STEP)
   {
-    M5.Lcd.drawFastVLine(30 + i, 122, 8, TFT_FIL_BACK);
+    display.drawFastVLine(30 + i, 122, 8, TFT_FIL_BACK);
   }
 
   for (uint8_t i = 0; i <= 4; i++)
   {
-    M5.Lcd.drawFastVLine(30 + (i * 45), 129, 2, TFT_FIL_BORDER);
+    display.drawFastVLine(30 + (i * 45), 129, 2, TFT_FIL_BORDER);
   }
 
   // SWR
   for (uint8_t i = 0; i <= 180; i += STEP)
   {
-    M5.Lcd.drawFastVLine(30 + i, 194, 8, TFT_FIL_BACK);
+    display.drawFastVLine(30 + i, 194, 8, TFT_FIL_BACK);
   }
 
   for (uint8_t i = 0; i <= 4; i += 1)
   {
-    M5.Lcd.drawFastVLine(30 + (i * 22), 200, 2, TFT_FIL_BORDER);
+    display.drawFastVLine(30 + (i * 22), 200, 2, TFT_FIL_BORDER);
   }
 
   // Id
   for (uint8_t i = 0; i <= 180; i += STEP)
   {
-    M5.Lcd.drawFastVLine(30 + i, 218, 8, TFT_FIL_BACK);
+    display.drawFastVLine(30 + i, 218, 8, TFT_FIL_BACK);
   }
 
   for (uint8_t i = 0; i <= 12; i++)
   {
     if (i % 3 == 0)
     {
-      M5.Lcd.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+      display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
     }
   }
 
@@ -569,18 +569,18 @@ void clearGUI()
 
   for (uint8_t i = 0; i <= 180; i += STEP)
   {
-    M5.Lcd.drawFastVLine(30 + i, 170, 8, TFT_FIL_BACK);
+    display.drawFastVLine(30 + i, 170, 8, TFT_FIL_BACK);
   }
 
-  M5.Lcd.setFont(0);
-  M5.Lcd.setTextDatum(CC_DATUM);
-  M5.Lcd.setTextColor(TFT_WHITE);
+  display.setFont(0);
+  display.setTextDatum(CC_DATUM);
+  display.setTextColor(TFT_WHITE);
 
   for (uint8_t i = 0; i <= 4; i += 1)
   {
-    M5.Lcd.drawString(legendeCOMP[i], 34 + (i * 34), 174);
+    display.drawString(legendeCOMP[i], 34 + (i * 34), 174);
   }
-  M5.Lcd.drawString("dB", 204, 174);
+  display.drawString("dB", 204, 174);
 }
 
 // Clear Data
@@ -620,8 +620,8 @@ void clearData()
 // Get 24bits BMP
 bool M5Screen24bmp()
 {
-  uint16_t image_height = M5.Lcd.height();
-  uint16_t image_width = M5.Lcd.width();
+  uint16_t image_height = display.height();
+  uint16_t image_width = display.width();
   const uint16_t pad = (4 - (3 * image_width) % 4) % 4;
   uint32_t filesize = 54 + (3 * image_width + pad) * image_height;
   unsigned char swap;
@@ -664,7 +664,7 @@ bool M5Screen24bmp()
   for (uint16_t y = image_height; y > 0; y--)
   {
     // Get one line of the screen content
-    M5.Lcd.readRectRGB(0, y - 1, image_width, 1, line_data);
+    display.readRectRGB(0, y - 1, image_width, 1, line_data);
     // BMP color order is: Blue, Green, Red
     // Return values from readRectRGB is: Red, Green, Blue
     // Therefore: R und B need to be swapped
@@ -827,11 +827,11 @@ void wakeAndSleep()
     settingsMode = false;
     screensaverMode = true;
     screensaverTimer = 0;
-    M5.Lcd.fillScreen(TFT_BLACK);
+    display.fillScreen(TFT_BLACK);
   }
   else if (screensaverMode == true && screensaverTimer != 0)
   {
-    M5.Lcd.fillScreen(TFT_BLACK);
+    display.fillScreen(TFT_BLACK);
     clearData();
     viewGUI();
     screensaverMode = false;
@@ -842,7 +842,7 @@ void wakeAndSleep()
   else if (screensaverMode == true)
   {
 
-    M5.Lcd.fillRect(x, y, 44, 22, TFT_BLACK);
+    display.fillRect(x, y, 44, 22, TFT_BLACK);
 
     if (xDir)
     {
@@ -884,7 +884,7 @@ void wakeAndSleep()
       y = 196;
     }
 
-    M5.Lcd.drawJpg(logo, sizeof(logo), x, y, 44, 22);
+    display.drawJpg(logo, sizeof(logo), x, y, 44, 22);
 
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
       vTaskDelay(75);
@@ -970,7 +970,7 @@ boolean checkConnection()
     {
       if ((IC_CONNECT == BT && btConnected == false) || (IC_CONNECT == USB && txConnected == false))
       {
-        M5.Lcd.sleep();
+        display.sleep();
         wakeup = false;
       }
     }
@@ -980,7 +980,7 @@ boolean checkConnection()
       {
         clearData();
         viewGUI();
-        M5.Lcd.wakeup();
+        display.wakeup();
         wakeup = true;
         screensaverTimer = millis();
       }
@@ -994,13 +994,13 @@ boolean checkConnection()
 
       if (screensaverMode == false && settingsMode == false)
       {
-        M5.Lcd.setTextDatum(CC_DATUM);
-        M5.Lcd.setFont(&UniversCondensed20pt7b);
-        M5.Lcd.setTextPadding(194);
-        M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-        M5.Lcd.drawString(message, 160, 76);
+        display.setTextDatum(CC_DATUM);
+        display.setFont(&UniversCondensed20pt7b);
+        display.setTextPadding(194);
+        display.setTextColor(TFT_WHITE, TFT_BLACK);
+        display.drawString(message, 160, 76);
         vTaskDelay(750);
-        M5.Lcd.drawString("", 160, 76);
+        display.drawString("", 160, 76);
         frequencyOld = "";
         settingLock = false;
         vTaskDelay(250);
@@ -1029,13 +1029,13 @@ void voiceManager(uint8_t tx, uint8_t alternance)
     Serial.println(voiceCounter);
   }
 
-  M5.Lcd.setFont(&tahoma8pt7b);
-  M5.Lcd.setTextPadding(24);
-  M5.Lcd.setTextDatum(CC_DATUM);
+  display.setFont(&tahoma8pt7b);
+  display.setTextPadding(24);
+  display.setTextDatum(CC_DATUM);
 
   if (voice == 0)
   {
-    M5.Lcd.fillRect(32, 2, 28, 18, TFT_BLACK);
+    display.fillRect(32, 2, 28, 18, TFT_BLACK);
     return;
   }
   else
@@ -1053,10 +1053,10 @@ void voiceManager(uint8_t tx, uint8_t alternance)
       {
         if (voiceRefresh == true)
         {
-          M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_BLACK);
-          M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_RED);
-          M5.Lcd.setTextColor(TFT_RED);
-          M5.Lcd.drawString("T" + String(voice), 45, 12);
+          display.fillRoundRect(32, 2, 28, 18, 2, TFT_BLACK);
+          display.drawRoundRect(32, 2, 28, 18, 2, TFT_RED);
+          display.setTextColor(TFT_RED);
+          display.drawString("T" + String(voice), 45, 12);
           voiceRefresh = false;
         }
       }
@@ -1075,10 +1075,10 @@ void voiceManager(uint8_t tx, uint8_t alternance)
 
           if (voiceRefresh == true)
           {
-            M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_BLACK);
-            M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_RED);
-            M5.Lcd.setTextColor(TFT_RED);
-            M5.Lcd.drawString("T" + String(voice), 45, 12);
+            display.fillRoundRect(32, 2, 28, 18, 2, TFT_BLACK);
+            display.drawRoundRect(32, 2, 28, 18, 2, TFT_RED);
+            display.setTextColor(TFT_RED);
+            display.drawString("T" + String(voice), 45, 12);
             voiceRefresh = false;
           }
         }
@@ -1092,10 +1092,10 @@ void voiceManager(uint8_t tx, uint8_t alternance)
         {
           uint8_t value = voiceTimeout - int((millis() - transmit) / 1000);
 
-          M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_RED);
-          M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_WHITE);
-          M5.Lcd.setTextColor(TFT_WHITE);
-          M5.Lcd.drawString(String(value) + "s", 45, 12);
+          display.fillRoundRect(32, 2, 28, 18, 2, TFT_RED);
+          display.drawRoundRect(32, 2, 28, 18, 2, TFT_WHITE);
+          display.setTextColor(TFT_WHITE);
+          display.drawString(String(value) + "s", 45, 12);
         }
       }
     }
@@ -1103,10 +1103,10 @@ void voiceManager(uint8_t tx, uint8_t alternance)
     {
       if (voiceRefresh == true)
       {
-        M5.Lcd.fillRoundRect(32, 2, 28, 18, 2, TFT_BLACK);
-        M5.Lcd.drawRoundRect(32, 2, 28, 18, 2, TFT_RED);
-        M5.Lcd.setTextColor(TFT_RED);
-        M5.Lcd.drawString("T" + String(voice), 45, 12);
+        display.fillRoundRect(32, 2, 28, 18, 2, TFT_BLACK);
+        display.drawRoundRect(32, 2, 28, 18, 2, TFT_RED);
+        display.setTextColor(TFT_RED);
+        display.drawString("T" + String(voice), 45, 12);
         voiceRefresh = false;
       }
     }

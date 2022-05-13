@@ -38,7 +38,7 @@ void getButton()
 // Manage brightness
 void setBrightness(uint8_t value)
 {
-  M5.Lcd.setBrightness(value);
+  display.setBrightness(value);
 }
 
 // Shutdown

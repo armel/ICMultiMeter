@@ -21,6 +21,9 @@ void setup()
   auto cfg = M5.config();
   M5.begin(cfg);
 
+  // Init Display
+  display.begin();
+
   // Init Led
   if(M5.getBoard() == m5::board_t::board_M5Stack) {
     FastLED.addLeds<NEOPIXEL, 15>(leds, NUM_LEDS);  // GRB ordering is assumed
@@ -57,8 +60,8 @@ void setup()
   httpServer.begin();
 
   setBrightness(map(brightness, 1, 100, 1, 254));
-  M5.Lcd.setRotation(1);
-  M5.Lcd.fillScreen(TFT_BLACK);
+  display.setRotation(1);
+  display.fillScreen(TFT_BLACK);
 
   viewGUI();
 
@@ -123,18 +126,18 @@ void loop()
 
       if(charge != chargeOld) {
         chargeOld = charge;
-        M5.Lcd.setFont(0);
-        M5.Lcd.setTextPadding(35);
-        M5.Lcd.setTextDatum(CR_DATUM);
-        M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+        display.setFont(0);
+        display.setTextPadding(35);
+        display.setTextDatum(CR_DATUM);
+        display.setTextColor(TFT_WHITE, TFT_BLACK);
 
         if( IC_MODEL == 705 && charge == 0) 
         {
-          M5.Lcd.drawString("(10W)", 194, 138);
+          display.drawString("(10W)", 194, 138);
         }
         else if(IC_MODEL == 705 && charge == 1)
         {
-          M5.Lcd.drawString("(5W)", 194, 138);
+          display.drawString("(5W)", 194, 138);
         }
       }
       
