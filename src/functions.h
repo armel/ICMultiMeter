@@ -369,7 +369,7 @@ void viewGUI()
       }
     }
   }
-  else
+  else if(IC_MODEL == 7300)
   {
     for (uint8_t i = 0; i <= 15; i++)
     {
@@ -389,6 +389,27 @@ void viewGUI()
       }
     }
   }
+  else
+  {
+    for (uint8_t i = 0; i <= 12; i++)
+    {
+      if (i == 12)
+      {
+        display.drawString(String(" 20A"), 30 + (i * 14), 234);
+        display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+      }
+      else if (i % 3 == 0)
+      {
+        display.drawString(String((i / 3) * 5), 30 + (i * 14), 234);
+        display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+      }
+      else
+      {
+        display.drawString(String("."), 30 + (i * 14), 230);
+      }
+    }
+  }
+
   display.drawFastVLine(30, 218, 8, TFT_FIL_BORDER);
 
   // SWR
@@ -579,7 +600,7 @@ void clearGUI()
     display.drawFastVLine(30 + i, 218, 8, TFT_FIL_BACK);
   }
 
-  if(IC_MODEL == 705)
+  if(IC_MODEL == 705 || IC_MODEL == 9700)
   {
     for (uint8_t i = 0; i <= 12; i++)
     {

@@ -618,7 +618,7 @@ void getIdLevel()
       display.drawFastVLine(30 + i, 218, 8, TFT_FIL_BACK);
     }
 
-    if(IC_MODEL == 705)
+    if(IC_MODEL == 705 || IC_MODEL == 9700)
     {
       for (uint8_t i = 0; i <= 12; i++)
       {
