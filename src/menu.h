@@ -9,13 +9,13 @@ void viewMenu(uint8_t x, uint8_t y, uint16_t w, uint8_t h) {
     display.setFont(&YELLOWCRE8pt7b);
     display.setTextPadding(w - 2);
     display.setTextColor(TFT_MENU_SELECT);
-    display.drawString("SETTINGS", 160, 14 + y);
+    display.drawString("SETTINGS", 160 + offsetX, 14 + y);
 
     display.setTextDatum(CC_DATUM);
     display.setFont(0);
     display.setTextPadding(w - 2);
     display.setTextColor(TFT_MENU_SELECT);
-    display.drawString(String(NAME) + " V" + String(VERSION) + " by " + String(AUTHOR), 160, 28 + y);
+    display.drawString(String(NAME) + " V" + String(VERSION) + " by " + String(AUTHOR), 160 + offsetX, 28 + y);
 
     display.drawFastHLine(x + 1, 36 + y, w - 2, TFT_MENU_SELECT);
     display.drawFastHLine(x + 1, (y + h) - 24, w - 2, TFT_MENU_SELECT);
@@ -46,15 +46,15 @@ void viewOption(int8_t settingsChoice, boolean settingsSelect, uint8_t x, uint8_
     for(i = start; i < stop; i++) {
         if(settingsChoice == i && settingsSelect == false) {
             display.setTextColor(TFT_BLACK, TFT_MENU_SELECT);
-            display.drawString(settings[i], 160, 45 + y + (j * 18));
+            display.drawString(settings[i], 160 + offsetX, 45 + y + (j * 18));
         }
         else if(settingsChoice == i && settingsSelect == true) {
             display.setTextColor(TFT_BLACK, TFT_MENU_SELECT);
-            display.drawString(settings[i], 160, 45 + y + (j * 18));
+            display.drawString(settings[i], 160 + offsetX, 45 + y + (j * 18));
         }
         else {
             display.setTextColor(TFT_MENU_SELECT, TFT_MENU_BACK);
-            display.drawString(settings[i], 160, 45 + y + (j * 18));
+            display.drawString(settings[i], 160 + offsetX, 45 + y + (j * 18));
         }
         j++;
         if(j > 7) {

@@ -163,12 +163,12 @@ void getSmeterLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i, 122, 8, TFT_FIL_BACK);
+      display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_FIL_BACK);
     }
 
     for (uint8_t i = 0; i <= 4; i++)
     {
-      display.drawFastVLine(30 + (i * 45), 129, 2, TFT_FIL_BORDER);
+      display.drawFastVLine(30 + (i * 45) + offsetX, 129 + offsetY, 2, TFT_FIL_BORDER);
     }
 
     if (value != 0)
@@ -179,15 +179,15 @@ void getSmeterLevel()
       {
         if (i == 0)
         {
-          display.drawFastVLine(30 + i, 122, 8, TFT_FIL_BORDER);
+          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_FIL_BORDER);
         }
         else if (i <= 90)
         {
-          display.drawFastVLine(30 + i, 122, 8, TFT_BLUE);
+          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_BLUE);
         }
         else
         {
-          display.drawFastVLine(30 + i, 122, 8, TFT_RED);
+          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_RED);
         }
       }
     }
@@ -224,12 +224,12 @@ void getSWRLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i, 194, 8, TFT_FIL_BACK);
+      display.drawFastVLine(30 + i + offsetX, 194 + offsetY, 8, TFT_FIL_BACK);
     }
 
     for (uint8_t i = 0; i <= 4; i += 1)
     {
-      display.drawFastVLine(30 + (i * 22), 200, 2, TFT_FIL_BORDER);
+      display.drawFastVLine(30 + (i * 22) + offsetX, 200 + offsetY, 2, TFT_FIL_BORDER);
     }
 
     if (value != 0)
@@ -255,11 +255,11 @@ void getSWRLevel()
       {
         if (i <= 88)
         {
-          display.drawFastVLine(30 + i, 194, 8, TFT_BLUE);
+          display.drawFastVLine(30 + i + offsetX, 194 + offsetY, 8, TFT_BLUE);
         }
         else
         {
-          display.drawFastVLine(30 + i, 194, 8, TFT_RED);
+          display.drawFastVLine(30 + i + offsetX, 194 + offsetY, 8, TFT_RED);
         }
       }
     }
@@ -301,12 +301,12 @@ void getPowerLevel(uint8_t charge = 0)
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i, 122, 8, TFT_FIL_BACK);
+      display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_FIL_BACK);
     }
 
     for (uint8_t i = 0; i <= 4; i++)
     {
-      display.drawFastVLine(30 + (i * 45), 129, 2, TFT_FIL_BORDER);
+      display.drawFastVLine(30 + (i * 45) + offsetX, 129 + offsetY, 2, TFT_FIL_BORDER);
     }
 
     if (value != 0)
@@ -333,11 +333,11 @@ void getPowerLevel(uint8_t charge = 0)
       {
         if (i <= 90)
         {
-          display.drawFastVLine(30 + i, 122, 8, TFT_BLUE);
+          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_BLUE);
         }
         else
         {
-          display.drawFastVLine(30 + i, 122, 8, TFT_RED);
+          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_RED);
         }
       }
     }
@@ -441,7 +441,7 @@ void getFrequency()
     display.setTextPadding(200);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     // valString.replace(".", ",");
-    display.drawString(frequency, 160, 76);
+    display.drawString(frequency, 160 + offsetX, 76 + offsetY);
   }
 
   if(DEBUG) {
@@ -489,9 +489,9 @@ uint8_t getModeFilter()
     if (value != filterOld)
     {
       filterOld = value;
-      display.fillRoundRect(70, 24, 44, 18, 2, TFT_FIL_BACK);
-      display.drawRoundRect(70, 24, 44, 18, 2, TFT_FIL_BORDER);
-      display.drawString(value, 92, 34);
+      display.fillRoundRect(70 + offsetX, 24 + offsetY, 44, 18, 2, TFT_FIL_BACK);
+      display.drawRoundRect(70 + offsetX, 24 + offsetY, 44, 18, 2, TFT_FIL_BORDER);
+      display.drawString(value, 92 + offsetX, 34 + offsetY);
     }
 
     if(DEBUG) {
@@ -512,9 +512,9 @@ uint8_t getModeFilter()
     if (value != modeOld)
     {
       modeOld = value;
-      display.fillRoundRect(2, 24, 60, 18, 2, TFT_MODE_BACK);
-      display.drawRoundRect(2, 24, 60, 18, 2, TFT_MODE_BORDER);
-      display.drawString(value, 31, 34);
+      display.fillRoundRect(2 + offsetX, 24 + offsetY, 60, 18, 2, TFT_MODE_BACK);
+      display.drawRoundRect(2 + offsetX, 24 + offsetY, 60, 18, 2, TFT_MODE_BORDER);
+      display.drawString(value, 31 + offsetX, 34 + offsetY);
     }
 
     if(DEBUG) {
@@ -567,7 +567,7 @@ void getVdLevel()
 
     for (uint8_t i = 0; i <= 80; i += 2)
     {
-      display.drawFastVLine(230 + i, 226, 8, TFT_FIL_BACK);
+      display.drawFastVLine(230 + i + offsetX, 226 + offsetY, 8, TFT_FIL_BACK);
     }
 
     if(IC_MODEL == 705) {
@@ -580,7 +580,7 @@ void getVdLevel()
 
     for (uint8_t i = 0; i <= limit; i += 2)
     {
-      display.drawFastVLine(230 + i, 226, 8, TFT_BLUE);
+      display.drawFastVLine(230 + i + offsetX, 226 + offsetY, 8, TFT_BLUE);
     }
   }
 }
@@ -615,7 +615,7 @@ void getIdLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i, 218, 8, TFT_FIL_BACK);
+      display.drawFastVLine(30 + i + offsetX, 218 + offsetY, 8, TFT_FIL_BACK);
     }
 
     if(IC_MODEL == 705 || IC_MODEL == 9700)
@@ -624,7 +624,7 @@ void getIdLevel()
       {
         if (i % 3 == 0)
         {
-          display.drawFastVLine(30 + (i * 14), 224, 2, TFT_FIL_BORDER);
+          display.drawFastVLine(30 + (i * 14) + offsetX, 224 + offsetY, 2, TFT_FIL_BORDER);
         }
       }
     }
@@ -634,7 +634,7 @@ void getIdLevel()
       {
         if (i % 3 == 0)
         {
-          display.drawFastVLine(30 + (i * 11.3), 224, 2, TFT_FIL_BORDER);
+          display.drawFastVLine(30 + (i * 11.3) + offsetX, 224 + offsetY, 2, TFT_FIL_BORDER);
         }
       }
     }
@@ -644,7 +644,7 @@ void getIdLevel()
 
       for (uint8_t i = 0; i <= limit; i += STEP)
       {
-        display.drawFastVLine(30 + i, 218, 8, TFT_CYAN);
+        display.drawFastVLine(30 + i + offsetX, 218 + offsetY, 8, TFT_CYAN);
       }
     }
   }
@@ -683,7 +683,7 @@ void getALCLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i, 146, 8, TFT_FIL_BACK);
+      display.drawFastVLine(30 + i + offsetX, 146 + offsetY, 8, TFT_FIL_BACK);
     }
 
     if (value != 0)
@@ -692,7 +692,7 @@ void getALCLevel()
 
       for (uint8_t i = 0; i <= limit; i += STEP)
       {
-        display.drawFastVLine(30 + i, 146, 8, TFT_BLUE);
+        display.drawFastVLine(30 + i + offsetX, 146 + offsetY, 8, TFT_BLUE);
       }
     }
   }
@@ -737,17 +737,17 @@ uint8_t getTX()
 
     if (value == 1)
     {
-      display.fillRoundRect(2, 2, 28, 18, 2, TFT_RED);
-      display.drawRoundRect(2, 2, 28, 18, 2, TFT_WHITE);
+      display.fillRoundRect(2 + offsetX, 2 + offsetY, 28, 18, 2, TFT_RED);
+      display.drawRoundRect(2 + offsetX, 2 + offsetY, 28, 18, 2, TFT_WHITE);
       display.setTextColor(TFT_WHITE);
-      display.drawString("TX", 15, 12);
+      display.drawString("TX", 15 + offsetX, 12 + offsetY);
     }
     else
     {
-      display.fillRoundRect(2, 2, 28, 18, 2, TFT_BLACK);
-      display.drawRoundRect(2, 2, 28, 18, 2, TFT_RED);
+      display.fillRoundRect(2 + offsetX, 2 + offsetY, 28, 18, 2, TFT_BLACK);
+      display.drawRoundRect(2 + offsetX, 2 + offsetY, 28, 18, 2, TFT_RED);
       display.setTextColor(TFT_RED);
-      display.drawString("TX", 15, 12);
+      display.drawString("TX", 15 + offsetX, 12 + offsetY);
     }
   }
 
@@ -790,7 +790,7 @@ void getAGC()
     display.setTextPadding(50);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextDatum(CR_DATUM);
-    display.drawString(String(mode[value]), 316, 34);
+    display.drawString(String(mode[value]), 316 + offsetX, 34 + offsetY);
   }
 }
 
@@ -830,7 +830,7 @@ void getAN()
     display.setTextPadding(24);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextDatum(CL_DATUM);
-    display.drawString(String(mode[value]), 120, 12);
+    display.drawString(String(mode[value]), 120 + offsetX, 12 + offsetY);
   }
 }
 
@@ -870,7 +870,7 @@ boolean getNB()
     display.setTextPadding(24);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextDatum(CL_DATUM);
-    display.drawString(String(mode[value]), 150, 12);
+    display.drawString(String(mode[value]), 150 + offsetX, 12 + offsetY);
   }
 
   return value;
@@ -912,7 +912,7 @@ boolean getNR()
     display.setTextPadding(24);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextDatum(CL_DATUM);
-    display.drawString(String(mode[value]), 180, 12);
+    display.drawString(String(mode[value]), 180 + offsetX, 12 + offsetY);
   }
 
   return value;
@@ -956,10 +956,10 @@ void getAMP()
     display.setTextDatum(CL_DATUM);
     
     if(bandeLow == false && value != 0) {
-      display.drawString("P.AMP", 120, 34);
+      display.drawString("P.AMP", 120 + offsetX, 34 + offsetY);
     }
     else {
-      display.drawString(String(mode[value]), 120, 34);
+      display.drawString(String(mode[value]), 120 + offsetX, 34 + offsetY);
     }
   }
 }
@@ -1005,7 +1005,7 @@ void getTone(boolean retry = true)
     display.setTextPadding(90);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextDatum(CL_DATUM);
-    display.drawString(String(mode[value]), 180, 34);
+    display.drawString(String(mode[value]), 180 + offsetX, 34 + offsetY);
   }
 }
 
@@ -1035,30 +1035,30 @@ uint8_t getAF()
   {
     AFOld = value;
 
-    display.fillRect(245, 121, 44, 10, TFT_BLACK);
-    display.drawRect(245, 121, 44, 10, TFT_FIL_BORDER);
+    display.fillRect(245 + offsetX, 121 + offsetY, 44, 10, TFT_BLACK);
+    display.drawRect(245 + offsetX, 121 + offsetY, 44, 10, TFT_FIL_BORDER);
 
     if (value != 0)
     {
       limit = map(value, 0, 255, 0, 42);
-      display.drawFastHLine(246, 122, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 123, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 124, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 125, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 126, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 127, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 128, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246, 129, limit, TFT_GAUGE_3);
+      display.drawFastHLine(246 + offsetX, 122 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 123 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 124 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 125 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 126 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 127 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 128 + offsetY, limit, TFT_GAUGE_3);
+      display.drawFastHLine(246 + offsetX, 129 + offsetY, limit, TFT_GAUGE_3);
     }
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextPadding(18);
     display.setTextDatum(CL_DATUM);
-    display.drawString("AF", 225, 126);
+    display.drawString("AF", 225 + offsetX, 126 + offsetY);
     display.setTextPadding(24);
     display.setTextDatum(CR_DATUM);
-    display.drawString(String(map(value, 0, 255, 0, 100)) + "%", 316, 126);
+    display.drawString(String(map(value, 0, 255, 0, 100)) + "%", 316 + offsetX, 126 + offsetY);
   }
 
   return value;
@@ -1090,30 +1090,30 @@ uint8_t getMIC()
   {
     MICOld = value;
 
-    display.fillRect(245, 138, 44, 10, TFT_BLACK);
-    display.drawRect(245, 138, 44, 10, TFT_FIL_BORDER);
+    display.fillRect(245 + offsetX, 138 + offsetY, 44, 10, TFT_BLACK);
+    display.drawRect(245 + offsetX, 138 + offsetY, 44, 10, TFT_FIL_BORDER);
 
     if (value != 0)
     {
       limit = map(value, 0, 255, 0, 42);
-      display.drawFastHLine(246, 139, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 140, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 141, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 142, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 143, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 144, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 145, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246, 146, limit, TFT_GAUGE_3);
+      display.drawFastHLine(246 + offsetX, 139 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 140 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 141 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 142 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 143 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 144 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 145 + offsetY, limit, TFT_GAUGE_3);
+      display.drawFastHLine(246 + offsetX, 146 + offsetY, limit, TFT_GAUGE_3);
     }
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextPadding(18);
     display.setTextDatum(CL_DATUM);
-    display.drawString("MIC", 225, 143);
+    display.drawString("MIC", 225 + offsetX, 143 + offsetY);
     display.setTextPadding(24);
     display.setTextDatum(CR_DATUM);
-    display.drawString(String(map(value, 0, 255, 0, 100)) + "%", 316, 143);
+    display.drawString(String(map(value, 0, 255, 0, 100)) + "%", 316 + offsetX, 143 + offsetY);
   }
 
   return value;
@@ -1145,30 +1145,30 @@ uint8_t getSQL()
   {
     SQLOld = value;
 
-    display.fillRect(245, 155, 44, 10, TFT_BLACK);
-    display.drawRect(245, 155, 44, 10, TFT_FIL_BORDER);
+    display.fillRect(245 + offsetX, 155 + offsetY, 44, 10, TFT_BLACK);
+    display.drawRect(245 + offsetX, 155 + offsetY, 44, 10, TFT_FIL_BORDER);
 
     if (value != 0)
     {
       limit = map(value, 0, 255, 0, 42);
-      display.drawFastHLine(246, 156, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 157, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 158, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 159, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 160, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 161, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 162, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246, 163, limit, TFT_GAUGE_3);
+      display.drawFastHLine(246 + offsetX, 156 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 157 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 158 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 159 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 160 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 161 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 162 + offsetY, limit, TFT_GAUGE_3);
+      display.drawFastHLine(246 + offsetX, 163 + offsetY, limit, TFT_GAUGE_3);
     }
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextPadding(18);
     display.setTextDatum(CL_DATUM);
-    display.drawString("SQL", 225, 160);
+    display.drawString("SQL", 225 + offsetX, 160 + offsetY);
     display.setTextPadding(24);
     display.setTextDatum(CR_DATUM);
-    display.drawString(String(map(value, 0, 255, 0, 100)) + "%", 316, 160);
+    display.drawString(String(map(value, 0, 255, 0, 100)) + "%", 316 + offsetX, 160 + offsetY);
   }
 
   return value;
@@ -1200,30 +1200,30 @@ void getNRLevel()
   {
     NRLevelOld = value;
 
-    display.fillRect(245, 172, 44, 10, TFT_BLACK);
-    display.drawRect(245, 172, 44, 10, TFT_FIL_BORDER);
+    display.fillRect(245 + offsetX, 172 + offsetY, 44, 10, TFT_BLACK);
+    display.drawRect(245 + offsetX, 172 + offsetY, 44, 10, TFT_FIL_BORDER);
 
     if (value > 0)
     {
       limit = map(value, 8, 248, 0, 42);
-      display.drawFastHLine(246, 173, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 174, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 175, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 176, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 177, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 178, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 179, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246, 180, limit, TFT_GAUGE_3);
+      display.drawFastHLine(246 + offsetX, 173 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 174 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 175 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 176 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 177 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 178 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 179 + offsetY, limit, TFT_GAUGE_3);
+      display.drawFastHLine(246 + offsetX, 180 + offsetY, limit, TFT_GAUGE_3);
     }
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextPadding(18);
     display.setTextDatum(CL_DATUM);
-    display.drawString("NR", 225, 177);
+    display.drawString("NR", 225 + offsetX, 177 + offsetY);
     display.setTextPadding(24);
     display.setTextDatum(CR_DATUM);
-    display.drawString(String(map(value, 8, 248, 0, 100)) + "%", 316, 177);
+    display.drawString(String(map(value, 8, 248, 0, 100)) + "%", 316 + offsetX, 177 + offsetY);
   }
 }
 
@@ -1232,17 +1232,17 @@ void cleanNRLevel()
 {
   NRLevelOld = 0;
 
-  display.fillRect(245, 172, 44, 10, TFT_BLACK);
-  display.drawRect(245, 172, 44, 10, TFT_FIL_BORDER);
+  display.fillRect(245 + offsetX, 172 + offsetY, 44, 10, TFT_BLACK);
+  display.drawRect(245 + offsetX, 172 + offsetY, 44, 10, TFT_FIL_BORDER);
 
   display.setFont(0);
   display.setTextColor(TFT_DARKGREY, TFT_BLACK);
   display.setTextPadding(18);
   display.setTextDatum(CL_DATUM);
-  display.drawString("NR", 225, 177);
+  display.drawString("NR", 225 + offsetX, 177 + offsetY);
   display.setTextPadding(24);
   display.setTextDatum(CR_DATUM);
-  display.drawString(String(map(8, 8, 248, 0, 100)) + "%", 316, 177);
+  display.drawString(String(map(8, 8, 248, 0, 100)) + "%", 316 + offsetX, 177 + offsetY);
 }
 
 // Get NB Level
@@ -1271,30 +1271,30 @@ void getNBLevel()
   {
     NBLevelOld = value;
 
-    display.fillRect(245, 189, 44, 10, TFT_BLACK);
-    display.drawRect(245, 189, 44, 10, TFT_FIL_BORDER);
+    display.fillRect(245 + offsetX, 189 + offsetY, 44, 10, TFT_BLACK);
+    display.drawRect(245 + offsetX, 189 + offsetY, 44, 10, TFT_FIL_BORDER);
 
     if (value > 0)
     {
       limit = map(value, 0, 255, 0, 42);
-      display.drawFastHLine(246, 190, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 191, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 192, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 193, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 194, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246, 195, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246, 196, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246, 197, limit, TFT_GAUGE_3);
+      display.drawFastHLine(246 + offsetX, 190 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 191 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 192 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 193 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 194 + offsetY, limit, TFT_GAUGE_2);
+      display.drawFastHLine(246 + offsetX, 195 + offsetY, limit, TFT_GAUGE_1);
+      display.drawFastHLine(246 + offsetX, 196 + offsetY, limit, TFT_GAUGE_3);
+      display.drawFastHLine(246 + offsetX, 197 + offsetY, limit, TFT_GAUGE_3);
     }
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextPadding(18);
     display.setTextDatum(CL_DATUM);
-    display.drawString("NB", 225, 194);
+    display.drawString("NB", 225 + offsetX, 194 + offsetY);
     display.setTextPadding(24);
     display.setTextDatum(CR_DATUM);
-    display.drawString(String(map(value, 0, 255, 0, 100)) + "%", 316, 194);
+    display.drawString(String(map(value, 0, 255, 0, 100)) + "%", 316 + offsetX, 194 + offsetY);
   }
 }
 
@@ -1303,17 +1303,17 @@ void cleanNBLevel()
 {
   NBLevelOld = 0;
 
-  display.fillRect(245, 189, 44, 10, TFT_BLACK);
-  display.drawRect(245, 189, 44, 10, TFT_FIL_BORDER);
+  display.fillRect(245 + offsetX, 189 + offsetY, 44, 10, TFT_BLACK);
+  display.drawRect(245 + offsetX, 189 + offsetY, 44, 10, TFT_FIL_BORDER);
 
   display.setFont(0);
   display.setTextColor(TFT_DARKGREY, TFT_BLACK);
   display.setTextPadding(18);
   display.setTextDatum(CL_DATUM);
-  display.drawString("NB", 225, 194);
+  display.drawString("NB", 225 + offsetX, 194 + offsetY);
   display.setTextPadding(24);
   display.setTextDatum(CR_DATUM);
-  display.drawString(String(map(0, 0, 255, 0, 100)) + "%", 316, 194);
+  display.drawString(String(map(0, 0, 255, 0, 100)) + "%", 316 + offsetX, 194 + offsetY);
 }
 
 // Get COMP
@@ -1357,7 +1357,7 @@ uint8_t getCOMP(boolean retry = true)
     display.setTextPadding(50);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextDatum(CL_DATUM);
-    display.drawString(String(mode[value]), 4, 79);
+    display.drawString(String(mode[value]), 4 + offsetX, 79 + offsetY);
   }
   return value;
 }
@@ -1398,14 +1398,14 @@ void getCOMPLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i, 170, 8, TFT_FIL_BACK);
+      display.drawFastVLine(30 + i + offsetX, 170 + offsetY, 8, TFT_FIL_BACK);
     }
 
     limit = map(value, 0, 210, 0, 180);
 
     for (uint8_t i = 0; i <= limit; i += STEP)
     {
-      display.drawFastVLine(30 + i, 170, 8, TFT_BLUE);
+      display.drawFastVLine(30 + i + offsetX, 170 + offsetY, 8, TFT_BLUE);
     }
 
     display.setFont(0);
@@ -1414,9 +1414,9 @@ void getCOMPLevel()
 
     for (uint8_t i = 0; i <= 4; i += 1)
     {
-      display.drawString(legendeCOMP[i], 34 + (i * 34), 174);
+      display.drawString(legendeCOMP[i], 34 + (i * 34) + offsetX, 174 + offsetY);
     }
-    display.drawString("dB", 204, 174);
+    display.drawString("dB", 204 + offsetX, 174 + offsetY);
   }
 }
 
@@ -1480,8 +1480,8 @@ void getRIT()
     display.setTextPadding(50);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextDatum(CR_DATUM);
-    display.drawString("RIT", 316, 66);
-    display.drawString(RIT, 316, 81);
+    display.drawString("RIT", 316 + offsetX, 66 + offsetY);
+    display.drawString(RIT, 316 + offsetX, 81 + offsetY);
   }
 }
 
@@ -1523,7 +1523,7 @@ void getIP()
     display.setTextPadding(26);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextDatum(CL_DATUM);
-    display.drawString(String(mode[value]), 210, 12);
+    display.drawString(String(mode[value]), 210 + offsetX, 12 + offsetY);
   }
 }
 
@@ -1587,10 +1587,10 @@ void sendVoice()
 
   if (voiceCounter > 0)
   {
-    display.fillRoundRect(32, 2, 28, 18, 2, TFT_RED);
-    display.drawRoundRect(32, 2, 28, 18, 2, TFT_WHITE);
+    display.fillRoundRect(32 + offsetX, 2 + offsetY, 28, 18, 2, TFT_RED);
+    display.drawRoundRect(32 + offsetX, 2 + offsetY, 28, 18, 2, TFT_WHITE);
     display.setTextColor(TFT_WHITE);
-    display.drawString("T" + String(voice), 45, 12);
+    display.drawString("T" + String(voice), 45 + offsetX, 12 + offsetY);
   }
 
   if(DEBUG) {
