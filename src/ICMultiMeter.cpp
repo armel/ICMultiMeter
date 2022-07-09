@@ -21,8 +21,14 @@ void setup()
   auto cfg = M5.config();
   M5.begin(cfg);
 
+  pinMode(32, INPUT_PULLUP);
+  pinMode(26, INPUT_PULLUP);
+
   // Init Display
   display.begin();
+
+  offsetX = (display.width() - 320) / 2; 
+  offsetY = (display.height() - 240) / 2;
 
   // Init Led
   if(M5.getBoard() == m5::board_t::board_M5Stack) {
@@ -59,7 +65,7 @@ void setup()
   // Start server (for Web site Screen Capture)
   httpServer.begin();
 
-  setBrightness(map(brightness, 1, 100, 1, 254));
+  display.setBrightness(map(brightness, 1, 100, 1, 254));
   display.setRotation(1);
   display.fillScreen(TFT_BLACK);
 
@@ -133,11 +139,11 @@ void loop()
 
         if( IC_MODEL == 705 && charge == 0) 
         {
-          display.drawString("(10W)", 194, 138);
+          display.drawString("(10W)", 194 + offsetX, 138 + offsetY);
         }
         else if(IC_MODEL == 705 && charge == 1)
         {
-          display.drawString("(5W)", 194, 138);
+          display.drawString("(5W)", 194 + offsetX, 138 + offsetY);
         }
       }
       

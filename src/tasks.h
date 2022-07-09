@@ -12,10 +12,10 @@ void button(void *pvParameters)
   static int8_t settingsChoice = 0;
   static boolean settingsSelect = false;
 
-  uint8_t x = 44;
-  uint8_t y = 4;
-  uint16_t w = 320 - (x * 2);
-  uint8_t h = 185;
+  uint16_t x = 44 + offsetX;
+  uint16_t y = 4 + offsetY;
+  uint16_t w = display.width() - (x * 2);
+  uint16_t h = 185;
 
   for (;;)
   {
@@ -143,7 +143,7 @@ void button(void *pvParameters)
         // Brightness
         if(settingsString == "Brightness")
         {
-          display.drawString(String(choiceBrightness[0]) + " " + String(brightness) + "%", 160, h - 6);
+          display.drawString(String(choiceBrightness[0]) + " " + String(brightness) + "%", 160 + offsetX, h - 6 + offsetY);
 
           if(btnA || btnC) {
             if(btnA == 1) {
@@ -168,7 +168,7 @@ void button(void *pvParameters)
             settingsMode = false;
             vTaskDelay(pdMS_TO_TICKS(150));
           }
-          setBrightness(map(brightness, 1, 100, 1, 254));
+          display.setBrightness(map(brightness, 1, 100, 1, 254));
           vTaskDelay(pdMS_TO_TICKS(25));
         }
 
@@ -177,7 +177,7 @@ void button(void *pvParameters)
         {
           if(transverter == 0)
           {
-            display.drawString("OFF", 160, h - 6);
+            display.drawString("OFF", 160 + offsetX, h - 6 + offsetY);
           }
           else
           {
@@ -200,7 +200,7 @@ void button(void *pvParameters)
               transverterStringNew = transverterStringOld.substring(0, i + 3) + transverterStringNew;
             }
 
-            display.drawString(transverterStringNew, 160, h - 6);
+            display.drawString(transverterStringNew, 160 + offsetX, h - 6 + offsetY);
           }
 
           size_t stop = sizeof(choiceTransverter) / sizeof(choiceTransverter[0]);
@@ -235,7 +235,7 @@ void button(void *pvParameters)
         // Beep
         else if(settingsString == "Beep")
         {
-          display.drawString(String(choiceBeep[0]) + " " + String(beep) + "%", 160, h - 6);
+          display.drawString(String(choiceBeep[0]) + " " + String(beep) + "%", 160 + offsetX, h - 6 + offsetY);
 
           if(btnA || btnC) {
             if(btnA == 1) {
@@ -266,7 +266,7 @@ void button(void *pvParameters)
         // Screensaver
         else if(settingsString == "Screensaver")
         {
-          display.drawString(String(choiceScreensaver[0]) + " " + String(screensaver) + " MIN", 160, h - 6);
+          display.drawString(String(choiceScreensaver[0]) + " " + String(screensaver) + " MIN", 160 + offsetX, h - 6 + offsetY);
 
           if(btnA || btnC) {
             if(btnA == 1) {
@@ -297,7 +297,7 @@ void button(void *pvParameters)
         // Voice TX
         else if(settingsString == "Voice TX")
         {
-          display.drawString(String(choiceVoice[voice]), 160, h - 6);
+          display.drawString(String(choiceVoice[voice]), 160 + offsetX, h - 6 + offsetY);
 
           if(btnA || btnC) {
             if(btnA == 1) {
@@ -329,7 +329,7 @@ void button(void *pvParameters)
         // IP Address
         else if(settingsString == "IP Address")
         {
-          display.drawString(String(WiFi.localIP().toString().c_str()), 160, h - 6);
+          display.drawString(String(WiFi.localIP().toString().c_str()), 160 + offsetX, h - 6 + offsetY);
 
           if(btnB == 1) {
             clearData();
