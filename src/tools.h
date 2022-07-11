@@ -18,7 +18,7 @@ bool isCharging()
 // Get button
 void getButton()
 {
-  if (M5.getBoard() == m5::board_t::board_M5ATOM)
+  if (M5.getBoard() == m5::board_t::board_M5ATOM || M5.getBoard() == m5::board_t::board_M5AtomPsram || M5.getBoard() == m5::board_t::board_M5AtomU)
   {
     M5.update();
     btnB = M5.BtnA.isPressed();
