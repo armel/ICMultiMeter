@@ -293,10 +293,10 @@ void viewGUI()
   display.drawRoundRect(261 + offsetX, 96 + offsetY, 56, 13, 2, TFT_MODE_BORDER);
   display.setTextColor(TFT_WHITE);
 
-  if (IC_CONNECT == BT)
-    display.drawString(String(IC_MODEL) + " BT", 289 + offsetX, 103 + offsetY);
+  if (icConnect == BT)
+    display.drawString(String(icModel) + " BT", 289 + offsetX, 103 + offsetY);
   else
-    display.drawString(String(IC_MODEL) + " USB", 289 + offsetX, 103 + offsetY);
+    display.drawString(String(icModel) + " USB", 289 + offsetX, 103 + offsetY);
 
   if (transverter > 0)
   {
@@ -314,12 +314,12 @@ void viewGUI()
   display.drawRoundRect(283, 90, 34, 20, 2, TFT_MODE_BORDER);
   display.setTextColor(TFT_WHITE);
 
-  if (IC_CONNECT == BT)
+  if (icConnect == BT)
     display.drawString("BT", 300, 96);
   else
     display.drawString("USB", 300, 96);
 
-  display.drawString(String(IC_MODEL), 300, 105);
+  display.drawString(String(icModel), 300, 105);
 
   // display.drawFastHLine(0, 57, 320, TFT_FIL_BORDER);
   // display.drawFastHLine(0, 86, 320, TFT_FIL_BORDER);
@@ -349,7 +349,7 @@ void viewGUI()
     display.drawFastVLine(30 + i + offsetX, 218 + offsetY, 8, TFT_FIL_BACK);
   }
 
-  if(IC_MODEL == 705)
+  if(icModel == 705)
   {
     for (uint8_t i = 0; i <= 12; i++)
     {
@@ -369,7 +369,7 @@ void viewGUI()
       }
     }
   }
-  else if(IC_MODEL == 7300)
+  else if(icModel == 7300)
   {
     for (uint8_t i = 0; i <= 15; i++)
     {
@@ -537,7 +537,7 @@ void viewGUI()
   display.drawRect(220 + offsetX, 208 + offsetY, 100, 32, TFT_FIL_BORDER);
   display.drawString("Vd", 220 + offsetX, 208 + offsetY);
 
-  if (IC_MODEL == 705)
+  if (icModel == 705)
   {
     display.drawString("5", 230 + offsetX, 219 + offsetY);
   }
@@ -557,7 +557,7 @@ void viewGUI()
     display.drawFastVLine(230 + i + offsetX, 226 + offsetY, 8, TFT_FIL_BACK);
   }
 
-  if (IC_MODEL == 705)
+  if (icModel == 705)
   {
     display.drawFastHLine(230 + offsetX, 234 + offsetY, 50, TFT_RED);
     display.drawFastHLine(280 + offsetX, 234 + offsetY, 30, TFT_FIL_BORDER);
@@ -600,7 +600,7 @@ void clearGUI()
     display.drawFastVLine(30 + i + offsetX, 218 + offsetY, 8, TFT_FIL_BACK);
   }
 
-  if(IC_MODEL == 705 || IC_MODEL == 9700)
+  if(icModel == 705 || icModel == 9700)
   {
     for (uint8_t i = 0; i <= 12; i++)
     {
@@ -898,7 +898,6 @@ void wakeAndSleep()
   }
   else if (screensaverMode == true)
   {
-
     display.fillRect(x + offsetX, y + offsetY, 44, 22, TFT_BLACK);
 
     if (xDir)
@@ -941,11 +940,11 @@ void wakeAndSleep()
       y = 196;
     }
 
-    display.drawJpg(logo, sizeof(logo), x + offsetX, y + offsetY, 44, 22);
+    logoSprite.pushSprite(x + offsetX, y + offsetY, TFT_TRANSPARENT);
 
-    if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
+    if (icModel == 705 && icConnect == BT && btConnected == false)
       vTaskDelay(75);
-    else if (IC_CONNECT == USB && wifiConnected == false)
+    else if (icConnect == USB && wifiConnected == false)
       vTaskDelay(75);
   }
 
@@ -968,7 +967,7 @@ boolean checkConnection()
   String command = "";
   String response = "";
 
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x03, 0xFD};
 
   char s[4];
 
@@ -980,15 +979,15 @@ boolean checkConnection()
     command += String(s);
   }
 
-  command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
+  command += BAUD_RATE + String(",") + icSerialDevice;
 
   if (screenshot == false)
   {
-    if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
+    if (icModel == 705 && icConnect == BT && btConnected == false)
       message = "Need Pairing";
-    else if (IC_CONNECT == USB && wifiConnected == false)
+    else if (icConnect == USB && wifiConnected == false)
       message = "Check Wifi";
-    else if (IC_CONNECT == USB && (proxyConnected == false || txConnected == false))
+    else if (icConnect == USB && (proxyConnected == false || txConnected == false))
     {
       http.begin(civClient, PROXY_URL + String(":") + PROXY_PORT + String("/") + String("?civ=") + command); // Specify the URL
       http.addHeader("User-Agent", "M5Stack");                                                               // Specify header
@@ -1025,7 +1024,7 @@ boolean checkConnection()
     // Shutdown screen if no TX connexion
     if (wakeup == true && startup == false)
     {
-      if ((IC_CONNECT == BT && btConnected == false) || (IC_CONNECT == USB && txConnected == false))
+      if ((icConnect == BT && btConnected == false) || (icConnect == USB && txConnected == false))
       {
         display.sleep();
         wakeup = false;
@@ -1033,7 +1032,7 @@ boolean checkConnection()
     }
     else if (wakeup == false && startup == false)
     {
-      if ((IC_CONNECT == BT && btConnected == true) || (IC_CONNECT == USB && txConnected == true))
+      if ((icConnect == BT && btConnected == true) || (icConnect == USB && txConnected == true))
       {
         clearData();
         viewGUI();

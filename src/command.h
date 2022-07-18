@@ -11,26 +11,26 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit, boolean
   {
     for (uint8_t i = 0; i < n; i++)
     {
-      CAT.write(request[i]);
+      serialBT.write(request[i]);
     }
 
     vTaskDelay(50);
 
     if(sendOnly == true) return;
 
-    while (CAT.available())
+    while (serialBT.available())
     {
-      byte1 = CAT.read();
-      byte2 = CAT.read();
+      byte1 = serialBT.read();
+      byte2 = serialBT.read();
 
       if (byte1 == 0xFE && byte2 == 0xFE)
       {
         counter = 0;
-        byte3 = CAT.read();
+        byte3 = serialBT.read();
         while (byte3 != 0xFD)
         {
           buffer[counter] = byte3;
-          byte3 = CAT.read();
+          byte3 = serialBT.read();
           counter++;
           if (counter > limit)
           {
@@ -67,7 +67,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit, boole
     command += String(s);
   }
 
-  command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
+  command += BAUD_RATE + String(",") + icSerialDevice;
 
   http.begin(civClient, PROXY_URL + String(":") + PROXY_PORT + String("/") + String("?civ=") + command); // Specify the URL
   http.addHeader("User-Agent", "M5Stack");                                                               // Specify header
@@ -129,7 +129,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit, boole
 // Send CI-V Command dispatcher
 void sendCommand(char *request, size_t n, char *buffer, uint8_t limit, boolean sendOnly = false)
 {
-  if (IC_MODEL == 705 && IC_CONNECT == BT)
+  if (icModel == 705 && icConnect == BT)
     sendCommandBt(request, n, buffer, limit, sendOnly);
   else
     sendCommandWifi(request, n, buffer, limit);
@@ -143,7 +143,7 @@ void getSmeterLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x02, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x02, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -202,7 +202,7 @@ void getSWRLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x12, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x12, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -274,7 +274,7 @@ void getPowerLevel(uint8_t charge = 0)
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x11, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x11, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -348,7 +348,7 @@ void getPowerLevel(uint8_t charge = 0)
 uint8_t getPowerType()
 {
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x0B, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x0B, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -364,7 +364,7 @@ void getFrequency()
   String frequencyNew;
 
   static char buffer[8];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x03, 0xFD};
 
   double freq; // Current frequency in Hz
   const uint32_t decMulti[] = {1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10, 1};
@@ -454,7 +454,7 @@ void getFrequency()
 uint8_t getModeData()
 {
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x06, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x06, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -469,7 +469,7 @@ uint8_t getModeFilter()
   String value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x04, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x04, 0xFD};
 
   const char *mode[] = {"LSB", "USB", "AM", "CW", "RTTY", "FM", "WFM", "CW-R", "RTTY-R", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "DV"};
 
@@ -534,7 +534,7 @@ void getVdLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x15, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x15, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -548,7 +548,7 @@ void getVdLevel()
     Serial.println(value);
   }
 
-  if(IC_MODEL == 705) {
+  if(icModel == 705) {
     if (value < 75)
     {
       value = 75;
@@ -570,7 +570,7 @@ void getVdLevel()
       display.drawFastVLine(230 + i + offsetX, 226 + offsetY, 8, TFT_FIL_BACK);
     }
 
-    if(IC_MODEL == 705) {
+    if(icModel == 705) {
       limit = map(value, 75, 241, 0, 80);
     }
     else 
@@ -593,7 +593,7 @@ void getIdLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x16, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x16, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -618,7 +618,7 @@ void getIdLevel()
       display.drawFastVLine(30 + i + offsetX, 218 + offsetY, 8, TFT_FIL_BACK);
     }
 
-    if(IC_MODEL == 705 || IC_MODEL == 9700)
+    if(icModel == 705 || icModel == 9700)
     {
       for (uint8_t i = 0; i <= 12; i++)
       {
@@ -658,7 +658,7 @@ void getALCLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x13, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x13, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -705,7 +705,7 @@ uint8_t getTX()
   boolean control;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1C, 0x00, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1C, 0x00, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -720,9 +720,9 @@ uint8_t getTX()
     value = 0;
   }
 
-  if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == true)
+  if (icModel == 705 && icConnect == BT && btConnected == true)
     control = true;
-  else if (IC_CONNECT == USB && wifiConnected == true && proxyConnected == true && txConnected == true)
+  else if (icConnect == USB && wifiConnected == true && proxyConnected == true && txConnected == true)
     control = true;
   else
     control = false;
@@ -760,7 +760,7 @@ void getAGC()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x12, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x12, 0xFD};
 
   const char *mode[] = {"", "AGC-F", "AGC-M", "AGC-S"};
 
@@ -800,7 +800,7 @@ void getAN()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x41, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x41, 0xFD};
 
   const char *mode[] = {"  ", "AN"};
 
@@ -840,7 +840,7 @@ boolean getNB()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x22, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x22, 0xFD};
 
   const char *mode[] = {"  ", "NB"};
 
@@ -882,7 +882,7 @@ boolean getNR()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x40, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x40, 0xFD};
 
   const char *mode[] = {"  ", "NR"};
 
@@ -924,7 +924,7 @@ void getAMP()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x02, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x02, 0xFD};
 
   const char *mode[] = {"  ", "P.AMP1", "P.AMP2"};
 
@@ -970,7 +970,7 @@ void getTone(boolean retry = true)
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x5D, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x5D, 0xFD};
 
   const char *mode[] = {" ", "TONE", "TSQL", "DTCS", "", "", "DTCS (T)", "TONE (T)/DTCS (R)", "DTCS (T)/TSQL (R)", "TONE (T)/TSQL (R)"};
 
@@ -1017,7 +1017,7 @@ uint8_t getAF()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x14, 0x01, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x14, 0x01, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -1072,7 +1072,7 @@ uint8_t getMIC()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x14, 0x0B, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x14, 0x0B, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -1127,7 +1127,7 @@ uint8_t getSQL()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x14, 0x03, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x14, 0x03, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -1182,7 +1182,7 @@ void getNRLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x14, 0x06, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x14, 0x06, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -1253,7 +1253,7 @@ void getNBLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x14, 0x12, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x14, 0x12, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -1322,7 +1322,7 @@ uint8_t getCOMP(boolean retry = true)
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x44, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x44, 0xFD};
 
   const char *mode[] = {" ", "COMP"};
 
@@ -1370,7 +1370,7 @@ void getCOMPLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x14, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x14, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -1424,7 +1424,7 @@ void getCOMPLevel()
 void getRIT()
 {
   static char buffer[8];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x21, 0x00, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x21, 0x00, 0xFD};
 
   String RIT;
 
@@ -1491,13 +1491,13 @@ void getIP()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x07, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x07, 0xFD};
 
   const char *mode[] = {"  ", "IP+"};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
-  if(IC_MODEL != 7300) return;
+  if(icModel != 7300) return;
 
   sendCommand(request, n, buffer, 5);
 
@@ -1536,17 +1536,17 @@ void sendVoice()
 
   // Repeat Time
   char repeat[][9] = {
-    {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x02, 0x45, 0xFD},   // IC-705
-    {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x01, 0x81, 0xFD},   // IC-7300
-    {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x02, 0x17, 0xFD}    // IC-9700
+    {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x05, 0x02, 0x45, 0xFD},   // IC-705
+    {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x05, 0x01, 0x81, 0xFD},   // IC-7300
+    {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x05, 0x02, 0x17, 0xFD}    // IC-9700
   };
 
-  if(IC_MODEL == 705)
+  if(icModel == 705)
   {
     n = sizeof(repeat[0]) / sizeof(repeat[0][0]);
     sendCommand(repeat[0], n, buffer, 7);
   }
-  else if(IC_MODEL == 7300)
+  else if(icModel == 7300)
   {
     n = sizeof(repeat[1]) / sizeof(repeat[1][0]);
     sendCommand(repeat[1], n, buffer, 7);
@@ -1573,7 +1573,7 @@ void sendVoice()
   Serial.println(voiceTimeout);
 
   // Send
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x28, 0x00, 0x00, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x28, 0x00, 0x00, 0xFD};
 
   request[6] += voice;
 

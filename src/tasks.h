@@ -140,8 +140,101 @@ void button(void *pvParameters)
         display.setTextPadding(w - 2);
         display.setTextColor(TFT_MENU_SELECT, TFT_MENU_BACK);
 
+        // Config
+        if(settingsString == "Config")
+        {
+          display.drawString(String(choiceConfig[config * 4]) + " / " + String(choiceConfig[(config * 4) + 2]), 160 + offsetX, h - 6 + offsetY);
+          size_t n = sizeof(choiceConfig) / sizeof(choiceConfig[0]);
+          n = (n / 4) - 1;
+
+          if(btnA || btnC) {
+            if(btnA == 1) {
+              config -= 1;
+              if(config < 0) {
+                config = n;
+              }
+            }
+            else if(btnC == 1) {
+              config += 1;
+              if(config > n) {
+                config = 0;
+              }
+            }
+          }
+          else if(btnB == 1) {
+            if(configOld != config) {
+              preferences.putUInt("config", config);
+
+              if(
+                (icConnect == USB && strcmp(choiceConfig[(config * 4) + 2], "BT") == 0)
+                ||
+                (icConnect == BT && strcmp(choiceConfig[(config * 4) + 2], "USB") == 0)
+              )
+              {
+                ESP.restart();
+              } 
+
+              if(strcmp(choiceConfig[(config * 4) + 2], "USB") == 0)
+              {               
+                icModel = strtol(choiceConfig[(config * 4) + 0], 0, 10);
+                icCIVAddress = strtol(String(choiceConfig[(config * 4) + 1]).substring(2, 4).c_str(), 0, 16);
+                icConnect = USB;
+                icSerialDevice = choiceConfig[(config * 4) + 3];
+
+                btConnected = false;
+
+                if (WiFi.status() == WL_CONNECTED) wifiConnected = true;
+              }
+              else if(strcmp(choiceConfig[(config * 4) + 2], "BT") == 0)
+              {
+                icModel = strtol(choiceConfig[(config * 4) + 0], 0, 10);
+                icCIVAddress = strtol(String(choiceConfig[(config * 4) + 1]).substring(2, 4).c_str(), 0, 16);
+                icConnect = BT;
+
+                uint8_t i = 0;
+                while(i <= 15)
+                {
+                  icAddress[i/3] = strtol(String(choiceConfig[(config * 4) + 3]).substring(i, i + 2).c_str(), 0, 16);
+                  i += 3;
+                }
+
+                wifiConnected = false;
+
+                uint8_t attempt = 0;
+
+                serialBT.begin(NAME, true);
+                btClient = serialBT.connect(icAddress);
+
+                while(!btClient && attempt < 3) 
+                {
+                  btClient = serialBT.connect(icAddress);
+                  attempt++;
+                }
+
+                if(!btClient) 
+                {
+                  if (!serialBT.begin(NAME))
+                  {
+                    Serial.println("An error occurred initializing Bluetooth");
+                  }
+                  else
+                  {
+                    Serial.println("Bluetooth initialized");
+                  }
+                }
+              }
+            }
+            clearData();
+            viewGUI();
+            settingsSelect = false;
+            settingsMode = false;
+            vTaskDelay(pdMS_TO_TICKS(150));
+          }
+          vTaskDelay(pdMS_TO_TICKS(150));
+        }
+
         // Brightness
-        if(settingsString == "Brightness")
+        else if(settingsString == "Brightness")
         {
           display.drawString(String(choiceBrightness[0]) + " " + String(brightness) + "%", 160 + offsetX, h - 6 + offsetY);
 

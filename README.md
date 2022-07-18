@@ -129,7 +129,7 @@ Please, take the time to read the [README.md](https://github.com/armel/ICUSBProx
 
 It's done ? Nice, so we can move forward.
 
-Line 18 and 19, the constants `SERIAL_DEVICE` and `BAUDE_RATE` set the CI-V COM port settings. So COM port number (COM1, /dev/ttyUSB0, etc.) and Baude rate (115200, 19200, 9600, etc.).
+Line 18 and 19, the constants `SERIAL_DEVICE` and `BAUD_RATE` set the CI-V COM port settings. So COM port number (COM1, /dev/ttyUSB0, etc.) and Baud rate (115200, 19200, 9600, etc.).
 Line 20 and 21, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port of the Proxy.
 
 > About Proxy, the idea is to use a PC or a nano computer (like a Raspberry Pi) to connect the IC-7300 or IC-9700 transceiver via the USB cable (USB type A to USB type B). The M5Stack will talk to this PC by Wifi and the PC will talk to the transceiver by the USB cable. By this way, the M5Stack keeps the big advantage of being wireless.
@@ -168,7 +168,7 @@ Next, in `settings.h` ...
 | WIFI_SSID   |  _My WiFi SSID_ |
 | WIFI_PASSWORD | _My WiFi Password_ |
 | SERIAL_DEVICE | "/dev/ttyACM0" |
-| BAUDE_RATE | 115200 | 
+| BAUD_RATE | 115200 | 
 | PROXY_URL | "http://192.168.1.32" |
 | PROXY_PORT | 1234 |    
 
@@ -182,7 +182,7 @@ Next, in `settings.h` ...
 | WIFI_SSID   |  _My WiFi SSID_ |
 | WIFI_PASSWORD | _My WiFi Password_ |
 | SERIAL_DEVICE | "/dev/ttyUSB0" |
-| BAUDE_RATE | 115200 | 
+| BAUD_RATE | 115200 | 
 | PROXY_URL | "http://192.168.1.32" |
 | PROXY_PORT | 1234 |    
 
