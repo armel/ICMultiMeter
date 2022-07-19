@@ -67,6 +67,7 @@ uint16_t offsetY = 0;
 
 // Sprite
 LGFX_Sprite gaugeSprite(&display);
+LGFX_Sprite levelSprite(&display);
 LGFX_Sprite logoSprite(&display);
 
 // LED

@@ -378,7 +378,7 @@ void viewGUI()
       }
       else if (i % 3 == 0)
       {
-        display.drawString(String((i / 3) * 5) + offsetX, 30 + (i * 11.3) + offsetY, 234);
+        display.drawString(String((i / 3) * 5), 30 + (i * 11.3) + offsetX, 234 + offsetY);
         display.drawFastVLine(30 + (i * 11.3) + offsetX, 224 + offsetY, 2, TFT_FIL_BORDER);
       }
       else

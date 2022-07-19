@@ -73,6 +73,12 @@ void setup()
   {
   }
 
+  gaugeSprite.setColorDepth(8);
+  gaugeSprite.createSprite(180, 8);
+
+  levelSprite.setColorDepth(8);
+  levelSprite.createSprite(44, 10);
+
   logoSprite.setColorDepth(8);
   logoSprite.createSprite(44, 22);
   logoSprite.drawJpg(logo, sizeof(logo), 0, 0, 44, 22);

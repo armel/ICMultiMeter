@@ -163,12 +163,12 @@ void getSmeterLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_FIL_BACK);
+      gaugeSprite.drawFastVLine(i, 0, 8, TFT_FIL_BACK);
     }
 
     for (uint8_t i = 0; i <= 4; i++)
     {
-      display.drawFastVLine(30 + (i * 45) + offsetX, 129 + offsetY, 2, TFT_FIL_BORDER);
+      gaugeSprite.drawFastVLine((i * 45), 7, 2, TFT_FIL_BORDER);
     }
 
     if (value != 0)
@@ -179,18 +179,19 @@ void getSmeterLevel()
       {
         if (i == 0)
         {
-          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_FIL_BORDER);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_FIL_BORDER);
         }
         else if (i <= 90)
         {
-          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_BLUE);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_BLUE);
         }
         else
         {
-          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_RED);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_RED);
         }
       }
     }
+    gaugeSprite.pushSprite(30 + offsetX, 122 + offsetY, TFT_TRANSPARENT);
   }
 }
 
@@ -224,12 +225,12 @@ void getSWRLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 194 + offsetY, 8, TFT_FIL_BACK);
+      gaugeSprite.drawFastVLine(i, 0, 8, TFT_FIL_BACK);
     }
 
     for (uint8_t i = 0; i <= 4; i += 1)
     {
-      display.drawFastVLine(30 + (i * 22) + offsetX, 200 + offsetY, 2, TFT_FIL_BORDER);
+      gaugeSprite.drawFastVLine((i * 22), 6, 2, TFT_FIL_BORDER);
     }
 
     if (value != 0)
@@ -255,14 +256,15 @@ void getSWRLevel()
       {
         if (i <= 88)
         {
-          display.drawFastVLine(30 + i + offsetX, 194 + offsetY, 8, TFT_BLUE);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_BLUE);
         }
         else
         {
-          display.drawFastVLine(30 + i + offsetX, 194 + offsetY, 8, TFT_RED);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_RED);
         }
       }
     }
+    gaugeSprite.pushSprite(30 + offsetX, 194 + offsetY, TFT_TRANSPARENT);
   }
 }
 
@@ -301,12 +303,12 @@ void getPowerLevel(uint8_t charge = 0)
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_FIL_BACK);
+      gaugeSprite.drawFastVLine(i, 0, 8, TFT_FIL_BACK);
     }
 
     for (uint8_t i = 0; i <= 4; i++)
     {
-      display.drawFastVLine(30 + (i * 45) + offsetX, 129 + offsetY, 2, TFT_FIL_BORDER);
+      gaugeSprite.drawFastVLine((i * 45), 7, 2, TFT_FIL_BORDER);
     }
 
     if (value != 0)
@@ -333,14 +335,15 @@ void getPowerLevel(uint8_t charge = 0)
       {
         if (i <= 90)
         {
-          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_BLUE);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_BLUE);
         }
         else
         {
-          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_RED);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_RED);
         }
       }
     }
+    gaugeSprite.pushSprite(30 + offsetX, 122 + offsetY, TFT_TRANSPARENT);
   }
 }
 
@@ -615,7 +618,7 @@ void getIdLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 218 + offsetY, 8, TFT_FIL_BACK);
+      gaugeSprite.drawFastVLine(i, 0, 8, TFT_FIL_BACK);
     }
 
     if(icModel == 705 || icModel == 9700)
@@ -624,7 +627,7 @@ void getIdLevel()
       {
         if (i % 3 == 0)
         {
-          display.drawFastVLine(30 + (i * 14) + offsetX, 224 + offsetY, 2, TFT_FIL_BORDER);
+          gaugeSprite.drawFastVLine((i * 14), 6, 2, TFT_FIL_BORDER);
         }
       }
     }
@@ -634,7 +637,7 @@ void getIdLevel()
       {
         if (i % 3 == 0)
         {
-          display.drawFastVLine(30 + (i * 11.3) + offsetX, 224 + offsetY, 2, TFT_FIL_BORDER);
+          gaugeSprite.drawFastVLine((i * 11.3), 6, 2, TFT_FIL_BORDER);
         }
       }
     }
@@ -644,10 +647,11 @@ void getIdLevel()
 
       for (uint8_t i = 0; i <= limit; i += STEP)
       {
-        display.drawFastVLine(30 + i + offsetX, 218 + offsetY, 8, TFT_CYAN);
+        gaugeSprite.drawFastVLine(i, 218, 8, TFT_CYAN);
       }
     }
   }
+  gaugeSprite.pushSprite(30 + offsetX, 218 + offsetY, TFT_TRANSPARENT);
 }
 
 // Get ALC Level
@@ -683,7 +687,7 @@ void getALCLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 146 + offsetY, 8, TFT_FIL_BACK);
+      gaugeSprite.drawFastVLine(i, 0, 8, TFT_FIL_BACK);
     }
 
     if (value != 0)
@@ -692,9 +696,11 @@ void getALCLevel()
 
       for (uint8_t i = 0; i <= limit; i += STEP)
       {
-        display.drawFastVLine(30 + i + offsetX, 146 + offsetY, 8, TFT_BLUE);
+        gaugeSprite.drawFastVLine(i, 0, 8, TFT_BLUE);
       }
     }
+
+    gaugeSprite.pushSprite(30 + offsetX, 146 + offsetY, TFT_TRANSPARENT);
   }
 }
 
@@ -1035,21 +1041,23 @@ uint8_t getAF()
   {
     AFOld = value;
 
-    display.fillRect(245 + offsetX, 121 + offsetY, 44, 10, TFT_BLACK);
-    display.drawRect(245 + offsetX, 121 + offsetY, 44, 10, TFT_FIL_BORDER);
+    levelSprite.fillRect(0, 0, 44, 10, TFT_BLACK);
+    levelSprite.drawRect(0, 0, 44, 10, TFT_FIL_BORDER);
 
     if (value != 0)
     {
       limit = map(value, 0, 255, 0, 42);
-      display.drawFastHLine(246 + offsetX, 122 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 123 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 124 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 125 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 126 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 127 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 128 + offsetY, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246 + offsetX, 129 + offsetY, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 1, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 2, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 3, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 4, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 5, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 6, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 7, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 8, limit, TFT_GAUGE_3);
     }
+
+    levelSprite.pushSprite(245 + offsetX, 121 + offsetY, TFT_TRANSPARENT);
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -1090,21 +1098,23 @@ uint8_t getMIC()
   {
     MICOld = value;
 
-    display.fillRect(245 + offsetX, 138 + offsetY, 44, 10, TFT_BLACK);
-    display.drawRect(245 + offsetX, 138 + offsetY, 44, 10, TFT_FIL_BORDER);
+    levelSprite.fillRect(0, 0, 44, 10, TFT_BLACK);
+    levelSprite.drawRect(0, 0, 44, 10, TFT_FIL_BORDER);
 
     if (value != 0)
     {
       limit = map(value, 0, 255, 0, 42);
-      display.drawFastHLine(246 + offsetX, 139 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 140 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 141 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 142 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 143 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 144 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 145 + offsetY, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246 + offsetX, 146 + offsetY, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 1, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 2, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 3, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 4, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 5, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 6, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 7, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 8, limit, TFT_GAUGE_3);
     }
+
+    levelSprite.pushSprite(245 + offsetX, 138 + offsetY, TFT_TRANSPARENT);
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -1145,21 +1155,23 @@ uint8_t getSQL()
   {
     SQLOld = value;
 
-    display.fillRect(245 + offsetX, 155 + offsetY, 44, 10, TFT_BLACK);
-    display.drawRect(245 + offsetX, 155 + offsetY, 44, 10, TFT_FIL_BORDER);
+    levelSprite.fillRect(0, 0, 44, 10, TFT_BLACK);
+    levelSprite.drawRect(0, 0, 44, 10, TFT_FIL_BORDER);
 
     if (value != 0)
     {
       limit = map(value, 0, 255, 0, 42);
-      display.drawFastHLine(246 + offsetX, 156 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 157 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 158 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 159 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 160 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 161 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 162 + offsetY, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246 + offsetX, 163 + offsetY, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 1, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 2, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 3, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 4, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 5, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 6, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 7, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 8, limit, TFT_GAUGE_3);
     }
+
+    levelSprite.pushSprite(245 + offsetX, 155 + offsetY, TFT_TRANSPARENT);
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -1200,21 +1212,23 @@ void getNRLevel()
   {
     NRLevelOld = value;
 
-    display.fillRect(245 + offsetX, 172 + offsetY, 44, 10, TFT_BLACK);
-    display.drawRect(245 + offsetX, 172 + offsetY, 44, 10, TFT_FIL_BORDER);
+    levelSprite.fillRect(0, 0, 44, 10, TFT_BLACK);
+    levelSprite.drawRect(0, 0, 44, 10, TFT_FIL_BORDER);
 
     if (value > 0)
     {
       limit = map(value, 8, 248, 0, 42);
-      display.drawFastHLine(246 + offsetX, 173 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 174 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 175 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 176 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 177 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 178 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 179 + offsetY, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246 + offsetX, 180 + offsetY, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 1, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 2, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 3, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 4, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 5, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 6, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 7, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 8, limit, TFT_GAUGE_3);
     }
+
+    levelSprite.pushSprite(245 + offsetX, 172 + offsetY, TFT_TRANSPARENT);
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -1271,21 +1285,23 @@ void getNBLevel()
   {
     NBLevelOld = value;
 
-    display.fillRect(245 + offsetX, 189 + offsetY, 44, 10, TFT_BLACK);
-    display.drawRect(245 + offsetX, 189 + offsetY, 44, 10, TFT_FIL_BORDER);
+    levelSprite.fillRect(0, 0, 44, 10, TFT_BLACK);
+    levelSprite.drawRect(0, 0, 44, 10, TFT_FIL_BORDER);
 
     if (value > 0)
     {
       limit = map(value, 0, 255, 0, 42);
-      display.drawFastHLine(246 + offsetX, 190 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 191 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 192 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 193 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 194 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 195 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 196 + offsetY, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246 + offsetX, 197 + offsetY, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 1, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 2, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 3, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 4, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 5, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 6, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 7, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 8, limit, TFT_GAUGE_3);
     }
+
+    levelSprite.pushSprite(245 + offsetX, 189 + offsetY, TFT_TRANSPARENT);
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -1398,15 +1414,17 @@ void getCOMPLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 170 + offsetY, 8, TFT_FIL_BACK);
+      gaugeSprite.drawFastVLine(i, 170, 8, TFT_FIL_BACK);
     }
 
     limit = map(value, 0, 210, 0, 180);
 
     for (uint8_t i = 0; i <= limit; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 170 + offsetY, 8, TFT_BLUE);
+      gaugeSprite.drawFastVLine(i, 0, 8, TFT_BLUE);
     }
+
+    gaugeSprite.pushSprite(30 + offsetX, 170 + offsetY, TFT_TRANSPARENT);
 
     display.setFont(0);
     display.setTextDatum(CC_DATUM);
