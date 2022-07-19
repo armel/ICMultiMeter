@@ -1050,6 +1050,15 @@ boolean checkConnection()
       {
         display.sleep();
         wakeup = false;
+
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          leds[4 - i] = CRGB::Black;
+          leds[5 + i] = CRGB::Black;
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
       }
     }
     else if (wakeup == false && startup == false)
