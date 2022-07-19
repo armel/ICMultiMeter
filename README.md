@@ -232,8 +232,10 @@ The following options are available :
 
 | Settings             | Value                                     | 
 | -------------------- |:-----------------------------------------:| 
+| Config				   | Set Config                                |
 | Voice TX             | Transmit Voice TX Memory (OFF or T1 ~ T8) | 
 | Transverter Mode     | Set Transverter Mode (OFF, LO1 ~ LO5)     | 
+| Led Mode             | Set Led Mode (OFF, TX, MEASURES)          | 
 | Brightness           | Set Brightness (0 ~ 100%)                 | 
 | Beep                 | Set Beep (0 ~ 100%)                       |
 | Screensaver          | Set Screensaver TimeOut (1 ~ 60 min)      |
@@ -241,7 +243,7 @@ The following options are available :
 | Shutdown             | Shutdown your M5Stack (even if in charge) |
 | Exit                 | Menu Exit                                 |
  
-> Voice TX, Transverter Mode, Brightness, Beep and Screensaver are preserved at the next restart.
+> Config, Voice TX, Transverter Mode, Led Mode, Brightness, Beep and Screensaver are preserved at the next restart.
 
 If you have chosen a memory in the Voice TX setting, after exiting the settings menu, you will see the memory number in the upper left corner of the screen. Use the left button to send it once and the right button to send it multiple times (and click the right button again to stop). If you send it multiple times, you will see a counter in the upper left corner, before each transmission (this is the timer of your transceiver). Note that, this Voice TX feature is experimental, but would be usefull.
 
