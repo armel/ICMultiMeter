@@ -192,6 +192,60 @@ void getSmeterLevel()
       }
     }
     gaugeSprite.pushSprite(30 + offsetX, 122 + offsetY, TFT_TRANSPARENT);
+
+    // If M5GO
+    if(strcmp(choiceLed[led], "MEASURES") == 0)
+    {
+      if(value <= 13) {
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          leds[4 - i] = CRGB::WhiteSmoke;
+          leds[5 + i] = CRGB::WhiteSmoke;
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+      else if(value <= 120) {
+        uint8_t j = map(value, 14, 120, 0, 4);
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[4 - i] = CRGB::Blue;
+            leds[5 + i] = CRGB::Blue;
+          }
+          else
+          {
+            leds[4 - i] = CRGB::WhiteSmoke;
+            leds[5 + i] = CRGB::WhiteSmoke;
+          }
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+      else {
+        uint8_t j = map(value, 121, 241, 0, 4);
+
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[i] = CRGB::Red;
+            leds[9 - i] = CRGB::Red;
+          }
+          else
+          {
+            leds[i] = CRGB::Blue;
+            leds[9 - i] = CRGB::Blue;
+          }
+        }
+        
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+    }
   }
 }
 
@@ -265,6 +319,41 @@ void getSWRLevel()
       }
     }
     gaugeSprite.pushSprite(30 + offsetX, 194 + offsetY, TFT_TRANSPARENT);
+
+    // If M5GO
+    if(strcmp(choiceLed[led], "MEASURES") == 0)
+    {
+      if(value <= 110) {
+        uint8_t j = map(value, 0, 120, 0, 4);
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[4 - i] = CRGB::Green;
+            leds[5 + i] = CRGB::Green;
+          }
+          else
+          {
+            leds[4 - i] = CRGB::WhiteSmoke;
+            leds[5 + i] = CRGB::WhiteSmoke;
+          }
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+      else {
+
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          leds[i] = CRGB::Red;
+          leds[9 - i] = CRGB::Red;
+        }
+        
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+    }
   }
 }
 

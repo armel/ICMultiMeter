@@ -32,6 +32,7 @@ void setup()
 
   // Preferences
   preferences.begin(NAME);
+  led = preferences.getUInt("led", 0);
   brightness = preferences.getUInt("brightness", 64);
   transverter = preferences.getUInt("transverter", 0);
   voice = preferences.getUInt("voice", 0);
@@ -233,11 +234,14 @@ void loop()
         if(needClear == false) {
           getALCLevel();
           clearGUI();
-          for(uint8_t i = 0; i <= 9; i++){
-            leds[i] = CRGB::Black;
+          if(strcmp(choiceLed[led], "TX") == 0)
+          {
+            for(uint8_t i = 0; i <= 9; i++){
+              leds[i] = CRGB::Black;
+            }
+            FastLED.setBrightness(16);
+            FastLED.show();
           }
-          FastLED.setBrightness(16);
-          FastLED.show();
           needClear = true;
         }
         getSmeterLevel();
@@ -245,11 +249,14 @@ void loop()
       else {
         screensaverTimer = millis();   // If transmit, refresh tempo
         if(needClear) {
-          for(uint8_t i = 0; i <= 9; i++){
-            leds[i] = CRGB::Red;
+          if(strcmp(choiceLed[led], "TX") == 0)
+          {
+            for(uint8_t i = 0; i <= 9; i++){
+              leds[i] = CRGB::Red;
+            }
+            FastLED.setBrightness(16);
+            FastLED.show();
           }
-          FastLED.setBrightness(16);
-          FastLED.show();
           needClear = false;
         }
 

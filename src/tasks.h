@@ -233,6 +233,37 @@ void button(void *pvParameters)
           vTaskDelay(pdMS_TO_TICKS(150));
         }
 
+        // M5GO Module
+        if(settingsString == "Led Mode")
+        {
+          display.drawString(String(choiceLed[led]), 160 + offsetX, h - 6 + offsetY);
+
+          if(btnA || btnC) {
+            if(btnA == 1) {
+              led -= 1;
+              if(led < 0) {
+                led = 2;
+              }
+            }
+            else if(btnC == 1) {
+              led += 1;
+              if(led > 2) {
+                led = 0;
+              }
+            }
+          }
+          else if(btnB == 1) {
+            if(ledOld != led)
+              preferences.putUInt("led", led);
+            clearData();
+            viewGUI();
+            settingsSelect = false;
+            settingsMode = false;
+            vTaskDelay(pdMS_TO_TICKS(150));
+          }
+          vTaskDelay(pdMS_TO_TICKS(150));
+        }
+
         // Brightness
         else if(settingsString == "Brightness")
         {

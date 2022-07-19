@@ -94,12 +94,14 @@ WiFiClient httpClient, civClient;
 
 int8_t config = 0;
 int8_t beep = 0;
+int8_t led = 0;
 int8_t transverter = 0;
 int8_t voice = 0;
 int8_t voiceMode = 0;
 int8_t voiceTimeout = 0;
 int8_t screensaver = 0;
 int8_t configOld = 255;
+int8_t ledOld = 0;
 
 uint8_t voiceCounter = 0;
 uint8_t htmlGetRequest;
@@ -165,8 +167,9 @@ String binFilename[128];
 uint8_t binIndex = 0;
 
 // Menu
-const char *settings[] = {"Config", "Voice TX", "Transverter Mode", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
+const char *settings[] = {"Config", "Voice TX", "Transverter Mode", "Led Mode", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
 const char *choiceVoice[] = {"OFF", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8"};
+const char *choiceLed[] = {"OFF", "TX", "MEASURES"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceBeep[] = {"BEEP LEVEL"};
 const char *choiceScreensaver[] = {"TIMEOUT"};
