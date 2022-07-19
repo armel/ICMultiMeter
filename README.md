@@ -87,7 +87,7 @@ Open the ICMultiMeter project with PlateformIO for VSCode.
 
 ### File `src/settings.h`
 
-#### Multi config
+#### Multi configs
 
 Since version 1.0.0, it's posssible to set multi configs. With this new feature, it is possible to switch from one configuration to another from the settings menu !
 
