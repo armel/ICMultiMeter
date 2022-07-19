@@ -962,11 +962,10 @@ void wakeAndSleep()
       vTaskDelay(75);
   }
 
-  if (DEBUG)
+  // Debug trace
+  if (DEBUG == 1)
   {
-    Serial.print(screensaverMode);
-    Serial.print(" ");
-    Serial.println(millis() - screensaverTimer);
+    Serial.printf("%d %ld\n", screensaverMode, millis() - screensaverTimer);
   }
 }
 

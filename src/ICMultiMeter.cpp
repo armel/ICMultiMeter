@@ -342,12 +342,15 @@ void loop()
   // Manage Screen Saver
   wakeAndSleep();
 
-  if(DEBUG)
+  if(DEBUG == 1)
   {
-    Serial.print(screensaverMode);
-    Serial.print(" ");
-    Serial.print(millis() - screensaverTimer);
-    Serial.print(" ");
-    Serial.println(screensaver * 60 * 1000);
+    Serial.printf("%d kb %d kb %d kb %d kb\n", 
+      ESP.getHeapSize() / 1024,
+      ESP.getFreeHeap() / 1024, 
+      ESP.getPsramSize() / 1024, 
+      ESP.getFreePsram() / 1024
+    );
+
+    Serial.printf("%d %ld %ld\n", screensaverMode, millis() - screensaverTimer, long(screensaver * 60 * 1000));
   }
 }
