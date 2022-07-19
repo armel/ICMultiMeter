@@ -127,8 +127,8 @@ void setup()
     {
       Serial.printf("Attempt %d - Make sure IC-705 is available and in range.", attempt + 1);
 
-      sprintf(dot, "%.*s", 1, ",,,,,");
-      //value(strcat(valString, dot));
+      sprintf(dot, "%.*s", 1, ".....");
+      value(strcat(valString, dot));
 
       btClient = serialBT.connect(icAddress);
       attempt++;
@@ -148,7 +148,7 @@ void setup()
     else
     {
       snprintf(valString, 24, "%s", "");
-      //value(valString);
+      value(valString);
     }
   }
   else

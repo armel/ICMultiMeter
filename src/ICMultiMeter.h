@@ -151,6 +151,8 @@ String filterOld = "";
 String modeOld = "";
 String RITOld = "";
 
+char valStringOld[32];
+
 // Flags for button presses via Web site Screen Capture
 bool buttonLeftPressed = false;
 bool buttonCenterPressed = false;
