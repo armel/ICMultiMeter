@@ -11,26 +11,26 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit, boolean
   {
     for (uint8_t i = 0; i < n; i++)
     {
-      CAT.write(request[i]);
+      serialBT.write(request[i]);
     }
 
     vTaskDelay(50);
 
     if(sendOnly == true) return;
 
-    while (CAT.available())
+    while (serialBT.available())
     {
-      byte1 = CAT.read();
-      byte2 = CAT.read();
+      byte1 = serialBT.read();
+      byte2 = serialBT.read();
 
       if (byte1 == 0xFE && byte2 == 0xFE)
       {
         counter = 0;
-        byte3 = CAT.read();
+        byte3 = serialBT.read();
         while (byte3 != 0xFD)
         {
           buffer[counter] = byte3;
-          byte3 = CAT.read();
+          byte3 = serialBT.read();
           counter++;
           if (counter > limit)
           {
@@ -67,7 +67,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit, boole
     command += String(s);
   }
 
-  command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
+  command += BAUD_RATE + String(",") + icSerialDevice;
 
   http.begin(civClient, PROXY_URL + String(":") + PROXY_PORT + String("/") + String("?civ=") + command); // Specify the URL
   http.addHeader("User-Agent", "M5Stack");                                                               // Specify header
@@ -129,7 +129,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit, boole
 // Send CI-V Command dispatcher
 void sendCommand(char *request, size_t n, char *buffer, uint8_t limit, boolean sendOnly = false)
 {
-  if (IC_MODEL == 705 && IC_CONNECT == BT)
+  if (icModel == 705 && icConnect == BT)
     sendCommandBt(request, n, buffer, limit, sendOnly);
   else
     sendCommandWifi(request, n, buffer, limit);
@@ -143,7 +143,7 @@ void getSmeterLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x02, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x02, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -163,12 +163,12 @@ void getSmeterLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_FIL_BACK);
+      gaugeSprite.drawFastVLine(i, 0, 8, TFT_FIL_BACK);
     }
 
     for (uint8_t i = 0; i <= 4; i++)
     {
-      display.drawFastVLine(30 + (i * 45) + offsetX, 129 + offsetY, 2, TFT_FIL_BORDER);
+      gaugeSprite.drawFastVLine((i * 45), 7, 2, TFT_FIL_BORDER);
     }
 
     if (value != 0)
@@ -179,16 +179,71 @@ void getSmeterLevel()
       {
         if (i == 0)
         {
-          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_FIL_BORDER);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_FIL_BORDER);
         }
         else if (i <= 90)
         {
-          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_BLUE);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_BLUE);
         }
         else
         {
-          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_RED);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_RED);
         }
+      }
+    }
+    gaugeSprite.pushSprite(30 + offsetX, 122 + offsetY, TFT_TRANSPARENT);
+
+    // If M5GO
+    if(strcmp(choiceLed[led], "MEASURES") == 0)
+    {
+      if(value <= 13) {
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          leds[4 - i] = CRGB::WhiteSmoke;
+          leds[5 + i] = CRGB::WhiteSmoke;
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+      else if(value <= 120) {
+        uint8_t j = map(value, 14, 120, 0, 4);
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[4 - i] = CRGB::Blue;
+            leds[5 + i] = CRGB::Blue;
+          }
+          else
+          {
+            leds[4 - i] = CRGB::WhiteSmoke;
+            leds[5 + i] = CRGB::WhiteSmoke;
+          }
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+      else {
+        uint8_t j = map(value, 121, 241, 0, 4);
+
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[i] = CRGB::Red;
+            leds[9 - i] = CRGB::Red;
+          }
+          else
+          {
+            leds[i] = CRGB::Blue;
+            leds[9 - i] = CRGB::Blue;
+          }
+        }
+        
+        FastLED.setBrightness(16);
+        FastLED.show();
       }
     }
   }
@@ -202,7 +257,7 @@ void getSWRLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x12, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x12, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -224,12 +279,12 @@ void getSWRLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 194 + offsetY, 8, TFT_FIL_BACK);
+      gaugeSprite.drawFastVLine(i, 0, 8, TFT_FIL_BACK);
     }
 
     for (uint8_t i = 0; i <= 4; i += 1)
     {
-      display.drawFastVLine(30 + (i * 22) + offsetX, 200 + offsetY, 2, TFT_FIL_BORDER);
+      gaugeSprite.drawFastVLine((i * 22), 6, 2, TFT_FIL_BORDER);
     }
 
     if (value != 0)
@@ -255,12 +310,48 @@ void getSWRLevel()
       {
         if (i <= 88)
         {
-          display.drawFastVLine(30 + i + offsetX, 194 + offsetY, 8, TFT_BLUE);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_BLUE);
         }
         else
         {
-          display.drawFastVLine(30 + i + offsetX, 194 + offsetY, 8, TFT_RED);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_RED);
         }
+      }
+    }
+    gaugeSprite.pushSprite(30 + offsetX, 194 + offsetY, TFT_TRANSPARENT);
+
+    // If M5GO
+    if(strcmp(choiceLed[led], "MEASURES") == 0)
+    {
+      if(value <= 110) {
+        uint8_t j = map(value, 0, 120, 0, 4);
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[4 - i] = CRGB::Green;
+            leds[5 + i] = CRGB::Green;
+          }
+          else
+          {
+            leds[4 - i] = CRGB::WhiteSmoke;
+            leds[5 + i] = CRGB::WhiteSmoke;
+          }
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+      else {
+
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          leds[i] = CRGB::Red;
+          leds[9 - i] = CRGB::Red;
+        }
+        
+        FastLED.setBrightness(16);
+        FastLED.show();
       }
     }
   }
@@ -274,7 +365,7 @@ void getPowerLevel(uint8_t charge = 0)
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x11, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x11, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -301,12 +392,12 @@ void getPowerLevel(uint8_t charge = 0)
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_FIL_BACK);
+      gaugeSprite.drawFastVLine(i, 0, 8, TFT_FIL_BACK);
     }
 
     for (uint8_t i = 0; i <= 4; i++)
     {
-      display.drawFastVLine(30 + (i * 45) + offsetX, 129 + offsetY, 2, TFT_FIL_BORDER);
+      gaugeSprite.drawFastVLine((i * 45), 7, 2, TFT_FIL_BORDER);
     }
 
     if (value != 0)
@@ -333,14 +424,15 @@ void getPowerLevel(uint8_t charge = 0)
       {
         if (i <= 90)
         {
-          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_BLUE);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_BLUE);
         }
         else
         {
-          display.drawFastVLine(30 + i + offsetX, 122 + offsetY, 8, TFT_RED);
+          gaugeSprite.drawFastVLine(i, 0, 8, TFT_RED);
         }
       }
     }
+    gaugeSprite.pushSprite(30 + offsetX, 122 + offsetY, TFT_TRANSPARENT);
   }
 }
 
@@ -348,7 +440,7 @@ void getPowerLevel(uint8_t charge = 0)
 uint8_t getPowerType()
 {
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x0B, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x0B, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -364,7 +456,7 @@ void getFrequency()
   String frequencyNew;
 
   static char buffer[8];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x03, 0xFD};
 
   double freq; // Current frequency in Hz
   const uint32_t decMulti[] = {1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10, 1};
@@ -454,7 +546,7 @@ void getFrequency()
 uint8_t getModeData()
 {
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x06, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x06, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -469,7 +561,7 @@ uint8_t getModeFilter()
   String value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x04, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x04, 0xFD};
 
   const char *mode[] = {"LSB", "USB", "AM", "CW", "RTTY", "FM", "WFM", "CW-R", "RTTY-R", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "DV"};
 
@@ -534,7 +626,7 @@ void getVdLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x15, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x15, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -548,7 +640,7 @@ void getVdLevel()
     Serial.println(value);
   }
 
-  if(IC_MODEL == 705) {
+  if(icModel == 705) {
     if (value < 75)
     {
       value = 75;
@@ -570,7 +662,7 @@ void getVdLevel()
       display.drawFastVLine(230 + i + offsetX, 226 + offsetY, 8, TFT_FIL_BACK);
     }
 
-    if(IC_MODEL == 705) {
+    if(icModel == 705) {
       limit = map(value, 75, 241, 0, 80);
     }
     else 
@@ -593,7 +685,7 @@ void getIdLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x16, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x16, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -615,16 +707,16 @@ void getIdLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 218 + offsetY, 8, TFT_FIL_BACK);
+      gaugeSprite.drawFastVLine(i, 0, 8, TFT_FIL_BACK);
     }
 
-    if(IC_MODEL == 705 || IC_MODEL == 9700)
+    if(icModel == 705 || icModel == 9700)
     {
       for (uint8_t i = 0; i <= 12; i++)
       {
         if (i % 3 == 0)
         {
-          display.drawFastVLine(30 + (i * 14) + offsetX, 224 + offsetY, 2, TFT_FIL_BORDER);
+          gaugeSprite.drawFastVLine((i * 14), 6, 2, TFT_FIL_BORDER);
         }
       }
     }
@@ -634,7 +726,7 @@ void getIdLevel()
       {
         if (i % 3 == 0)
         {
-          display.drawFastVLine(30 + (i * 11.3) + offsetX, 224 + offsetY, 2, TFT_FIL_BORDER);
+          gaugeSprite.drawFastVLine((i * 11.3), 6, 2, TFT_FIL_BORDER);
         }
       }
     }
@@ -644,10 +736,11 @@ void getIdLevel()
 
       for (uint8_t i = 0; i <= limit; i += STEP)
       {
-        display.drawFastVLine(30 + i + offsetX, 218 + offsetY, 8, TFT_CYAN);
+        gaugeSprite.drawFastVLine(i, 218, 8, TFT_CYAN);
       }
     }
   }
+  gaugeSprite.pushSprite(30 + offsetX, 218 + offsetY, TFT_TRANSPARENT);
 }
 
 // Get ALC Level
@@ -658,7 +751,7 @@ void getALCLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x13, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x13, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -683,7 +776,7 @@ void getALCLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 146 + offsetY, 8, TFT_FIL_BACK);
+      gaugeSprite.drawFastVLine(i, 0, 8, TFT_FIL_BACK);
     }
 
     if (value != 0)
@@ -692,9 +785,11 @@ void getALCLevel()
 
       for (uint8_t i = 0; i <= limit; i += STEP)
       {
-        display.drawFastVLine(30 + i + offsetX, 146 + offsetY, 8, TFT_BLUE);
+        gaugeSprite.drawFastVLine(i, 0, 8, TFT_BLUE);
       }
     }
+
+    gaugeSprite.pushSprite(30 + offsetX, 146 + offsetY, TFT_TRANSPARENT);
   }
 }
 
@@ -705,7 +800,7 @@ uint8_t getTX()
   boolean control;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1C, 0x00, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1C, 0x00, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -720,9 +815,9 @@ uint8_t getTX()
     value = 0;
   }
 
-  if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == true)
+  if (icModel == 705 && icConnect == BT && btConnected == true)
     control = true;
-  else if (IC_CONNECT == USB && wifiConnected == true && proxyConnected == true && txConnected == true)
+  else if (icConnect == USB && wifiConnected == true && proxyConnected == true && txConnected == true)
     control = true;
   else
     control = false;
@@ -760,7 +855,7 @@ void getAGC()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x12, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x12, 0xFD};
 
   const char *mode[] = {"", "AGC-F", "AGC-M", "AGC-S"};
 
@@ -800,7 +895,7 @@ void getAN()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x41, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x41, 0xFD};
 
   const char *mode[] = {"  ", "AN"};
 
@@ -840,7 +935,7 @@ boolean getNB()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x22, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x22, 0xFD};
 
   const char *mode[] = {"  ", "NB"};
 
@@ -882,7 +977,7 @@ boolean getNR()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x40, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x40, 0xFD};
 
   const char *mode[] = {"  ", "NR"};
 
@@ -924,7 +1019,7 @@ void getAMP()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x02, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x02, 0xFD};
 
   const char *mode[] = {"  ", "P.AMP1", "P.AMP2"};
 
@@ -970,7 +1065,7 @@ void getTone(boolean retry = true)
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x5D, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x5D, 0xFD};
 
   const char *mode[] = {" ", "TONE", "TSQL", "DTCS", "", "", "DTCS (T)", "TONE (T)/DTCS (R)", "DTCS (T)/TSQL (R)", "TONE (T)/TSQL (R)"};
 
@@ -1017,7 +1112,7 @@ uint8_t getAF()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x14, 0x01, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x14, 0x01, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -1035,21 +1130,23 @@ uint8_t getAF()
   {
     AFOld = value;
 
-    display.fillRect(245 + offsetX, 121 + offsetY, 44, 10, TFT_BLACK);
-    display.drawRect(245 + offsetX, 121 + offsetY, 44, 10, TFT_FIL_BORDER);
+    levelSprite.fillRect(0, 0, 44, 10, TFT_BLACK);
+    levelSprite.drawRect(0, 0, 44, 10, TFT_FIL_BORDER);
 
     if (value != 0)
     {
       limit = map(value, 0, 255, 0, 42);
-      display.drawFastHLine(246 + offsetX, 122 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 123 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 124 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 125 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 126 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 127 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 128 + offsetY, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246 + offsetX, 129 + offsetY, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 1, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 2, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 3, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 4, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 5, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 6, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 7, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 8, limit, TFT_GAUGE_3);
     }
+
+    levelSprite.pushSprite(245 + offsetX, 121 + offsetY, TFT_TRANSPARENT);
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -1072,7 +1169,7 @@ uint8_t getMIC()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x14, 0x0B, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x14, 0x0B, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -1090,21 +1187,23 @@ uint8_t getMIC()
   {
     MICOld = value;
 
-    display.fillRect(245 + offsetX, 138 + offsetY, 44, 10, TFT_BLACK);
-    display.drawRect(245 + offsetX, 138 + offsetY, 44, 10, TFT_FIL_BORDER);
+    levelSprite.fillRect(0, 0, 44, 10, TFT_BLACK);
+    levelSprite.drawRect(0, 0, 44, 10, TFT_FIL_BORDER);
 
     if (value != 0)
     {
       limit = map(value, 0, 255, 0, 42);
-      display.drawFastHLine(246 + offsetX, 139 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 140 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 141 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 142 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 143 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 144 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 145 + offsetY, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246 + offsetX, 146 + offsetY, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 1, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 2, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 3, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 4, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 5, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 6, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 7, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 8, limit, TFT_GAUGE_3);
     }
+
+    levelSprite.pushSprite(245 + offsetX, 138 + offsetY, TFT_TRANSPARENT);
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -1127,7 +1226,7 @@ uint8_t getSQL()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x14, 0x03, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x14, 0x03, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -1145,21 +1244,23 @@ uint8_t getSQL()
   {
     SQLOld = value;
 
-    display.fillRect(245 + offsetX, 155 + offsetY, 44, 10, TFT_BLACK);
-    display.drawRect(245 + offsetX, 155 + offsetY, 44, 10, TFT_FIL_BORDER);
+    levelSprite.fillRect(0, 0, 44, 10, TFT_BLACK);
+    levelSprite.drawRect(0, 0, 44, 10, TFT_FIL_BORDER);
 
     if (value != 0)
     {
       limit = map(value, 0, 255, 0, 42);
-      display.drawFastHLine(246 + offsetX, 156 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 157 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 158 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 159 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 160 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 161 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 162 + offsetY, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246 + offsetX, 163 + offsetY, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 1, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 2, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 3, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 4, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 5, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 6, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 7, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 8, limit, TFT_GAUGE_3);
     }
+
+    levelSprite.pushSprite(245 + offsetX, 155 + offsetY, TFT_TRANSPARENT);
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -1182,7 +1283,7 @@ void getNRLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x14, 0x06, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x14, 0x06, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -1200,21 +1301,23 @@ void getNRLevel()
   {
     NRLevelOld = value;
 
-    display.fillRect(245 + offsetX, 172 + offsetY, 44, 10, TFT_BLACK);
-    display.drawRect(245 + offsetX, 172 + offsetY, 44, 10, TFT_FIL_BORDER);
+    levelSprite.fillRect(0, 0, 44, 10, TFT_BLACK);
+    levelSprite.drawRect(0, 0, 44, 10, TFT_FIL_BORDER);
 
     if (value > 0)
     {
       limit = map(value, 8, 248, 0, 42);
-      display.drawFastHLine(246 + offsetX, 173 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 174 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 175 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 176 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 177 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 178 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 179 + offsetY, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246 + offsetX, 180 + offsetY, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 1, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 2, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 3, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 4, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 5, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 6, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 7, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 8, limit, TFT_GAUGE_3);
     }
+
+    levelSprite.pushSprite(245 + offsetX, 172 + offsetY, TFT_TRANSPARENT);
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -1253,7 +1356,7 @@ void getNBLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x14, 0x12, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x14, 0x12, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -1271,21 +1374,23 @@ void getNBLevel()
   {
     NBLevelOld = value;
 
-    display.fillRect(245 + offsetX, 189 + offsetY, 44, 10, TFT_BLACK);
-    display.drawRect(245 + offsetX, 189 + offsetY, 44, 10, TFT_FIL_BORDER);
+    levelSprite.fillRect(0, 0, 44, 10, TFT_BLACK);
+    levelSprite.drawRect(0, 0, 44, 10, TFT_FIL_BORDER);
 
     if (value > 0)
     {
       limit = map(value, 0, 255, 0, 42);
-      display.drawFastHLine(246 + offsetX, 190 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 191 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 192 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 193 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 194 + offsetY, limit, TFT_GAUGE_2);
-      display.drawFastHLine(246 + offsetX, 195 + offsetY, limit, TFT_GAUGE_1);
-      display.drawFastHLine(246 + offsetX, 196 + offsetY, limit, TFT_GAUGE_3);
-      display.drawFastHLine(246 + offsetX, 197 + offsetY, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 1, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 2, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 3, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 4, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 5, limit, TFT_GAUGE_2);
+      levelSprite.drawFastHLine(1, 6, limit, TFT_GAUGE_1);
+      levelSprite.drawFastHLine(1, 7, limit, TFT_GAUGE_3);
+      levelSprite.drawFastHLine(1, 8, limit, TFT_GAUGE_3);
     }
+
+    levelSprite.pushSprite(245 + offsetX, 189 + offsetY, TFT_TRANSPARENT);
 
     display.setFont(0);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -1322,7 +1427,7 @@ uint8_t getCOMP(boolean retry = true)
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x16, 0x44, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x16, 0x44, 0xFD};
 
   const char *mode[] = {" ", "COMP"};
 
@@ -1370,7 +1475,7 @@ void getCOMPLevel()
 
   char str[2];
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x14, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x14, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -1398,15 +1503,17 @@ void getCOMPLevel()
 
     for (uint8_t i = 0; i <= 180; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 170 + offsetY, 8, TFT_FIL_BACK);
+      gaugeSprite.drawFastVLine(i, 170, 8, TFT_FIL_BACK);
     }
 
     limit = map(value, 0, 210, 0, 180);
 
     for (uint8_t i = 0; i <= limit; i += STEP)
     {
-      display.drawFastVLine(30 + i + offsetX, 170 + offsetY, 8, TFT_BLUE);
+      gaugeSprite.drawFastVLine(i, 0, 8, TFT_BLUE);
     }
+
+    gaugeSprite.pushSprite(30 + offsetX, 170 + offsetY, TFT_TRANSPARENT);
 
     display.setFont(0);
     display.setTextDatum(CC_DATUM);
@@ -1424,7 +1531,7 @@ void getCOMPLevel()
 void getRIT()
 {
   static char buffer[8];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x21, 0x00, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x21, 0x00, 0xFD};
 
   String RIT;
 
@@ -1491,13 +1598,13 @@ void getIP()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x07, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x07, 0xFD};
 
   const char *mode[] = {"  ", "IP+"};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
-  if(IC_MODEL != 7300) return;
+  if(icModel != 7300) return;
 
   sendCommand(request, n, buffer, 5);
 
@@ -1536,17 +1643,17 @@ void sendVoice()
 
   // Repeat Time
   char repeat[][9] = {
-    {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x02, 0x45, 0xFD},   // IC-705
-    {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x01, 0x81, 0xFD},   // IC-7300
-    {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x05, 0x02, 0x17, 0xFD}    // IC-9700
+    {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x05, 0x02, 0x45, 0xFD},   // IC-705
+    {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x05, 0x01, 0x81, 0xFD},   // IC-7300
+    {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x05, 0x02, 0x17, 0xFD}    // IC-9700
   };
 
-  if(IC_MODEL == 705)
+  if(icModel == 705)
   {
     n = sizeof(repeat[0]) / sizeof(repeat[0][0]);
     sendCommand(repeat[0], n, buffer, 7);
   }
-  else if(IC_MODEL == 7300)
+  else if(icModel == 7300)
   {
     n = sizeof(repeat[1]) / sizeof(repeat[1][0]);
     sendCommand(repeat[1], n, buffer, 7);
@@ -1573,7 +1680,7 @@ void sendVoice()
   Serial.println(voiceTimeout);
 
   // Send
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x28, 0x00, 0x00, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x28, 0x00, 0x00, 0xFD};
 
   request[6] += voice;
 

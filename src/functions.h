@@ -6,14 +6,12 @@ void callbackBT(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 {
   if (event == ESP_SPP_SRV_OPEN_EVT)
   {
-    btConnected = true;
+    btClient = true;
     Serial.println("BT Client Connected");
   }
   if (event == ESP_SPP_CLOSE_EVT)
   {
-    display.sleep();
-    wakeup = false;
-    btConnected = false;
+    btClient = false;
     Serial.println("BT Client disconnected");
   }
 }
@@ -293,10 +291,10 @@ void viewGUI()
   display.drawRoundRect(261 + offsetX, 96 + offsetY, 56, 13, 2, TFT_MODE_BORDER);
   display.setTextColor(TFT_WHITE);
 
-  if (IC_CONNECT == BT)
-    display.drawString(String(IC_MODEL) + " BT", 289 + offsetX, 103 + offsetY);
+  if (icConnect == BT)
+    display.drawString(String(icModel) + " BT", 289 + offsetX, 103 + offsetY);
   else
-    display.drawString(String(IC_MODEL) + " USB", 289 + offsetX, 103 + offsetY);
+    display.drawString(String(icModel) + " USB", 289 + offsetX, 103 + offsetY);
 
   if (transverter > 0)
   {
@@ -314,12 +312,12 @@ void viewGUI()
   display.drawRoundRect(283, 90, 34, 20, 2, TFT_MODE_BORDER);
   display.setTextColor(TFT_WHITE);
 
-  if (IC_CONNECT == BT)
+  if (icConnect == BT)
     display.drawString("BT", 300, 96);
   else
     display.drawString("USB", 300, 96);
 
-  display.drawString(String(IC_MODEL), 300, 105);
+  display.drawString(String(icModel), 300, 105);
 
   // display.drawFastHLine(0, 57, 320, TFT_FIL_BORDER);
   // display.drawFastHLine(0, 86, 320, TFT_FIL_BORDER);
@@ -349,7 +347,7 @@ void viewGUI()
     display.drawFastVLine(30 + i + offsetX, 218 + offsetY, 8, TFT_FIL_BACK);
   }
 
-  if(IC_MODEL == 705)
+  if(icModel == 705)
   {
     for (uint8_t i = 0; i <= 12; i++)
     {
@@ -369,7 +367,7 @@ void viewGUI()
       }
     }
   }
-  else if(IC_MODEL == 7300)
+  else if(icModel == 7300)
   {
     for (uint8_t i = 0; i <= 15; i++)
     {
@@ -380,7 +378,7 @@ void viewGUI()
       }
       else if (i % 3 == 0)
       {
-        display.drawString(String((i / 3) * 5) + offsetX, 30 + (i * 11.3) + offsetY, 234);
+        display.drawString(String((i / 3) * 5), 30 + (i * 11.3) + offsetX, 234 + offsetY);
         display.drawFastVLine(30 + (i * 11.3) + offsetX, 224 + offsetY, 2, TFT_FIL_BORDER);
       }
       else
@@ -537,7 +535,7 @@ void viewGUI()
   display.drawRect(220 + offsetX, 208 + offsetY, 100, 32, TFT_FIL_BORDER);
   display.drawString("Vd", 220 + offsetX, 208 + offsetY);
 
-  if (IC_MODEL == 705)
+  if (icModel == 705)
   {
     display.drawString("5", 230 + offsetX, 219 + offsetY);
   }
@@ -557,7 +555,7 @@ void viewGUI()
     display.drawFastVLine(230 + i + offsetX, 226 + offsetY, 8, TFT_FIL_BACK);
   }
 
-  if (IC_MODEL == 705)
+  if (icModel == 705)
   {
     display.drawFastHLine(230 + offsetX, 234 + offsetY, 50, TFT_RED);
     display.drawFastHLine(280 + offsetX, 234 + offsetY, 30, TFT_FIL_BORDER);
@@ -600,7 +598,7 @@ void clearGUI()
     display.drawFastVLine(30 + i + offsetX, 218 + offsetY, 8, TFT_FIL_BACK);
   }
 
-  if(IC_MODEL == 705 || IC_MODEL == 9700)
+  if(icModel == 705 || icModel == 9700)
   {
     for (uint8_t i = 0; i <= 12; i++)
     {
@@ -673,6 +671,22 @@ void clearData()
 
   batteryCharginglOld = true;
 }
+
+// Print value
+void value(char* valString, uint8_t x = 160, uint8_t y = 76)
+{
+  if (strcmp(valString, valStringOld) != 0)
+  {
+    strncpy(valStringOld, valString, 32);
+
+    display.setTextDatum(CC_DATUM);
+    display.setFont(&UniversCondensed20pt7b);
+    display.setTextPadding(194);
+    display.setTextColor(TFT_WHITE, TFT_BLACK);
+    display.drawString(valString, x + offsetX, y + offsetY);
+  }
+}
+
 
 // Get 24bits BMP
 bool M5Screen24bmp()
@@ -898,7 +912,6 @@ void wakeAndSleep()
   }
   else if (screensaverMode == true)
   {
-
     display.fillRect(x + offsetX, y + offsetY, 44, 22, TFT_BLACK);
 
     if (xDir)
@@ -941,19 +954,18 @@ void wakeAndSleep()
       y = 196;
     }
 
-    display.drawJpg(logo, sizeof(logo), x + offsetX, y + offsetY, 44, 22);
+    logoSprite.pushSprite(x + offsetX, y + offsetY, TFT_TRANSPARENT);
 
-    if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
+    if (icModel == 705 && icConnect == BT && btConnected == false)
       vTaskDelay(75);
-    else if (IC_CONNECT == USB && wifiConnected == false)
+    else if (icConnect == USB && wifiConnected == false)
       vTaskDelay(75);
   }
 
-  if (DEBUG)
+  // Debug trace
+  if (DEBUG == 1)
   {
-    Serial.print(screensaverMode);
-    Serial.print(" ");
-    Serial.println(millis() - screensaverTimer);
+    Serial.printf("%d %ld\n", screensaverMode, millis() - screensaverTimer);
   }
 }
 
@@ -964,11 +976,11 @@ boolean checkConnection()
 
   uint16_t httpCode;
 
-  String message = "";
+  char message[24] = "";
   String command = "";
   String response = "";
 
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x03, 0xFD};
 
   char s[4];
 
@@ -980,15 +992,24 @@ boolean checkConnection()
     command += String(s);
   }
 
-  command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
+  command += BAUD_RATE + String(",") + icSerialDevice;
 
   if (screenshot == false)
   {
-    if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
-      message = "Need Pairing";
-    else if (IC_CONNECT == USB && wifiConnected == false)
-      message = "Check Wifi";
-    else if (IC_CONNECT == USB && (proxyConnected == false || txConnected == false))
+    if(btClient)
+    {
+      btConnected = true;
+    }
+    else 
+    {
+      btConnected = false;
+    }
+
+    if (icModel == 705 && icConnect == BT && btConnected == false)
+      snprintf(message, 24, "%s", "Need Pairing");
+    else if (icConnect == USB && wifiConnected == false)
+      snprintf(message, 24, "%s", "Check Wifi");
+    else if (icConnect == USB && (proxyConnected == false || txConnected == false))
     {
       http.begin(civClient, PROXY_URL + String(":") + PROXY_PORT + String("/") + String("?civ=") + command); // Specify the URL
       http.addHeader("User-Agent", "M5Stack");                                                               // Specify header
@@ -1006,18 +1027,18 @@ boolean checkConnection()
         {
           Serial.println("TX connected");
           txConnected = true;
-          message = "";
+          snprintf(message, 24, "%s", "");
         }
         else
         {
           Serial.println("TX disconnected");
           txConnected = false;
-          message = "Check TX";
+          snprintf(message, 24, "%s %lu", "Check", icModel);
         }
       }
       else
       {
-        message = "Check Proxy";
+        snprintf(message, 24, "%s", "Check Proxy");
       }
       http.end();
     }
@@ -1025,15 +1046,24 @@ boolean checkConnection()
     // Shutdown screen if no TX connexion
     if (wakeup == true && startup == false)
     {
-      if ((IC_CONNECT == BT && btConnected == false) || (IC_CONNECT == USB && txConnected == false))
+      if ((icConnect == BT && btConnected == false) || (icConnect == USB && txConnected == false))
       {
         display.sleep();
         wakeup = false;
+
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          leds[4 - i] = CRGB::Black;
+          leds[5 + i] = CRGB::Black;
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
       }
     }
     else if (wakeup == false && startup == false)
     {
-      if ((IC_CONNECT == BT && btConnected == true) || (IC_CONNECT == USB && txConnected == true))
+      if ((icConnect == BT && btConnected == true) || (icConnect == USB && txConnected == true))
       {
         clearData();
         viewGUI();
@@ -1045,19 +1075,16 @@ boolean checkConnection()
 
     // View message
 
-    if (message != "")
+    if (strcmp(message, "") != 0)
     {
       settingLock = true;
 
       if (screensaverMode == false && settingsMode == false)
       {
-        display.setTextDatum(CC_DATUM);
-        display.setFont(&UniversCondensed20pt7b);
-        display.setTextPadding(194);
-        display.setTextColor(TFT_WHITE, TFT_BLACK);
-        display.drawString(message, 160 + offsetX, 76 + offsetY);
+        value(message);
         vTaskDelay(750);
-        display.drawString("", 160 + offsetX, 76 + offsetY);
+        snprintf(message, 24, "%s", "");
+        value(message);
         frequencyOld = "";
         settingLock = false;
         vTaskDelay(250);
