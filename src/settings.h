@@ -4,7 +4,7 @@
 // IC Config
 // For each line, 
 //  - IC Model (705, 7300 or 9700), 
-//  - CI_V Address (0x94 by default on IC-7300, 0xA4 by default on IC-705), 
+//  - CI_V Address (by default 0x94 on IC-7300, 0xA2 on IC-9700 and 0xA4 on IC-705), 
 //  - IC Connect (USB or BT),
 //  - Serial Device (if USB) or BT Address (if BT with IC-705)
 const char *choiceConfig[] = {
